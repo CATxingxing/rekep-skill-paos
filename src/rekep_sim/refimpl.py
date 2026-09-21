@@ -104,46 +104,52 @@ def build_keypoint_proposer(config: dict[str, Any]):
 def _patch_kmeans(keypoint_proposal_module: Any) -> None:
     """Harden the reference kmeans call without editing the reference source.
 
-    ``kmeans_pytorch.kmeans`` loops ``while True`` until ``center_shift**2 < tol``;
-    with NaN input that condition is never true, so the reference hangs forever.
-    We (a) silence its tqdm chatter and (b) fail fast on non-finite input. The
-    reference call site (``keypoint_proposal.kmeans``) is rebound to the guarded
-    function; the upstream file on disk is unchanged.
+    ``kmeans_pytorch.kmeans`` loops ``while True`` until ``center_shift**2 < tol``.
+    With NaN input, or when the assignment oscillates, that condition is never
+    met and the reference hangs forever (observed: a 30-minute hang in the
+    perception node). We replace the call site with a bounded re-implementation
+    that has identical clustering semantics (same init + pairwise distance +
+    update) but a hard iteration cap and a non-finite guard.
     """
     import kmeans_pytorch
 
-    if getattr(kmeans_pytorch.kmeans, "_rekep_guarded", False):
+    if getattr(kmeans_pytorch.kmeans, "_rekep_bounded", False):
         return
 
-    class _SilentTqdm:
-        def set_postfix(self, *a, **k):
-            return None
-
-        def update(self, *a, **k):
-            return None
-
-        def close(self):
-            return None
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, *a):
-            return False
-
-    kmeans_pytorch.tqdm = lambda *a, **k: _SilentTqdm()
-
-    original = kmeans_pytorch.kmeans
-
-    def guarded(X, *args, **kwargs):
+    def bounded_kmeans(X, num_clusters, distance="euclidean", tol=1e-4,
+                       device=None, max_iter=100, **_ignored):
+        import numpy as np
         import torch
 
-        if torch.is_tensor(X) and not torch.isfinite(X).all():
-            raise RuntimeError(
-                "kmeans input contains non-finite values; refusing to loop"
-            )
-        return original(X, *args, **kwargs)
+        device = device or torch.device("cpu")
+        if distance == "euclidean":
+            pairwise = kmeans_pytorch.pairwise_distance
+        elif distance == "cosine":
+            pairwise = kmeans_pytorch.pairwise_cosine
+        else:
+            raise NotImplementedError
+        X = X.float().to(device)
+        if not torch.isfinite(X).all():
+            raise RuntimeError("kmeans input contains non-finite values")
+        num_samples = int(X.shape[0])
+        k = int(min(num_clusters, num_samples))
+        idx = np.random.choice(num_samples, k, replace=False)
+        state = X[idx].clone()
+        choice = torch.zeros(num_samples, dtype=torch.long, device=device)
+        for _ in range(max(1, int(max_iter))):
+            dis = pairwise(X, state)
+            choice = torch.argmin(dis, dim=1)
+            prev = state.clone()
+            for cluster in range(k):
+                selected = torch.nonzero(choice == cluster).squeeze(1).to(device)
+                if selected.numel() == 0:
+                    continue
+                state[cluster] = X.index_select(0, selected).mean(dim=0)
+            center_shift = torch.sum(torch.sqrt(torch.sum((state - prev) ** 2, dim=1)))
+            if bool(torch.isfinite(center_shift)) and float(center_shift) ** 2 < tol:
+                break
+        return choice.cpu(), state.cpu()
 
-    guarded._rekep_guarded = True  # type: ignore[attr-defined]
-    kmeans_pytorch.kmeans = guarded
-    keypoint_proposal_module.kmeans = guarded
+    bounded_kmeans._rekep_bounded = True  # type: ignore[attr-defined]
+    kmeans_pytorch.kmeans = bounded_kmeans
+    keypoint_proposal_module.kmeans = bounded_kmeans

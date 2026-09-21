@@ -1,0 +1,31 @@
+=== B/D: reference parity + sandbox (pytest) ===
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+25 passed, 4 warnings in 22.79s
+=== build + install bundle ===
+✓ Skill rekep-sim 0.1.2 is already ready
+
+installed node gateway (gateway-1.1.0-linux-x86_64)
+installed node rekep_perception (rekep_perception-0.1.2-linux-x86_64)
+installed node rekep_plan (rekep_plan-0.1.2-linux-x86_64)
+installed node rekep_execute (rekep_execute-0.1.2-linux-x86_64)
+=== start + A/C/E/F probe ===
+✓ Skill rekep-sim is running (profile=sim, flow=paos-rekep-sim-sim)
+Skill: rekep-sim
+State: running
+Profile: sim
+Dora flow: paos-rekep-sim-sim (running)
+Gateway GET /tools: ready
+Tool context rekep.get_context: ready
+Tool context rekep.plan_task: ready
+Tool context rekep.execute_task: ready
+A/C tools: ['rekep.execute_task', 'rekep.get_context', 'rekep.plan_task']
+C perception observation_id: sha256:2588b6ba6f578a0d887622090ca40bfb387462bd7cfb3362c92130590cccd6d3 objects: {'pick_cube', 'place_zone'}
+C plan: {'plan_id': 'plan_ecfc2a32df514b14a64a348993ea0fe1', 'num_stages': 3, 'grasp_keypoints': [1, -1, -1], 'release_keypoints': [-1, -1, 1]}
+NEG stale_observation: terminal=failed code=REKEP_OBSERVATION_STALE -> PASS
+NEG motion_not_allowed: terminal=failed code=REKEP_MOTION_NOT_ALLOWED -> PASS
+NEG plan_tampered: terminal=failed code=REKEP_PLAN_TAMPERED -> PASS
+NEG plan_not_found: terminal=failed code=REKEP_PLAN_NOT_FOUND -> PASS
+F execute: {'status': 'succeeded', 'video': '/data7/home/linjiongxiao/.paos-rekep/tmp/rekep_mujoco.mp4', 'place_error_m': 0.0353}
+P4_CHECKS: [True, True, True, True, True, True, True, True, True, True]
+P4_ACCEPTANCE: PASS

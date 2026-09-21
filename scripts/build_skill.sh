@@ -76,6 +76,13 @@ profiles:
     environment:
       MUJOCO_GL: egl
       PYTHONDONTWRITEBYTECODE: "1"
+      TMPDIR: "$PAOS_REKEP_ROOT/tmp"
+      TMP: "$PAOS_REKEP_ROOT/tmp"
+      TEMP: "$PAOS_REKEP_ROOT/tmp"
+      XDG_CACHE_HOME: "$PAOS_REKEP_ROOT/cache"
+      HF_HOME: "$PAOS_REKEP_ROOT/hf"
+      TORCH_HOME: "$PAOS_REKEP_ROOT/torch"
+      PYTHONPYCACHEPREFIX: "$PAOS_REKEP_ROOT/pycache"
       REKEP_SIM_PYTHON: "$VP"
       REKEP_SIM_SRC: "$ROOT"
       REKEP_SIM_EXTRA_PYTHONPATH: "$REF_RUNTIME"
