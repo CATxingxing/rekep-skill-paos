@@ -1,0 +1,26 @@
+/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/swiglu_ffn.py:51: UserWarning: xFormers is not available (SwiGLU)
+  warnings.warn("xFormers is not available (SwiGLU)")
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/attention.py:33: UserWarning: xFormers is not available (Attention)
+  warnings.warn("xFormers is not available (Attention)")
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
+  warnings.warn("xFormers is not available (Block)")
+running k-means on cpu..
+running k-means on cpu..
+keypoints: [(0, 'place_zone', [0.003, -0.426, 0.011]), (1, 'pick_cube', [0.265, -0.442, 0.077])]
+program stages: 3 grasp [1, -1, -1] release [-1, -1, 1]
+progress {'phase': 'stage1_grasp', 'ok': True}
+progress {'phase': 'stage3_release'}
+RESULT {
+  "status": "succeeded",
+  "video": "/data7/home/linjiongxiao/.paos-rekep/tmp/rekep_mujoco.mp4",
+  "final_cube_position_m": [
+    -0.008133327074180066,
+    -0.3952364117291117,
+    -0.002032066066451359
+  ],
+  "place_error_m": 0.0353,
+  "elapsed_s": 124.79
+}
+stages [{'phase': 'stage1_grasp', 'ok': True}, {'phase': 'stage3_release', 'ok': True}]

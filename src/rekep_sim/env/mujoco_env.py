@@ -42,6 +42,15 @@ class Capture:
     seg: np.ndarray
 
 
+@dataclass
+class _IKResult:
+    success: bool
+    num_descents: int
+    position_error: float
+    cspace_position: np.ndarray
+    orientation_error: float = 0.0
+
+
 class MujocoReKepEnv:
     def __init__(
         self,
@@ -73,6 +82,9 @@ class MujocoReKepEnv:
         self.video_cache: list[np.ndarray] = []
         self.step_counter = 0
         self.last_og_gripper_action = 1.0
+        self._grasp_label: int | None = None
+        self._grasp_offset = np.eye(4)
+        self.grasp_distance_threshold = 0.06
         self.reset_joint_pos = self.data.qpos[self.arm_qposadr].copy()
         self._keypoint_registry: dict[int, tuple[int, np.ndarray]] = {}
         self._keypoint2object: dict[int, int] = {}
@@ -157,19 +169,19 @@ class MujocoReKepEnv:
             keypoints = keypoints[None, :]
         self._keypoint_registry = {}
         self._keypoint2object = {}
-        labels = list(self.label_body)
-        body_pose = {
+        labels = list(self.label_geom)
+        geom_pose = {
             label: (
-                self.data.xpos[self.label_body[label]].copy(),
-                self.data.xquat[self.label_body[label]].copy(),
+                self.data.geom_xpos[self.label_geom[label]].copy(),
+                self.data.geom_xmat[self.label_geom[label]].reshape(3, 3).copy(),
             )
             for label in labels
         }
         for idx, kp in enumerate(keypoints):
             best_label, best_local, best_dist = None, None, np.inf
             for label in labels:
-                pos, quat = body_pose[label]
-                local = _world_to_body(kp, pos, quat)
+                pos, rot = geom_pose[label]
+                local = rot.T @ (kp - pos)
                 dist = float(np.linalg.norm(local))
                 if dist < best_dist:
                     best_label, best_local, best_dist = label, local, dist
@@ -183,16 +195,21 @@ class MujocoReKepEnv:
         out = []
         for idx in sorted(self._keypoint_registry):
             label, local = self._keypoint_registry[idx]
-            body_id = self.label_body[label]
-            pos, quat = self.data.xpos[body_id], self.data.xquat[body_id]
-            out.append(_body_to_world(local, pos, quat))
+            gid = self.label_geom[label]
+            pos = self.data.geom_xpos[gid]
+            rot = self.data.geom_xmat[gid].reshape(3, 3)
+            out.append(pos + rot @ local)
         return np.asarray(out)
 
     def get_object_by_keypoint(self, keypoint_idx: int) -> int:
         return self._keypoint2object[int(keypoint_idx)]
 
     def is_grasping(self, candidate_obj=None) -> bool:
-        """Contact between a gripper pad and the (candidate) object geom."""
+        """Assisted grasp (if attached) or gripper-pad contact with the object."""
+        if self._grasp_label is not None and (
+            candidate_obj is None or int(candidate_obj) == self._grasp_label
+        ):
+            return True
         target_geoms = None
         if candidate_obj is not None and int(candidate_obj) in self.label_geom:
             target_geoms = {self.label_geom[int(candidate_obj)]}
@@ -220,6 +237,10 @@ class MujocoReKepEnv:
 
     def get_ee_quat(self) -> np.ndarray:
         return self.get_ee_pose()[3:]
+
+    def tool_down_quat(self) -> np.ndarray:
+        """Quaternion (xyzw) of the fixed top-down tool orientation."""
+        return _mat_to_quat_xyzw(self.target_rot)
 
     def get_arm_joint_postions(self) -> np.ndarray:
         return self.data.qpos[self.arm_qposadr].copy()
@@ -254,13 +275,94 @@ class MujocoReKepEnv:
             q = np.clip(q + step * dq, self.arm_lo + 1e-5, self.arm_hi - 1e-5)
         raise RuntimeError(f"IK failed for target {target_pos.round(3).tolist()}")
 
+    def solve_ik_result(
+        self,
+        target_pose_homo,
+        position_tolerance: float = 0.01,
+        orientation_tolerance: float = 0.05,
+        position_weight: float = 1.0,
+        orientation_weight: float = 0.05,
+        max_iterations: int = 150,
+        initial_joint_pos=None,
+    ):
+        """Adapter matching the reference IK result interface used by the solvers."""
+        target_pose_homo = np.asarray(target_pose_homo, dtype=float).reshape(4, 4)
+        target_pos = target_pose_homo[:3, 3]
+        target_rot = target_pose_homo[:3, :3]
+        iters = max(1, int(max_iterations))
+        q = self.get_arm_joint_postions() if initial_joint_pos is None else np.asarray(initial_joint_pos, dtype=float)
+        try:
+            q = self.ik(target_pos, target_rot, seed=q, iterations=iters)
+            success = True
+            pos_err = float(np.linalg.norm(target_pos - self.data.site_xpos[self.pinch_id]))
+            descents = 1
+        except RuntimeError:
+            success = False
+            pos_err = float("inf")
+            q = self.get_arm_joint_postions()
+            descents = iters
+        return _IKResult(success, descents, pos_err, q)
+
+    def _robust_ik(self, target_pos, target_rot, iterations: int = 3000) -> np.ndarray:
+        seeds = [self.get_arm_joint_postions(), self.reset_joint_positions()]
+        for _ in range(4):
+            seeds.append(self.rng.uniform(self.arm_lo, self.arm_hi))
+        last_err = None
+        for seed in seeds:
+            try:
+                return self.ik(target_pos, target_rot, seed=seed, iterations=iterations)
+            except RuntimeError as exc:
+                last_err = exc
+        raise RuntimeError(str(last_err))
+
     def _move_to(self, q_target, gripper: float, steps: int = 60) -> None:
         for _ in range(steps):
             self.data.ctrl[:6] = q_target
             self.data.ctrl[6] = gripper
             mujoco.mj_step(self.model, self.data)
+            if self._grasp_label is not None:
+                self._apply_grasp()
             self._record_frame()
         self.step_counter += 1
+
+    def _pinch_pose(self) -> np.ndarray:
+        pose = np.eye(4)
+        pose[:3, :3] = self.data.site_xmat[self.pinch_id].reshape(3, 3)
+        pose[:3, 3] = self.data.site_xpos[self.pinch_id]
+        return pose
+
+    def _free_body_pose(self, body_id: int) -> np.ndarray:
+        pose = np.eye(4)
+        pose[:3, :3] = _quat_wxyz_to_mat(self.data.xquat[body_id])
+        pose[:3, 3] = self.data.xpos[body_id]
+        return pose
+
+    def _try_attach(self) -> None:
+        if self._grasp_label is not None:
+            return
+        pinch = self._pinch_pose()
+        for label, gid in self.label_geom.items():
+            body_id = self.label_body[label]
+            if body_id == 0:  # world/static object (e.g. place zone)
+                continue
+            obj = self._free_body_pose(body_id)
+            if np.linalg.norm(pinch[:3, 3] - obj[:3, 3]) < self.grasp_distance_threshold:
+                self._grasp_label = label
+                self._grasp_offset = np.linalg.inv(pinch) @ obj
+                return
+
+    def _apply_grasp(self) -> None:
+        if self._grasp_label is None:
+            return
+        body_id = self.label_body[self._grasp_label]
+        target = self._pinch_pose() @ self._grasp_offset
+        jnt = int(self.model.body_jntadr[body_id])
+        if jnt < 0:
+            return
+        qadr = int(self.model.jnt_qposadr[jnt])
+        self.data.qpos[qadr:qadr + 3] = target[:3, 3]
+        self.data.qpos[qadr + 3:qadr + 7] = _mat_to_quat_wxyz(target[:3, :3])
+        mujoco.mj_forward(self.model, self.data)
 
     def execute_action(self, action, precise: bool = True):
         """action = [x,y,z,qx,qy,qz,qw, gripper] with gripper 1=close,-1=open,0=null."""
@@ -271,7 +373,11 @@ class MujocoReKepEnv:
         target_quat_xyzw = action[3:7]
         gripper = action[7]
         target_rot = _quat_xyzw_to_mat(target_quat_xyzw)
-        q = self.ik(target_pos, target_rot, seed=self.get_arm_joint_postions())
+        try:
+            q = self._robust_ik(target_pos, target_rot)
+        except RuntimeError:
+            # the Nova2 scene is 6-DOF; fall back to a feasible top-down grasp
+            q = self._robust_ik(target_pos, self.target_rot)
         g = self.last_og_gripper_action
         if gripper == self.get_gripper_close_action():
             g = 255.0
@@ -283,16 +389,17 @@ class MujocoReKepEnv:
         return pos_err, 0.0
 
     def open_gripper(self) -> None:
-        if self.last_og_gripper_action == 0.0:
+        if self.last_og_gripper_action == 0.0 and self._grasp_label is None:
             return
         self._move_to(self.get_arm_joint_postions(), 0.0, steps=30)
         self.last_og_gripper_action = 0.0
+        self._grasp_label = None
 
     def close_gripper(self) -> None:
-        if self.last_og_gripper_action == 255.0:
-            return
-        self._move_to(self.get_arm_joint_postions(), 255.0, steps=30)
-        self.last_og_gripper_action = 255.0
+        if self.last_og_gripper_action != 255.0:
+            self._move_to(self.get_arm_joint_postions(), 255.0, steps=30)
+            self.last_og_gripper_action = 255.0
+        self._try_attach()
 
     def get_gripper_open_action(self) -> float:
         return -1.0
@@ -367,22 +474,37 @@ class MujocoReKepEnv:
             is_gripper = body_id in body_ids and ("pad" in name or "gripper" in name)
             if not is_gripper and body_id not in grasped_bodies:
                 continue
-            if self.model.geom_type[geom_id] != mujoco.mjtGeom.mjGEOM_MESH:
-                continue
+            sampled = self._sample_geom_points(geom_id, 200)
+            if sampled is not None and len(sampled):
+                pts.append(sampled)
+        if not pts:
+            return np.zeros((0, 3))
+        return np.concatenate(pts, axis=0)
+
+    def _sample_geom_points(self, geom_id: int, n: int) -> np.ndarray | None:
+        gtype = self.model.geom_type[geom_id]
+        size = self.model.geom_size[geom_id].copy()
+        if gtype == mujoco.mjtGeom.mjGEOM_MESH:
             mesh_id = self.model.geom_dataid[geom_id]
             if mesh_id < 0:
-                continue
+                return None
             vadr, vnum = self.model.mesh_vertadr[mesh_id], self.model.mesh_vertnum[mesh_id]
             verts = self.model.mesh_vert[vadr:vadr + vnum].reshape(-1, 3)
             if self.model.mesh_scale[mesh_id] is not None:
                 verts = verts * self.model.mesh_scale[mesh_id]
-            idx = self.rng.choice(len(verts), size=min(200, len(verts)), replace=False)
-            local = verts[idx]
-            world = local @ self.data.geom_xmat[geom_id].reshape(3, 3).T + self.data.geom_xpos[geom_id]
-            pts.append(world)
-        if not pts:
-            return np.zeros((0, 3))
-        return np.concatenate(pts, axis=0)
+            if len(verts) > n:
+                verts = verts[self.rng.choice(len(verts), size=n, replace=False)]
+            local = verts
+        elif gtype == mujoco.mjtGeom.mjGEOM_BOX:
+            local = (self.rng.random((n, 3)) * 2.0 - 1.0) * size
+        elif gtype == mujoco.mjtGeom.mjGEOM_SPHERE:
+            v = self.rng.normal(size=(n, 3))
+            v /= np.linalg.norm(v, axis=1, keepdims=True)
+            local = v * size[0]
+        else:
+            return None
+        rot = self.data.geom_xmat[geom_id].reshape(3, 3)
+        return local @ rot.T + self.data.geom_xpos[geom_id]
 
     def _robot_body_ids(self) -> set[int]:
         ids = set()
@@ -404,6 +526,7 @@ class MujocoReKepEnv:
         mujoco.mj_forward(self.model, self.data)
         self.video_cache = []
         self.last_og_gripper_action = 1.0
+        self._grasp_label = None
 
     def _record_frame(self) -> None:
         self.renderer.disable_depth_rendering()
@@ -442,6 +565,18 @@ def _quat_xyzw_to_mat(quat_xyzw: np.ndarray) -> np.ndarray:
     w, x, y, z = quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]
     mat = np.zeros(9)
     mujoco.mju_quat2Mat(mat, np.array([w, x, y, z]))
+    return mat.reshape(3, 3)
+
+
+def _mat_to_quat_wxyz(mat: np.ndarray) -> np.ndarray:
+    quat = np.zeros(4)
+    mujoco.mju_mat2Quat(quat, np.asarray(mat, dtype=np.float64).reshape(9))
+    return quat
+
+
+def _quat_wxyz_to_mat(quat_wxyz: np.ndarray) -> np.ndarray:
+    mat = np.zeros(9)
+    mujoco.mju_quat2Mat(mat, np.asarray(quat_wxyz, dtype=np.float64))
     return mat.reshape(3, 3)
 
 
