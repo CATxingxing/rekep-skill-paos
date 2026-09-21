@@ -1,0 +1,20 @@
+................                                                         [100%]
+=============================== warnings summary ===============================
+tests/test_ref_keypoint.py::test_keypoint_proposal_runs_and_is_deterministic
+  /data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.11/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+    warnings.warn(
+
+tests/test_ref_keypoint.py::test_keypoint_proposal_runs_and_is_deterministic
+  /data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/swiglu_ffn.py:51: UserWarning: xFormers is not available (SwiGLU)
+    warnings.warn("xFormers is not available (SwiGLU)")
+
+tests/test_ref_keypoint.py::test_keypoint_proposal_runs_and_is_deterministic
+  /data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/attention.py:33: UserWarning: xFormers is not available (Attention)
+    warnings.warn("xFormers is not available (Attention)")
+
+tests/test_ref_keypoint.py::test_keypoint_proposal_runs_and_is_deterministic
+  /data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
+    warnings.warn("xFormers is not available (Block)")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+16 passed, 4 warnings in 14.58s

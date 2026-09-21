@@ -1,0 +1,12 @@
+..                                                                       [100%]
+=============================== warnings summary ===============================
+tests/test_ref_solver.py::test_subgoal_solver_runs_and_is_deterministic
+  /data7/home/linjiongxiao/projects2/rekep-skill-paos/reference/rekep-real-plugin/runtime/utils.py:81: NumbaPerformanceWarning: np.dot() is faster on contiguous arrays, called on (Array(float64, 2, 'C', False, aligned=True), Array(float64, 2, 'A', False, aligned=True))
+    transformed_points[i] = np.dot(points, R.T) + pos
+
+tests/test_ref_solver.py::test_subgoal_solver_runs_and_is_deterministic
+  /data7/home/linjiongxiao/projects2/rekep-skill-paos/reference/rekep-real-plugin/runtime/utils.py:54: NumbaPerformanceWarning: np.dot() is faster on contiguous arrays, called on (Array(float64, 2, 'A', False, aligned=True), Array(float64, 2, 'A', False, aligned=True))
+    rot_distance = angle_between_rotmat(a[:3, :3], b[:3, :3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2 passed, 2 warnings in 13.76s

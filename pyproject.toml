@@ -1,0 +1,23 @@
+[project]
+name = "rekep-sim"
+version = "0.0.1"
+description = "ReKep simulation capability as a PhyAgentOS Forge Skill"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy==1.26.4",
+    "scipy",
+    "opencv-python-headless",
+    "kmeans-pytorch",
+    "scikit-learn",
+    "numba",
+    "parse",
+    "requests",
+    "pyyaml",
+    "transforms3d",
+    "mujoco",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "reference/rekep-real-plugin/runtime"]
+testpaths = ["tests"]
+markers = ["slow: heavy/optional tests (model inference, sim)"]
