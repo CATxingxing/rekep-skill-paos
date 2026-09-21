@@ -1,6 +1,6 @@
 A/C tools: ['rekep.execute_task', 'rekep.get_context', 'rekep.plan_task']
 C perception observation_id: sha256:2588b6ba6f578a0d887622090ca40bfb387462bd7cfb3362c92130590cccd6d3 objects: {'pick_cube', 'place_zone'}
-C plan: {'plan_id': 'plan_ecfc2a32df514b14a64a348993ea0fe1', 'num_stages': 3, 'grasp_keypoints': [1, -1, -1], 'release_keypoints': [-1, -1, 1]}
+C plan: {'plan_id': 'plan_3902cffc12a94ed48ce37f22cccf8386', 'num_stages': 3, 'grasp_keypoints': [1, -1, -1], 'release_keypoints': [-1, -1, 1]}
 NEG stale_observation: terminal=failed code=REKEP_OBSERVATION_STALE -> PASS
 NEG motion_not_allowed: terminal=failed code=REKEP_MOTION_NOT_ALLOWED -> PASS
 NEG plan_tampered: terminal=failed code=REKEP_PLAN_TAMPERED -> PASS

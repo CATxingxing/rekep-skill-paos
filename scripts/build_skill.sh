@@ -88,7 +88,6 @@ profiles:
       REKEP_SIM_EXTRA_PYTHONPATH: "$REF_RUNTIME"
       REKEP_SIM_SCENE: "$SCENE"
       REKEP_SIM_STATE_DIR: "$STATE_DIR"
-      REKEP_PLAN_SOURCE: template
       REKEP_DINOV2_REPO: "$PAOS_REKEP_ROOT/models/dinov2"
       REKEP_DINOV2_WEIGHTS: "$PAOS_REKEP_ROOT/models/weights/dinov2_vits14.pth"
       REKEP_DINOV2_MODEL: dinov2_vits14

@@ -10,7 +10,7 @@ export PATH="$PAOS_ENV/bin:$PATH"
 export PYTHONPATH="$ROOT/scripts/shim:$ROOT/scripts${PYTHONPATH:+:$PYTHONPATH}"
 export NO_PROXY=127.0.0.1,localhost
 export no_proxy=127.0.0.1,localhost
-export REKEP_SIM_VERSION=0.1.2
+export REKEP_SIM_VERSION=0.1.3
 VP="$PAOS_REKEP_ROOT/envs/rekep-sim"
 EV="$ROOT/evidence/P4"
 mkdir -p "$EV"
@@ -23,7 +23,7 @@ REKEP_DINOV2_WEIGHTS="$PAOS_REKEP_ROOT/models/weights/dinov2_vits14.pth" \
 echo "=== build + install bundle ==="
 python "$ROOT/scripts/paos_dev_shim.py" skill stop rekep-sim >/dev/null 2>&1 || true
 bash "$ROOT/scripts/build_skill.sh" >/dev/null
-python "$ROOT/scripts/paos_dev_shim.py" skill install "$ROOT/dist/skills/rekep-sim-0.1.2.tar.gz" --local --yes 2>&1 | tail -3
+python "$ROOT/scripts/paos_dev_shim.py" skill install "$ROOT/dist/skills/rekep-sim-0.1.3.tar.gz" --local --yes 2>&1 | tail -3
 bash "$ROOT/scripts/install_nodes_local.sh" 2>&1 | tail -4
 
 echo "=== start + A/C/E/F probe ==="

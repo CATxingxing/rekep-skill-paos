@@ -1,4 +1,4 @@
-.........................                                                [100%]
+..........................                                               [100%]
 =============================== warnings summary ===============================
 tests/test_ref_keypoint.py::test_keypoint_proposal_runs_and_is_deterministic
   /data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
@@ -17,4 +17,4 @@ tests/test_ref_keypoint.py::test_keypoint_proposal_runs_and_is_deterministic
     warnings.warn("xFormers is not available (Block)")
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-25 passed, 4 warnings in 22.79s
+26 passed, 4 warnings in 21.76s

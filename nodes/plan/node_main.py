@@ -34,7 +34,10 @@ def main() -> None:
                 "REKEP_OBSERVATION_STALE",
                 "observation_id does not match the latest perception snapshot",
             )
-        source = arguments.get("source") or os.environ.get("REKEP_PLAN_SOURCE", "template")
+        source = arguments.get("source") or os.environ.get("REKEP_PLAN_SOURCE")
+        if not source:
+            # use the reference VLM path automatically once a key is configured
+            source = "vlm" if os.environ.get("REKEP_VLM_API_KEY") else "template"
         program = planner.plan(instruction, snapshot, source=source)
         plans = sd / "plans"
         plans.mkdir(parents=True, exist_ok=True)
