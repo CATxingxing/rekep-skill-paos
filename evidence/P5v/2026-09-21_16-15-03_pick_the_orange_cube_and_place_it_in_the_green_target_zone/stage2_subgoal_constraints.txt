@@ -1,0 +1,5 @@
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Place the orange cube (keypoint 0) in the green target zone (keypoint 1)."""
+    cost = np.linalg.norm(keypoints[0] - keypoints[1]) - 0.05
+    return cost
+

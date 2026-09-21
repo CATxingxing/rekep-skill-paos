@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# dora shim: isolate this user's Dora coordinator/daemon on private ports so it
+# never collides with other users' coordinators on the default ports (53290/6012).
+# Needed because PAOS's RuntimeManager calls bare `dora up` / `dora check` /
+# `dora start`, which use fixed default ports.
+#
+# Enable: export PATH="<repo>/scripts/shimbin:$PATH"
+set -euo pipefail
+REAL="${DORA_REAL_BIN:-/data7/home/linjiongxiao/miniconda3/envs/paos/bin/dora}"
+COORD_PORT="${DORA_SHIM_COORD_PORT:-53390}"
+CTRL_PORT="${DORA_SHIM_CTRL_PORT:-6192}"
+LOCAL_PORT="${DORA_SHIM_LOCAL_PORT:-53391}"
+
+cmd="${1:-}"; shift || true
+case "$cmd" in
+  up)
+    setsid "$REAL" coordinator --port "$COORD_PORT" --control-port "$CTRL_PORT" --quiet >/dev/null 2>&1 &
+    setsid "$REAL" daemon --coordinator-port "$COORD_PORT" --local-listen-port "$LOCAL_PORT" --quiet >/dev/null 2>&1 &
+    for _ in $(seq 1 20); do
+      if "$REAL" check --coordinator-port "$CTRL_PORT" >/dev/null 2>&1; then exit 0; fi
+      sleep 0.3
+    done
+    exit 0
+    ;;
+  check|start|stop|list|logs|destroy|down|info)
+    exec "$REAL" "$cmd" --coordinator-port "$CTRL_PORT" "$@"
+    ;;
+  *)
+    exec "$REAL" "$cmd" "$@"
+    ;;
+esac

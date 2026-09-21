@@ -193,8 +193,38 @@ class ReKepRuntime:
         import constraint_generation
 
         gen = constraint_generation.ConstraintGenerator(
-            {"model": "gpt-5.4", "temperature": 0.0, "max_tokens": 2048}
+            {"model": "gpt-5.4", "temperature": 0.0, "max_tokens": 16384}
         )
+        # Ground the model on the exact keypoint IDs (mirrors the reference
+        # real-path index guard). Without this the VLM remaps IDs arbitrarily.
+        keypoints = snapshot["keypoints"]
+        guard_lines = ["Use exact keypoint IDs from this table. Never remap ID meanings:"]
+        for k in keypoints:
+            guard_lines.append(
+                f"- id {k['index']}: object={k.get('object', 'unknown')}, "
+                f"position_m={[round(float(x), 3) for x in k['position_m']]}"
+            )
+        grasp_id = next(
+            (k["index"] for k in keypoints if k.get("object") == "pick_cube"), None
+        )
+        if grasp_id is not None:
+            guard_lines.append(
+                f"- The first grasping stage must grasp the pick_cube keypoint id {grasp_id}."
+            )
+        guard = "\n".join(guard_lines)
+        _orig_build_prompt = gen._build_prompt
+
+        def _build_prompt_guarded(image_path, instruction):
+            messages, text = _orig_build_prompt(image_path, instruction)
+            suffix = "\n\n## Additional Hard Constraints\n" + guard + "\n"
+            for message in messages:
+                if isinstance(message.get("content"), list):
+                    for part in message["content"]:
+                        if part.get("type") == "text":
+                            part["text"] = part["text"] + suffix
+            return messages, text + suffix
+
+        gen._build_prompt = _build_prompt_guarded
         metadata = {
             "init_keypoint_positions": [k["position_m"] for k in snapshot["keypoints"]],
             "num_keypoints": len(snapshot["keypoints"]),
@@ -337,6 +367,14 @@ class ReKepRuntime:
                 ok = self._grasp_action(grasp_kps[stage - 1], keypoints, cancel)
                 phases.append({"phase": f"stage{stage}_grasp", "ok": bool(ok)})
                 _progress(progress, {"phase": f"stage{stage}_grasp", "ok": bool(ok)})
+                if not ok:
+                    video = env.save_video()
+                    return {
+                        "status": "failed",
+                        "error": f"grasp failed at stage {stage}",
+                        "video": video,
+                        "stages": phases,
+                    }
             elif is_release:
                 env.open_gripper()
                 phases.append({"phase": f"stage{stage}_release", "ok": True})

@@ -1,0 +1,39 @@
+```python
+import numpy as np
+
+# Explanation:
+# The task "pick the orange cube and place it in the green target zone" consists of 2 stages:
+# 1. Grasp the orange cube (keypoint 0) by aligning the end-effector with it.
+# 2. Place the orange cube into the green target zone (keypoint 1) while still grasping it,
+#    then release the cube at the end of the stage.
+
+num_stages = 2
+
+### stage 1 sub-goal constraints (grasping stage)
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the orange cube (keypoint 0)."""
+    cost = np.linalg.norm(end_effector - keypoints[0]) - 0.05
+    return cost
+
+### stage 1 path constraints (none)
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Place the orange cube (keypoint 0) in the green target zone (keypoint 1)."""
+    cost = np.linalg.norm(keypoints[0] - keypoints[1]) - 0.05
+    return cost
+
+### stage 2 path constraints
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the orange cube (keypoint 0) while moving it."""
+    return get_grasping_cost_by_keypoint_idx(0)
+
+# Summarize keypoints to be grasped in all grasping stages.
+# Stage 1 is a grasping stage: grasp keypoint 0.
+# Stage 2 is a non-grasping stage (the robot is already holding the object).
+grasp_keypoints = [0, -1]
+
+# Summarize at the end of which stage the robot should release the keypoints.
+# The orange cube is released at the end of stage 2 after placement.
+release_keypoints = [-1, 0]
+```

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -37,6 +38,55 @@ def _nearest_object(env, point: np.ndarray) -> str:
     }.get(best_name, best_name)
 
 
+_PROPOSER_CACHE: dict[str, Any] = {}
+_PROPOSER_LOCK = threading.Lock()
+
+
+def _proposer_for(env, proposer_config: dict | None, seed: int):
+    """Build (and cache) the reference keypoint proposer once per process."""
+    cfg = dict(DEFAULT_PROPOSER_CONFIG)
+    if proposer_config:
+        cfg.update(proposer_config)
+    cfg["bounds_min"] = env.bounds_min.tolist()
+    cfg["bounds_max"] = env.bounds_max.tolist()
+    cfg["seed"] = seed
+    key = repr(sorted(cfg.items()))
+    with _PROPOSER_LOCK:
+        cached = _PROPOSER_CACHE.get(key)
+        if cached is None:
+            cached = refimpl.build_keypoint_proposer(cfg)
+            _PROPOSER_CACHE[key] = cached
+    return cached
+
+
+def warmup(env, *, proposer_config: dict | None = None, seed: int = 0) -> None:
+    """Load the DINOv2 model and run one inference on synthetic data.
+
+    Uses no simulator rendering, so it is safe to run in a background thread
+    concurrently with the provider registering (keeps node readiness fast while
+    the model warms up).
+    """
+    proposer = _proposer_for(env, proposer_config, seed)
+    h = w = 64
+    rgb = np.zeros((h, w, 3), dtype=np.uint8)
+    rgb[16:48, 16:48] = np.array([220, 60, 40], dtype=np.uint8)
+    points = np.zeros((h, w, 3), dtype=np.float32)
+    points[..., 0] = np.linspace(env.bounds_min[0], env.bounds_max[0], w)[None, :]
+    points[..., 1] = np.linspace(env.bounds_min[1], env.bounds_max[1], h)[:, None]
+    points[..., 2] = 0.8
+    seg = np.zeros((h, w), dtype=np.int32)
+    seg[16:48, 16:48] = 1
+    np.random.seed(seed)
+    import torch
+
+    torch.manual_seed(seed)
+    try:
+        proposer.get_keypoints(rgb, points, seg)
+    except Exception:
+        # a synthetic warmup may find no candidates; the model is still loaded
+        pass
+
+
 def perceive(env, *, proposer_config: dict | None = None, seed: int = 0) -> tuple[dict, Any, np.ndarray]:
     cfg = dict(DEFAULT_PROPOSER_CONFIG)
     if proposer_config:
@@ -46,7 +96,7 @@ def perceive(env, *, proposer_config: dict | None = None, seed: int = 0) -> tupl
     cfg["seed"] = seed
 
     obs = env.get_cam_obs()[0]
-    proposer = refimpl.build_keypoint_proposer(cfg)
+    proposer = _proposer_for(env, proposer_config, seed)
     np.random.seed(seed)
     import torch
 

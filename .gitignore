@@ -15,3 +15,4 @@ __pycache__/
 # local state / caches (should live outside the repo on /data7)
 .paos-rekep/
 *.log.tmp
+out/

@@ -1,0 +1,53 @@
+```python
+# The task "pick the orange cube and place it in the green target zone" involves 2 stages.
+# Stage 1: Grasp the orange cube (keypoint 1).
+# Stage 2: Move the cube to the green target zone (keypoint 0) and release it.
+# Keypoints: id 0 = place_zone, id 1 = pick_cube.
+# The robot must grasp the cube in stage 1 and keep grasping it during stage 2, then release it at the end of stage 2.
+
+num_stages = 2
+
+### stage 1 sub-goal constraints (if any)
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the orange cube (keypoint 1)."""
+    return np.linalg.norm(end_effector - keypoints[1]) - 0.02
+# Add more sub-goal constraints if needed
+...
+
+### stage 1 path constraints (if any)
+# No path constraints needed for the grasping stage.
+...
+
+### stage 2 sub-goal constraints (if any)
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Place the cube in the target zone: cube keypoint should be at zone keypoint plus vertical offset."""
+    # The vertical offset is the initial height difference between cube and zone (0.066 m),
+    # so the cube keeps its original height when placed in the zone.
+    offsetted_point = keypoints[0] + np.array([0.0, 0.0, 0.066])
+    return np.linalg.norm(keypoints[1] - offsetted_point) - 0.03
+# Add more sub-goal constraints if needed
+...
+
+### stage 2 path constraints (if any)
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the cube (keypoint 1) while moving to the target zone."""
+    return get_grasping_cost_by_keypoint_idx(1)
+# Add more path constraints if needed
+...
+
+"""
+Summarize keypoints to be grasped in all grasping stages.
+The length of the list should be equal to the number of stages.
+For grapsing stage, write the keypoint index. For non-grasping stage, write -1.
+"""
+grasp_keypoints = [1, -1]
+
+"""
+Summarize at the end of which stage the robot should release the keypoints.
+The keypoint indices must appear in an earlier stage as defined in `grasp_keypoints` (i.e., a keypoint can only be released only if it has been grasped previously).
+Only release object when it's necessary to complete the task, e.g., drop bouquet in the vase.
+The length of the list should be equal to the number of stages.
+If a keypoint is to be released at the end of a stage, write the keypoint index at the corresponding location. Otherwise, write -1.
+"""
+release_keypoints = [-1, 1]
+```

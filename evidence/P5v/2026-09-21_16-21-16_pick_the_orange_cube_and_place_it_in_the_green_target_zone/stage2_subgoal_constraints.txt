@@ -1,0 +1,7 @@
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """Place the cube in the target zone: cube keypoint should be at zone keypoint plus vertical offset."""
+    # The vertical offset is the initial height difference between cube and zone (0.066 m),
+    # so the cube keeps its original height when placed in the zone.
+    offsetted_point = keypoints[0] + np.array([0.0, 0.0, 0.066])
+    return np.linalg.norm(keypoints[1] - offsetted_point) - 0.03
+

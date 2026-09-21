@@ -34,3 +34,24 @@ Dobot Nova2 + Robotiq 2F-85 scene and executes a constraint-driven ReKep task.
 - If a Tool reports stale perception, a digest mismatch, cancellation, or a
   failed outcome check, stop and surface the structured error. Do not
   automatically retry physical execution.
+
+## Verification
+
+The ToolResult of `rekep.execute_task` (`status`, `place_error_m`, `video`) is the
+authoritative execution fact for this Skill. This gateway profile runs a headless
+MuJoCo simulator and does **not** publish a separate image evidence stream.
+
+When you create the AgentTask, use exactly:
+
+```json
+{"mode": "audit", "goal": "<user goal>",
+ "success_criteria": ["<criteria>"],
+ "evidence_policy": {"minimum_association": "best_effort"}}
+```
+
+Do **not** set `minimum_association: "authoritative"` and do not require an image
+source this profile cannot produce: PAOS's Forge evidence adapter only emits
+`best_effort`, so an `authoritative` policy fails closed even when the ToolResult
+succeeded. Report the ToolResult; never fabricate success.
+
+

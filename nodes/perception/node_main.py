@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import threading
 from pathlib import Path
 
 os.environ.setdefault("MUJOCO_GL", "egl")
@@ -10,7 +11,7 @@ os.environ.setdefault("MUJOCO_GL", "egl")
 import cv2  # noqa: E402
 
 from rekep_sim.env.mujoco_env import MujocoReKepEnv  # noqa: E402
-from rekep_sim.perception import perceive  # noqa: E402
+from rekep_sim.perception import perceive, warmup  # noqa: E402
 from rekep_sim.provider import Provider  # noqa: E402
 from rekep_sim.state import scene_path, state_dir, write_json  # noqa: E402
 
@@ -21,6 +22,9 @@ def main() -> None:
         height=int(os.environ.get("REKEP_SIM_HEIGHT", "240")),
         width=int(os.environ.get("REKEP_SIM_WIDTH", "320")),
     )
+    # Warm the DINOv2 model in the background: register the provider immediately
+    # (fast node readiness) while the model loads.
+    threading.Thread(target=warmup, args=(env,), daemon=True).start()
 
     def handler(arguments, _cancel, _progress):
         seed = int(arguments.get("seed", 0))

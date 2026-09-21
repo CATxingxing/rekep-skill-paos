@@ -98,7 +98,24 @@ def build_keypoint_proposer(config: dict[str, Any]):
     import keypoint_proposal  # from the reference runtime
     _patch_kmeans(keypoint_proposal)
 
-    return keypoint_proposal.KeypointProposer(config)
+    # Cap torch threads: on a many-core host the default (all cores) causes severe
+    # oversubscription and ~10x slower CPU inference.
+    try:
+        import torch
+
+        torch.set_num_threads(int(os.environ.get("REKEP_TORCH_THREADS", "4")))
+    except Exception:
+        pass
+
+    proposer = keypoint_proposal.KeypointProposer(config)
+    # The reference constructs MeanShift(n_jobs=32); on a loaded many-core host
+    # the joblib thread pool costs ~6s per call (vs 0.3s single-threaded). Force
+    # single-threaded; the clustering is over a handful of candidate points.
+    try:
+        proposer.mean_shift.n_jobs = 1
+    except Exception:
+        pass
+    return proposer
 
 
 def _patch_kmeans(keypoint_proposal_module: Any) -> None:
