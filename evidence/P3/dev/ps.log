@@ -1,0 +1,1269 @@
+    PID    PPID CMD
+      1       0 /sbin/init splash
+      2       0 [kthreadd]
+      3       2 [rcu_gp]
+      4       2 [rcu_par_gp]
+      6       2 [kworker/0:0H-kblockd]
+      7       2 [kworker/u144:0-netns]
+      9       2 [mm_percpu_wq]
+     10       2 [ksoftirqd/0]
+     11       2 [rcu_sched]
+     12       2 [migration/0]
+     13       2 [idle_inject/0]
+     15       2 [cpuhp/0]
+     16       2 [cpuhp/1]
+     17       2 [idle_inject/1]
+     18       2 [migration/1]
+     19       2 [ksoftirqd/1]
+     21       2 [kworker/1:0H-kblockd]
+     22       2 [cpuhp/2]
+     23       2 [idle_inject/2]
+     24       2 [migration/2]
+     25       2 [ksoftirqd/2]
+     27       2 [kworker/2:0H-kblockd]
+     28       2 [cpuhp/3]
+     29       2 [idle_inject/3]
+     30       2 [migration/3]
+     31       2 [ksoftirqd/3]
+     33       2 [kworker/3:0H-kblockd]
+     34       2 [cpuhp/4]
+     35       2 [idle_inject/4]
+     36       2 [migration/4]
+     37       2 [ksoftirqd/4]
+     39       2 [kworker/4:0H-kblockd]
+     40       2 [cpuhp/5]
+     41       2 [idle_inject/5]
+     42       2 [migration/5]
+     43       2 [ksoftirqd/5]
+     45       2 [kworker/5:0H-kblockd]
+     46       2 [cpuhp/6]
+     47       2 [idle_inject/6]
+     48       2 [migration/6]
+     49       2 [ksoftirqd/6]
+     51       2 [kworker/6:0H-kblockd]
+     52       2 [cpuhp/7]
+     53       2 [idle_inject/7]
+     54       2 [migration/7]
+     55       2 [ksoftirqd/7]
+     57       2 [kworker/7:0H-kblockd]
+     58       2 [cpuhp/8]
+     59       2 [idle_inject/8]
+     60       2 [migration/8]
+     61       2 [ksoftirqd/8]
+     63       2 [kworker/8:0H-kblockd]
+     64       2 [cpuhp/9]
+     65       2 [idle_inject/9]
+     66       2 [migration/9]
+     67       2 [ksoftirqd/9]
+     69       2 [kworker/9:0H-kblockd]
+     70       2 [cpuhp/10]
+     71       2 [idle_inject/10]
+     72       2 [migration/10]
+     73       2 [ksoftirqd/10]
+     75       2 [kworker/10:0H-kblockd]
+     76       2 [cpuhp/11]
+     77       2 [idle_inject/11]
+     78       2 [migration/11]
+     79       2 [ksoftirqd/11]
+     81       2 [kworker/11:0H-kblockd]
+     82       2 [cpuhp/12]
+     83       2 [idle_inject/12]
+     84       2 [migration/12]
+     85       2 [ksoftirqd/12]
+     87       2 [kworker/12:0H-kblockd]
+     88       2 [cpuhp/13]
+     89       2 [idle_inject/13]
+     90       2 [migration/13]
+     91       2 [ksoftirqd/13]
+     93       2 [kworker/13:0H-kblockd]
+     94       2 [cpuhp/14]
+     95       2 [idle_inject/14]
+     96       2 [migration/14]
+     97       2 [ksoftirqd/14]
+     99       2 [kworker/14:0H-kblockd]
+    100       2 [cpuhp/15]
+    101       2 [idle_inject/15]
+    102       2 [migration/15]
+    103       2 [ksoftirqd/15]
+    105       2 [kworker/15:0H-kblockd]
+    106       2 [cpuhp/16]
+    107       2 [idle_inject/16]
+    108       2 [migration/16]
+    109       2 [ksoftirqd/16]
+    111       2 [kworker/16:0H-kblockd]
+    112       2 [cpuhp/17]
+    113       2 [idle_inject/17]
+    114       2 [migration/17]
+    115       2 [ksoftirqd/17]
+    117       2 [kworker/17:0H-kblockd]
+    118       2 [cpuhp/18]
+    119       2 [idle_inject/18]
+    120       2 [migration/18]
+    121       2 [ksoftirqd/18]
+    123       2 [kworker/18:0H-kblockd]
+    125       2 [cpuhp/19]
+    126       2 [idle_inject/19]
+    127       2 [migration/19]
+    128       2 [ksoftirqd/19]
+    130       2 [kworker/19:0H-kblockd]
+    131       2 [cpuhp/20]
+    132       2 [idle_inject/20]
+    133       2 [migration/20]
+    134       2 [ksoftirqd/20]
+    136       2 [kworker/20:0H-kblockd]
+    137       2 [cpuhp/21]
+    138       2 [idle_inject/21]
+    139       2 [migration/21]
+    140       2 [ksoftirqd/21]
+    142       2 [kworker/21:0H-kblockd]
+    143       2 [cpuhp/22]
+    144       2 [idle_inject/22]
+    145       2 [migration/22]
+    146       2 [ksoftirqd/22]
+    148       2 [kworker/22:0H-kblockd]
+    149       2 [cpuhp/23]
+    150       2 [idle_inject/23]
+    151       2 [migration/23]
+    152       2 [ksoftirqd/23]
+    154       2 [kworker/23:0H-kblockd]
+    155       2 [cpuhp/24]
+    156       2 [idle_inject/24]
+    157       2 [migration/24]
+    158       2 [ksoftirqd/24]
+    160       2 [kworker/24:0H-kblockd]
+    161       2 [cpuhp/25]
+    162       2 [idle_inject/25]
+    163       2 [migration/25]
+    164       2 [ksoftirqd/25]
+    166       2 [kworker/25:0H-kblockd]
+    167       2 [cpuhp/26]
+    168       2 [idle_inject/26]
+    169       2 [migration/26]
+    170       2 [ksoftirqd/26]
+    172       2 [kworker/26:0H-kblockd]
+    173       2 [cpuhp/27]
+    174       2 [idle_inject/27]
+    175       2 [migration/27]
+    176       2 [ksoftirqd/27]
+    178       2 [kworker/27:0H-kblockd]
+    179       2 [cpuhp/28]
+    180       2 [idle_inject/28]
+    181       2 [migration/28]
+    182       2 [ksoftirqd/28]
+    184       2 [kworker/28:0H-kblockd]
+    185       2 [cpuhp/29]
+    186       2 [idle_inject/29]
+    187       2 [migration/29]
+    188       2 [ksoftirqd/29]
+    190       2 [kworker/29:0H-kblockd]
+    191       2 [cpuhp/30]
+    192       2 [idle_inject/30]
+    193       2 [migration/30]
+    194       2 [ksoftirqd/30]
+    196       2 [kworker/30:0H-kblockd]
+    197       2 [cpuhp/31]
+    198       2 [idle_inject/31]
+    199       2 [migration/31]
+    200       2 [ksoftirqd/31]
+    202       2 [kworker/31:0H-kblockd]
+    203       2 [cpuhp/32]
+    204       2 [idle_inject/32]
+    205       2 [migration/32]
+    206       2 [ksoftirqd/32]
+    208       2 [kworker/32:0H-kblockd]
+    209       2 [cpuhp/33]
+    210       2 [idle_inject/33]
+    211       2 [migration/33]
+    212       2 [ksoftirqd/33]
+    214       2 [kworker/33:0H-kblockd]
+    215       2 [cpuhp/34]
+    216       2 [idle_inject/34]
+    217       2 [migration/34]
+    218       2 [ksoftirqd/34]
+    220       2 [kworker/34:0H]
+    221       2 [cpuhp/35]
+    222       2 [idle_inject/35]
+    223       2 [migration/35]
+    224       2 [ksoftirqd/35]
+    226       2 [kworker/35:0H-kblockd]
+    227       2 [cpuhp/36]
+    228       2 [idle_inject/36]
+    229       2 [migration/36]
+    230       2 [ksoftirqd/36]
+    232       2 [kworker/36:0H-kblockd]
+    233       2 [cpuhp/37]
+    234       2 [idle_inject/37]
+    235       2 [migration/37]
+    236       2 [ksoftirqd/37]
+    238       2 [kworker/37:0H-kblockd]
+    239       2 [cpuhp/38]
+    240       2 [idle_inject/38]
+    241       2 [migration/38]
+    242       2 [ksoftirqd/38]
+    244       2 [kworker/38:0H-kblockd]
+    245       2 [cpuhp/39]
+    246       2 [idle_inject/39]
+    247       2 [migration/39]
+    248       2 [ksoftirqd/39]
+    250       2 [kworker/39:0H-kblockd]
+    251       2 [cpuhp/40]
+    252       2 [idle_inject/40]
+    253       2 [migration/40]
+    254       2 [ksoftirqd/40]
+    256       2 [kworker/40:0H-kblockd]
+    257       2 [cpuhp/41]
+    258       2 [idle_inject/41]
+    259       2 [migration/41]
+    260       2 [ksoftirqd/41]
+    262       2 [kworker/41:0H]
+    263       2 [cpuhp/42]
+    264       2 [idle_inject/42]
+    265       2 [migration/42]
+    266       2 [ksoftirqd/42]
+    268       2 [kworker/42:0H]
+    269       2 [cpuhp/43]
+    270       2 [idle_inject/43]
+    271       2 [migration/43]
+    272       2 [ksoftirqd/43]
+    274       2 [kworker/43:0H]
+    275       2 [cpuhp/44]
+    276       2 [idle_inject/44]
+    277       2 [migration/44]
+    278       2 [ksoftirqd/44]
+    280       2 [kworker/44:0H]
+    281       2 [cpuhp/45]
+    282       2 [idle_inject/45]
+    283       2 [migration/45]
+    284       2 [ksoftirqd/45]
+    286       2 [kworker/45:0H-kblockd]
+    287       2 [cpuhp/46]
+    288       2 [idle_inject/46]
+    289       2 [migration/46]
+    290       2 [ksoftirqd/46]
+    292       2 [kworker/46:0H-kblockd]
+    293       2 [cpuhp/47]
+    294       2 [idle_inject/47]
+    295       2 [migration/47]
+    296       2 [ksoftirqd/47]
+    298       2 [kworker/47:0H-kblockd]
+    299       2 [cpuhp/48]
+    300       2 [idle_inject/48]
+    301       2 [migration/48]
+    302       2 [ksoftirqd/48]
+    304       2 [kworker/48:0H-kblockd]
+    305       2 [cpuhp/49]
+    306       2 [idle_inject/49]
+    307       2 [migration/49]
+    308       2 [ksoftirqd/49]
+    310       2 [kworker/49:0H]
+    311       2 [cpuhp/50]
+    312       2 [idle_inject/50]
+    313       2 [migration/50]
+    314       2 [ksoftirqd/50]
+    316       2 [kworker/50:0H-kblockd]
+    317       2 [cpuhp/51]
+    318       2 [idle_inject/51]
+    319       2 [migration/51]
+    320       2 [ksoftirqd/51]
+    322       2 [kworker/51:0H-kblockd]
+    323       2 [cpuhp/52]
+    324       2 [idle_inject/52]
+    325       2 [migration/52]
+    326       2 [ksoftirqd/52]
+    328       2 [kworker/52:0H-kblockd]
+    329       2 [cpuhp/53]
+    330       2 [idle_inject/53]
+    331       2 [migration/53]
+    332       2 [ksoftirqd/53]
+    334       2 [kworker/53:0H]
+    335       2 [cpuhp/54]
+    336       2 [idle_inject/54]
+    337       2 [migration/54]
+    338       2 [ksoftirqd/54]
+    340       2 [kworker/54:0H]
+    341       2 [cpuhp/55]
+    342       2 [idle_inject/55]
+    343       2 [migration/55]
+    344       2 [ksoftirqd/55]
+    346       2 [kworker/55:0H-kblockd]
+    347       2 [cpuhp/56]
+    348       2 [idle_inject/56]
+    349       2 [migration/56]
+    350       2 [ksoftirqd/56]
+    352       2 [kworker/56:0H]
+    353       2 [cpuhp/57]
+    354       2 [idle_inject/57]
+    355       2 [migration/57]
+    356       2 [ksoftirqd/57]
+    358       2 [kworker/57:0H-kblockd]
+    359       2 [cpuhp/58]
+    360       2 [idle_inject/58]
+    361       2 [migration/58]
+    362       2 [ksoftirqd/58]
+    364       2 [kworker/58:0H-kblockd]
+    365       2 [cpuhp/59]
+    366       2 [idle_inject/59]
+    367       2 [migration/59]
+    368       2 [ksoftirqd/59]
+    370       2 [kworker/59:0H-kblockd]
+    371       2 [cpuhp/60]
+    372       2 [idle_inject/60]
+    373       2 [migration/60]
+    374       2 [ksoftirqd/60]
+    376       2 [kworker/60:0H-kblockd]
+    377       2 [cpuhp/61]
+    378       2 [idle_inject/61]
+    379       2 [migration/61]
+    380       2 [ksoftirqd/61]
+    382       2 [kworker/61:0H]
+    383       2 [cpuhp/62]
+    384       2 [idle_inject/62]
+    385       2 [migration/62]
+    386       2 [ksoftirqd/62]
+    388       2 [kworker/62:0H]
+    389       2 [cpuhp/63]
+    390       2 [idle_inject/63]
+    391       2 [migration/63]
+    392       2 [ksoftirqd/63]
+    394       2 [kworker/63:0H-kblockd]
+    395       2 [cpuhp/64]
+    396       2 [idle_inject/64]
+    397       2 [migration/64]
+    398       2 [ksoftirqd/64]
+    400       2 [kworker/64:0H]
+    401       2 [cpuhp/65]
+    402       2 [idle_inject/65]
+    403       2 [migration/65]
+    404       2 [ksoftirqd/65]
+    406       2 [kworker/65:0H-kblockd]
+    407       2 [cpuhp/66]
+    408       2 [idle_inject/66]
+    409       2 [migration/66]
+    410       2 [ksoftirqd/66]
+    412       2 [kworker/66:0H-kblockd]
+    413       2 [cpuhp/67]
+    414       2 [idle_inject/67]
+    415       2 [migration/67]
+    416       2 [ksoftirqd/67]
+    418       2 [kworker/67:0H-kblockd]
+    419       2 [cpuhp/68]
+    420       2 [idle_inject/68]
+    421       2 [migration/68]
+    422       2 [ksoftirqd/68]
+    424       2 [kworker/68:0H-kblockd]
+    425       2 [cpuhp/69]
+    426       2 [idle_inject/69]
+    427       2 [migration/69]
+    428       2 [ksoftirqd/69]
+    430       2 [kworker/69:0H-kblockd]
+    431       2 [cpuhp/70]
+    432       2 [idle_inject/70]
+    433       2 [migration/70]
+    434       2 [ksoftirqd/70]
+    436       2 [kworker/70:0H-kblockd]
+    437       2 [cpuhp/71]
+    438       2 [idle_inject/71]
+    439       2 [migration/71]
+    440       2 [ksoftirqd/71]
+    442       2 [kworker/71:0H-kblockd]
+    443       2 [kdevtmpfs]
+    444       2 [netns]
+    445       2 [rcu_tasks_kthre]
+    446       2 [kauditd]
+    451       2 [khungtaskd]
+    452       2 [oom_reaper]
+    453       2 [writeback]
+    454       2 [kcompactd0]
+    455       2 [kcompactd1]
+    456       2 [ksmd]
+    457       2 [khugepaged]
+    504       2 [kintegrityd]
+    505       2 [kblockd]
+    506       2 [blkcg_punt_bio]
+    577       2 [tpm_dev_wq]
+    578       2 [ata_sff]
+    579       2 [md]
+    580       2 [edac-poller]
+    581       2 [devfreq_wq]
+    582       2 [watchdogd]
+    585       2 [kswapd0]
+    586       2 [kswapd1]
+    587       2 [ecryptfs-kthrea]
+    589       2 [kthrotld]
+    590       2 [acpi_thermal_pm]
+    591       2 [vfio-irqfd-clea]
+    592       2 [ipv6_addrconf]
+    602       2 [kstrp]
+    605       2 [kworker/u147:0]
+    606       2 [kworker/u148:0]
+    607       2 [kworker/u149:0]
+    620       2 [charger_manager]
+    700       2 [scsi_eh_0]
+    701       2 [scsi_tmf_0]
+    702       2 [scsi_eh_1]
+    703       2 [scsi_tmf_1]
+    704       2 [i40e]
+    711       2 [cryptd]
+    787       2 [scsi_eh_2]
+    788       2 [scsi_tmf_2]
+    789       2 [scsi_eh_3]
+    790       2 [scsi_tmf_3]
+    791       2 [scsi_eh_4]
+    792       2 [scsi_tmf_4]
+    793       2 [scsi_eh_5]
+    794       2 [scsi_tmf_5]
+    795       2 [scsi_eh_6]
+    796       2 [scsi_tmf_6]
+    797       2 [scsi_eh_7]
+    798       2 [scsi_tmf_7]
+    800       2 [scsi_eh_8]
+    801       2 [scsi_tmf_8]
+    802       2 [scsi_eh_9]
+    803       2 [scsi_tmf_9]
+    812       2 [nv_queue]
+    813       2 [nv_queue]
+    814       2 [nv_open_q]
+    815       2 [nv_open_q]
+    817       2 [nv_open_q]
+    818       2 [nv_open_q]
+    819       2 [nv_open_q]
+    820       2 [nv_open_q]
+    821       2 [nv_open_q]
+    822       2 [nv_open_q]
+    823       2 [kworker/47:1H-kblockd]
+    824       2 [kworker/13:1H-kblockd]
+    825       2 [kworker/3:1H-kblockd]
+    826       2 [kworker/6:1H-kblockd]
+    827       2 [kworker/14:1H-kblockd]
+    828       2 [kworker/39:1H-kblockd]
+    829       2 [kworker/40:1H-kblockd]
+    831       2 [nvidia-modeset/]
+    832       2 [nvidia-modeset/]
+    841       2 [irq/25-nvidia]
+    842       2 [nvidia]
+    844       2 [nv_queue]
+    864       2 [kdmflush]
+    883       2 [irq/25-nvidia]
+    884       2 [nvidia]
+    885       2 [nv_queue]
+    886       2 [ttm_swap]
+    887       2 [irq/27-nvidia]
+    888       2 [nvidia]
+    889       2 [nv_queue]
+    893       2 [irq/27-nvidia]
+    894       2 [nvidia]
+    895       2 [nv_queue]
+    896       2 [irq/32-nvidia]
+    897       2 [nvidia]
+    898       2 [nv_queue]
+    899       2 [kworker/58:1H-kblockd]
+    900       2 [kworker/46:1H-kblockd]
+    901       2 [kworker/38:1H-kblockd]
+    902       2 [kworker/36:1H-kblockd]
+    903       2 [irq/32-nvidia]
+    904       2 [nvidia]
+    905       2 [nv_queue]
+    906       2 [irq/34-nvidia]
+    907       2 [nvidia]
+    908       2 [nv_queue]
+    909       2 [irq/34-nvidia]
+    910       2 [nvidia]
+    911       2 [nv_queue]
+   1023       2 [raid5wq]
+   1071       2 [kworker/5:1H-kblockd]
+   1072       2 [kworker/2:1H-kblockd]
+   1075       2 [kworker/8:1H-kblockd]
+   1076       2 [jbd2/dm-0-8]
+   1077       2 [ext4-rsv-conver]
+   1078       2 [kworker/37:1H-kblockd]
+   1111       2 [kworker/9:1H-kblockd]
+   1115       2 [kworker/1:1H-kblockd]
+   1119       2 [kworker/11:1H-kblockd]
+   1123       2 [kworker/48:1H-kblockd]
+   1138       2 [kworker/52:1H-kblockd]
+   1140       2 [kworker/17:1H-kblockd]
+   1144       2 [kworker/4:1H-kblockd]
+   1146       2 [kworker/15:1H-kblockd]
+   1147       2 [kworker/41:1H-kblockd]
+   1148       2 [kworker/50:1H-kblockd]
+   1151       2 [kworker/43:1H-kblockd]
+   1152       2 [kworker/49:1H-kblockd]
+   1153       2 [kworker/7:1H-kblockd]
+   1155       2 [kworker/44:1H-kblockd]
+   1168       1 /lib/systemd/systemd-journald
+   1172       2 [kworker/42:1H-kblockd]
+   1202       2 [kworker/0:1H-events_highpri]
+   1209       1 /lib/systemd/systemd-udevd
+   1374       2 [UVM global queu]
+   1375       2 [UVM deferred re]
+   1376       2 [UVM Tools Event]
+   1381       2 [kworker/31:1H-kblockd]
+   1382       2 [kworker/32:1H-kblockd]
+   1383       2 [kworker/16:1H-kblockd]
+   1384       2 [kworker/19:1H-kblockd]
+   1385       2 [kworker/54:1H-kblockd]
+   1386       2 [kworker/60:1H-kblockd]
+   1387       2 [kworker/27:1H-kblockd]
+   1388       2 [ipmi-msghandler]
+   1390       2 [kworker/56:1H-kblockd]
+   1391       2 [kworker/62:1H-events_highpri]
+   1392       2 [kworker/22:1H-kblockd]
+   1393       2 [kworker/61:1H-kblockd]
+   1394       2 [kworker/63:1H-events_highpri]
+   1395       2 [kworker/55:1H-kblockd]
+   1396       2 [kworker/68:1H-kblockd]
+   1397       2 [kworker/57:1H-kblockd]
+   1398       2 [kworker/20:1H-kblockd]
+   1399       2 [kworker/26:1H-kblockd]
+   1407       2 [kworker/69:1H-kblockd]
+   1408       2 [kworker/34:1H-events_highpri]
+   1409       2 [kworker/30:1H-kblockd]
+   1445       2 [kworker/12:1H-kblockd]
+   1534       2 [irq/16-mei_me]
+   1710       2 [kworker/10:1H-kblockd]
+   1789       2 [kworker/21:1H-kblockd]
+   1889       2 [kipmi0]
+   1935       2 [kworker/51:1H-kblockd]
+   1993       2 [kworker/65:1H-events_highpri]
+   1999       2 [nfit]
+   2022       2 [kworker/71:1H-kblockd]
+   2150       2 [kaluad]
+   2151       2 [kmpath_rdacd]
+   2152       2 [kmpathd]
+   2153       2 [kmpath_handlerd]
+   2154       1 /sbin/multipathd -d -s
+   2165       2 [jbd2/sda2-8]
+   2166       2 [ext4-rsv-conver]
+   2169       2 [kworker/24:1H-kblockd]
+   2176       2 [loop0]
+   2183       2 [jbd2/sdf-8]
+   2186       2 [ext4-rsv-conver]
+   2187       2 [jbd2/sdg-8]
+   2188       2 [loop1]
+   2191       2 [ext4-rsv-conver]
+   2193       2 [jbd2/sde1-8]
+   2195       2 [ext4-rsv-conver]
+   2196       2 [jbd2/sdb-8]
+   2197       2 [kworker/45:1H-kblockd]
+   2198       2 [jbd2/sdd1-8]
+   2199       2 [ext4-rsv-conver]
+   2200       2 [jbd2/sdc-8]
+   2201       2 [ext4-rsv-conver]
+   2202       2 [loop2]
+   2203       2 [kworker/33:1H-kblockd]
+   2204       2 [ext4-rsv-conver]
+   2205       2 [loop3]
+   2206       2 [loop4]
+   2207       2 [loop5]
+   2209       2 [loop6]
+   2210       2 [loop7]
+   2214       2 [loop8]
+   2216       2 [loop9]
+   2219       2 [loop10]
+   2222       2 [loop11]
+   2224       2 [loop12]
+   2226       2 [loop13]
+   2230       2 [loop14]
+   2275       2 bpfilter_umh
+   2313       1 /lib/systemd/systemd-timesyncd
+   2315       2 [kworker/66:1H-kblockd]
+   2316       1 /sbin/auditd
+   2353       2 [kworker/25:1H-kblockd]
+   2354       2 [kworker/28:1H-kblockd]
+   2356       2 [kworker/59:1H-events_highpri]
+   2366       2 [kworker/64:1H-kblockd]
+   2368       2 [kworker/23:1H-events_highpri]
+   2375       2 [kworker/35:1H-events_highpri]
+   2451       1 /lib/systemd/systemd-networkd
+   2454       1 /lib/systemd/systemd-resolved
+   2460       2 [kworker/67:1H-kblockd]
+   2464       1 /usr/sbin/acpid
+   2467       1 avahi-daemon: running [liuy.local]
+   2469       1 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   2470       1 /usr/sbin/NetworkManager --no-daemon
+   2472       2 [kworker/18:1H-kblockd]
+   2474       1 /usr/bin/nvidia-smi dmon -s pucvmet -d 5 -f /var/log/gpu_monitor/dmon.log
+   2477       1 /usr/sbin/irqbalance --foreground
+   2479       1 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   2483       1 /usr/lib/policykit-1/polkitd --no-debug
+   2485       1 /usr/sbin/rsyslogd -n -iNONE
+   2487       1 /usr/sbin/smartd -n
+   2493       2 [kworker/53:1H-events_highpri]
+   2494       1 /usr/lib/snapd/snapd
+   2501       1 /lib/systemd/systemd-logind
+   2510       1 /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+   2532       1 /opt/360safe/360entclient
+   2534    2532 /opt/360safe/360entclient
+   2545       2 [kworker/70:1H-kblockd]
+   2557    2467 avahi-daemon: chroot helper
+   2558       1 /usr/sbin/ModemManager
+   2566       1 /usr/lib/code-server/lib/node /usr/lib/code-server
+   2586       2 [kworker/29:1H-events_highpri]
+   2588       1 /usr/bin/containerd
+   2589       1 /usr/bin/python3 /usr/bin/fail2ban-server -xf start
+   2610       1 /usr/sbin/xrdp-sesman
+   2633       1 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+   2634    2633 nginx: worker process
+   2635    2633 nginx: worker process
+   2636    2633 nginx: worker process
+   2637    2633 nginx: worker process
+   2638    2633 nginx: worker process
+   2639    2633 nginx: worker process
+   2640    2633 nginx: worker process
+   2641    2633 nginx: worker process
+   2643    2633 nginx: worker process
+   2644    2633 nginx: worker process
+   2645    2633 nginx: worker process
+   2646    2633 nginx: worker process
+   2647    2633 nginx: worker process
+   2648    2633 nginx: worker process
+   2649    2633 nginx: worker process
+   2650    2633 nginx: worker process
+   2651    2633 nginx: worker process
+   2652    2633 nginx: worker process
+   2653    2633 nginx: worker process
+   2654    2633 nginx: worker process
+   2655    2633 nginx: worker process
+   2656    2633 nginx: worker process
+   2657    2633 nginx: worker process
+   2658    2633 nginx: worker process
+   2659    2633 nginx: worker process
+   2660    2633 nginx: worker process
+   2661    2633 nginx: worker process
+   2662    2633 nginx: worker process
+   2663       1 /usr/sbin/xrdp
+   2664    2633 nginx: worker process
+   2665    2633 nginx: worker process
+   2666    2633 nginx: worker process
+   2667    2633 nginx: worker process
+   2668    2633 nginx: worker process
+   2669    2633 nginx: worker process
+   2670    2633 nginx: worker process
+   2671    2633 nginx: worker process
+   2672    2633 nginx: worker process
+   2673    2633 nginx: worker process
+   2674    2633 nginx: worker process
+   2675    2633 nginx: worker process
+   2676    2633 nginx: worker process
+   2677    2633 nginx: worker process
+   2678    2633 nginx: worker process
+   2679    2633 nginx: worker process
+   2680    2633 nginx: worker process
+   2681    2633 nginx: worker process
+   2682    2633 nginx: worker process
+   2683    2633 nginx: worker process
+   2684    2633 nginx: worker process
+   2685    2633 nginx: worker process
+   2687    2633 nginx: worker process
+   2688    2633 nginx: worker process
+   2689    2633 nginx: worker process
+   2690    2633 nginx: worker process
+   2691    2633 nginx: worker process
+   2692    2633 nginx: worker process
+   2693    2633 nginx: worker process
+   2694    2633 nginx: worker process
+   2695    2633 nginx: worker process
+   2696    2633 nginx: worker process
+   2697    2633 nginx: worker process
+   2698    2633 nginx: worker process
+   2699    2633 nginx: worker process
+   2701    2633 nginx: worker process
+   2703    2633 nginx: worker process
+   2704    2633 nginx: worker process
+   2705    2633 nginx: worker process
+   2706    2633 nginx: worker process
+   2708    2633 nginx: worker process
+   2709    2633 nginx: worker process
+   2710    2633 nginx: worker process
+   2711    2633 nginx: worker process
+   2712       1 /usr/bin/cloudflared --no-autoupdate --config /etc/cloudflared/config.yml tunnel run
+   2714       1 /usr/local/bin/ollama serve
+   2718       1 /usr/sbin/cron -f
+   2730       1 /usr/bin/whoopsie -f
+   2731    2718 /usr/sbin/CRON -f
+   2732       1 /usr/sbin/atd -f
+   2764       1 /usr/sbin/kerneloops --test
+   2768       1 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+   2769       1 /usr/sbin/kerneloops
+   2777    2731 /bin/sh -c /home/chenweixing/.local/bin/aliyun-reverse-tunnel.sh >/dev/null 2>&1
+   2778    2777 bash /home/chenweixing/.local/bin/aliyun-reverse-tunnel.sh
+   2799       1 /sbin/agetty -o -p -- \u --noclear tty1 linux
+   2893    2778 ssh -N -T -C -o BatchMode=yes -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ConnectTimeout=15 -i /home/chenweixing/.ssh/id_ed25519_aliyun -R 2222:localhost:22 -R 127.0.0.1:3200:127.0.0.1:3200 -R 127.0.0.1:3202:127.0.0.1:3202 root@8.166.124.198
+   2902       1 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --dns 223.5.5.5 --dns 114.114.114.114
+   2912       2 [vidmem lazy fre]
+   2913       2 [UVM GPU1 BH]
+   2914       2 [UVM GPU1 KC]
+   2919       2 [vidmem lazy fre]
+   2920       2 [UVM GPU2 BH]
+   2921       2 [UVM GPU2 KC]
+   2937       2 [vidmem lazy fre]
+   2939       2 [UVM GPU3 BH]
+   2940       2 [UVM GPU3 KC]
+   2964       2 [vidmem lazy fre]
+   2970       2 [UVM GPU4 BH]
+   2971       2 [UVM GPU4 KC]
+   2980       2 [vidmem lazy fre]
+   2982       2 [UVM GPU5 BH]
+   2983       2 [UVM GPU5 KC]
+   2991       2 [vidmem lazy fre]
+   2994       2 [UVM GPU6 BH]
+   2995       2 [UVM GPU6 KC]
+   3008       2 [vidmem lazy fre]
+   3009       2 [UVM GPU7 BH]
+   3010       2 [UVM GPU7 KC]
+   3025       2 [vidmem lazy fre]
+   3028       2 [UVM GPU8 BH]
+   3029       2 [UVM GPU8 KC]
+   3085    2566 /usr/lib/code-server/lib/node /usr/lib/code-server/out/node/entry
+   3219       1 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+   3306       2 [kworker/u144:1]
+   3550       1 /lib/systemd/systemd --user
+   3551    3550 (sd-pam)
+   3579       1 /usr/libexec/rtkit-daemon
+   3610    3550 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   3686    2902 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 5432 -container-ip 172.17.0.2 -container-port 5432
+   3695    2902 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 5432 -container-ip 172.17.0.2 -container-port 5432
+   3959       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id 6ecb839f1a18dc79051b81ac02312ed68cf432c596409e6039faab62e0e6b070 -address /run/containerd/containerd.sock
+   3999    3959 postgres
+   4052    2768 sshd: chenweixing [priv]
+   4059       1 /lib/systemd/systemd --user
+   4065    4059 (sd-pam)
+   4087    4059 /usr/bin/pulseaudio --daemonize=no --log-target=journal
+   4133    4059 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   4154    4052 sshd: chenweixing@notty
+   4155    4154 bash -lc export PATH="$HOME/.local/bin:$PATH"; for d in "$HOME"/.nvm/versions/node/*/bin; do [ -d "$d" ] && PATH="$d:$PATH"; done; export PATH; read -r KILO_SERVER_USERNAME; read -r KILO_SERVER_PASSWORD; export KILO_SERVER_USERNAME KILO_SERVER_PASSWORD; if ! command -v kilo >/dev/null 2>&1; then echo "KILO_ERROR: kilo CLI not found in PATH"; exit 127; fi; kilo serve --port 0 --hostname 127.0.0.1 & KPID=$!; echo "KILO_REMOTE_PID=$KPID"; ( while IFS= read -r _; do :; done; kill "$KPID" 2>/dev/null ) < /dev/stdin & wait $KPID
+   4176    4155 node /home/chenweixing/.nvm/versions/node/v24.13.0/bin/kilo serve --port 0 --hostname 127.0.0.1
+   4177    4155 bash -lc export PATH="$HOME/.local/bin:$PATH"; for d in "$HOME"/.nvm/versions/node/*/bin; do [ -d "$d" ] && PATH="$d:$PATH"; done; export PATH; read -r KILO_SERVER_USERNAME; read -r KILO_SERVER_PASSWORD; export KILO_SERVER_USERNAME KILO_SERVER_PASSWORD; if ! command -v kilo >/dev/null 2>&1; then echo "KILO_ERROR: kilo CLI not found in PATH"; exit 127; fi; kilo serve --port 0 --hostname 127.0.0.1 & KPID=$!; echo "KILO_REMOTE_PID=$KPID"; ( while IFS= read -r _; do :; done; kill "$KPID" 2>/dev/null ) < /dev/stdin & wait $KPID
+   4323    4176 /data2/chenweixing/home_migrated/.nvm/versions/node/v24.13.0/lib/node_modules/@kilocode/cli/bin/.kilo serve --port 0 --hostname 127.0.0.1
+   4968    3999 postgres: io worker 0
+   4969    3999 postgres: io worker 1
+   4971    3999 postgres: io worker 2
+   4972    3999 postgres: checkpointer 
+   4973    3999 postgres: background writer 
+   5039    3999 postgres: walwriter 
+   5040    3999 postgres: autovacuum launcher 
+   5042    3999 postgres: pg_cron launcher 
+   5043    3999 postgres: logical replication launcher 
+   5995       1 codex -c features.code_mode_host=true app-server --listen unix://
+   6585    2768 sshd: yinkaixuan [priv]
+   6586    2768 sshd: yinkaixuan [priv]
+   6608       1 /lib/systemd/systemd --user
+   6609    6608 (sd-pam)
+   6619    6608 /usr/bin/pulseaudio --daemonize=no --log-target=journal
+   6706    6608 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   6749    6585 sshd: yinkaixuan
+   6750    6586 sshd: yinkaixuan
+   6838    2768 sshd: yinkaixuan [priv]
+   6903    6838 sshd: yinkaixuan
+   8046       2 [kworker/55:2-mm_percpu_wq]
+  26520    2768 sshd: chenweixing [priv]
+  28227   26520 sshd: chenweixing@notty
+  28542   28227 sh
+  49737       1 /lib/systemd/systemd --user
+  49742   49737 (sd-pam)
+  49795   49737 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+  49948       1 /home/baiyongjie_manibench/.vscode-server/code-df53daabb18cd157bdb08c7f01c34df936cf12f4 --cli-data-dir /home/baiyongjie_manibench/.vscode-server/cli agent host
+  50035       1 sh /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/bin/code-server --connection-token=remotessh --accept-server-license-terms --install-extension=ms-python.python --install-extension=ms-toolsai.jupyter-renderers --install-extension=ms-toolsai.jupyter-keymap --install-extension=ms-toolsai.jupyter --agent-host-bridge-port=46479 --agent-host-bridge-host=127.0.0.1 --agent-host-bridge-connection-token=08099c4c-36d1-49a9-ba7e-14af1e496296 --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-18bc7f94-6eb4-4ea6-b8fe-65f0b7108edf
+  50039   50035 /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/node /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/server-main.js --connection-token=remotessh --accept-server-license-terms --install-extension=ms-python.python --install-extension=ms-toolsai.jupyter-renderers --install-extension=ms-toolsai.jupyter-keymap --install-extension=ms-toolsai.jupyter --agent-host-bridge-port=46479 --agent-host-bridge-host=127.0.0.1 --agent-host-bridge-connection-token=08099c4c-36d1-49a9-ba7e-14af1e496296 --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-18bc7f94-6eb4-4ea6-b8fe-65f0b7108edf
+  50340   50039 /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/node /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/bootstrap-fork --type=ptyHost --logsPath /home/baiyongjie_manibench/.vscode-server/data/logs/20260914T152839
+  50429       1 /lib/systemd/systemd --user
+  50432   50429 (sd-pam)
+  50494   50429 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+  52951   28542 /home/chenweixing/.vscode-server/code-7debcd0e2acdea1c52de81bf9ee1620444407dda command-shell --cli-data-dir /home/chenweixing/.vscode-server/cli --parent-process-id 28542 --on-host=127.0.0.1 --on-port
+  57191    2768 sshd: baiyongjie_manibench [priv]
+  57275   57191 sshd: baiyongjie_manibench@pts/6
+  57284   57275 -bash
+  73102       1 /lib/systemd/systemd --user
+  73103   73102 (sd-pam)
+  73173   73102 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+  73752       1 /data2/huangyulin/.vscode-server/code-645f29cc3176500b4b5762ba887cf2a7f0ffdf2c --cli-data-dir /home/huangyulin/.vscode-server/cli agent host
+  84397       1 /lib/systemd/systemd --user
+  84398   84397 (sd-pam)
+  84412   84397 /usr/bin/pulseaudio --daemonize=no --log-target=journal
+  84460   84397 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+  84812       1 /data7/home/zhangyexin/.vscode-server/code-a5b500951314efd502d07465bd138dfbd714a960 --cli-data-dir /home/zhangyexin/.vscode-server/cli agent host
+ 122934       1 tmux new -s stress3h
+ 122935  122934 -bash
+ 124691       1 sudo journalctl -kf -o short-iso
+ 124706  124691 journalctl -kf -o short-iso
+ 178172    2768 sshd: chenweixing [priv]
+ 179617  178172 sshd: chenweixing@notty
+ 179981  179617 sh
+ 182689    2768 sshd: zhangyexin [priv]
+ 182800  182689 sshd: zhangyexin
+ 187389  179981 /home/chenweixing/.vscode-server/code-7debcd0e2acdea1c52de81bf9ee1620444407dda command-shell --cli-data-dir /home/chenweixing/.vscode-server/cli --parent-process-id 179981 --on-host=127.0.0.1 --on-port
+ 230785       1 sudo journalctl -kf -o short-iso
+ 230800  230785 journalctl -kf -o short-iso
+ 268785   52951 sh /home/chenweixing/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/bin/code-server --connection-token=remotessh --accept-server-license-terms --install-extension=ms-python.python --install-extension=ms-toolsai.jupyter-renderers --install-extension=ms-toolsai.jupyter-keymap --install-extension=ms-toolsai.jupyter --agent-host-bridge-port=38039 --agent-host-bridge-host=127.0.0.1 --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-11505810-a9cf-4867-bbbc-fb4f655fac9a
+ 268789  268785 /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/server-main.js --connection-token=remotessh --accept-server-license-terms --install-extension=ms-python.python --install-extension=ms-toolsai.jupyter-renderers --install-extension=ms-toolsai.jupyter-keymap --install-extension=ms-toolsai.jupyter --agent-host-bridge-port=38039 --agent-host-bridge-host=127.0.0.1 --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-11505810-a9cf-4867-bbbc-fb4f655fac9a
+ 280485       1 sh /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/bin/code-server --start-server --server-data-dir /home/songxinshuai/.vscode-server --host=127.0.0.1 --accept-server-license-terms --enable-remote-auto-shutdown --port=0 --telemetry-level all --install-extension ms-python.python --install-extension ms-toolsai.jupyter-renderers --install-extension ms-toolsai.jupyter-keymap --install-extension ms-toolsai.jupyter --connection-token-file /home/songxinshuai/.vscode-server/.7debcd0e2acdea1c52de81bf9ee1620444407dda.token
+ 280495  280485 /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/node /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/out/server-main.js --start-server --server-data-dir /home/songxinshuai/.vscode-server --host=127.0.0.1 --accept-server-license-terms --enable-remote-auto-shutdown --port=0 --telemetry-level all --install-extension ms-python.python --install-extension ms-toolsai.jupyter-renderers --install-extension ms-toolsai.jupyter-keymap --install-extension ms-toolsai.jupyter --connection-token-file /home/songxinshuai/.vscode-server/.7debcd0e2acdea1c52de81bf9ee1620444407dda.token
+ 280694  280495 /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/node /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/out/bootstrap-fork --type=agentHost --logsPath /home/songxinshuai/.vscode-server/data/logs/20260920T133142 --user-data-dir /home/songxinshuai/.vscode-server/data --telemetry-level all
+ 280728  280495 /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/node /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/out/bootstrap-fork --type=ptyHost --logsPath /home/songxinshuai/.vscode-server/data/logs/20260920T133142
+ 280933  280694 /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/node /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/node_modules/@github/copilot-linux-x64/index.js --headless --no-auto-update --log-level info --stdio --no-auto-login
+ 282724  280728 /bin/bash --init-file /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+ 296404  282724 node /data2/songxinshuai/.npm-global/bin/codex --yolo
+ 296417  296404 /data2/songxinshuai/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex --yolo
+ 300953  296417 /data2/songxinshuai/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex-code-mode-host
+ 327181       1 sudo journalctl -kf -o short-iso
+ 327199  327181 journalctl -kf -o short-iso
+ 367906       1 /home/songxinshuai/.vscode-server/code-88e44fa0e00b08f7758b4f6d05632e4fd5e4df6f --cli-data-dir /home/songxinshuai/.vscode-server/cli agent host
+ 375559  268789 /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=fileWatcher
+ 375570  859094 sh /home/chenweixing/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/bin/code-server --socket-path /tmp/code-994b0afc-ec2a-461f-b226-9629c67409a2 --agent-host-path /tmp/code-9d13b619-f40a-4eb4-a2ae-f9a2e7de4a13 --start-server --accept-server-license-terms --enable-remote-auto-shutdown --without-connection-token
+ 375575  375570 /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/server-main.js --socket-path /tmp/code-994b0afc-ec2a-461f-b226-9629c67409a2 --agent-host-path /tmp/code-9d13b619-f40a-4eb4-a2ae-f9a2e7de4a13 --start-server --accept-server-license-terms --enable-remote-auto-shutdown --without-connection-token
+ 384220  268789 /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node --dns-result-order=ipv4first /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+ 384452  268789 /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=ptyHost --logsPath /home/chenweixing/.vscode-server/data/logs/20260920T211057
+ 384749  375575 /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=agentHost --logsPath /home/chenweixing/.vscode-server/data/logs/20260920T211150 --user-data-dir /home/chenweixing/.vscode-server/data --telemetry-level all
+ 387723  384749 /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node_modules/@github/copilot-linux-x64/index.js --headless --no-auto-update --log-level info --stdio --no-auto-login
+ 413502    4059 /usr/libexec/xdg-document-portal
+ 413505    4059 /usr/libexec/xdg-permission-store
+ 413536    4059 /usr/libexec/at-spi-bus-launcher
+ 413568       1 /usr/lib/upower/upowerd
+ 413683    4059 /usr/lib/x86_64-linux-gnu/xfce4/xfconf/xfconfd
+ 414552       1 sudo journalctl -kf -o short-iso
+ 414569  414552 journalctl -kf -o short-iso
+ 415395  384452 /bin/bash --init-file /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+ 416987 2187177 /usr/bin/gnome-keyring-daemon --start --foreground --components=secrets
+ 448718  384220 /home/chenweixing/.vscode-server/extensions/kilocode.kilo-code-7.7.5-linux-x64/bin/kilo serve --port 0
+ 500620       1 sudo journalctl -kf -o short-iso
+ 500635  500620 journalctl -kf -o short-iso
+ 510939       1 /lib/systemd/systemd --user
+ 510943  510939 (sd-pam)
+ 511063  510939 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 512130 2130775 /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/node /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/extensions/json-language-features/server/dist/node/jsonServerMain --node-ipc --clientProcessId=2130775
+ 521007 2130775 /home/baiyongjie_manibench/.vscode-server/extensions/anthropic.claude-code-2.1.278-linux-x64/resources/native-binary/claude --output-format stream-json --verbose --input-format stream-json --max-thinking-tokens 31999 --permission-prompt-tool stdio --setting-sources=user,project,local --debug --debug-to-stderr --enable-auth-status --no-chrome --replay-user-messages
+ 568320       1 /usr/bin/Xvfb :99 -screen 0 1280x720x24
+ 626425 3970206 /bin/bash --init-file /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+ 669134       1 /usr/sbin/munged
+ 695327    2768 sshd: yinkaixuan [priv]
+ 695465  695327 sshd: yinkaixuan
+ 795406 1693979 /data7/home/annan/human-game/.venv/bin/python -B -X utf8 /data7/home/annan/human-game/app/human_eval/world_game.py --host 0.0.0.0 --port 8781 --data-dir /data7/home/annan/human-game/data --judge-config /data7/home/annan/human-game/app/api_request.json
+ 826163       1 /lib/systemd/systemd --user
+ 826164  826163 (sd-pam)
+ 826237  826163 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 830718       1 /bin/bash --init-file /data7/yuqingchi/.vscode-server/cli/servers/Stable-994fd12f8d3a5aa16f17d42c041e5809167e845a/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+ 842483       1 tmux
+ 842924  842483 -bash
+ 844546  842924 node /data7/yuqingchi/.nvm/versions/node/v22.23.1/bin/codex
+ 844554  844546 /data7/yuqingchi/.nvm/versions/node/v22.23.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex
+ 848397  842483 -bash
+ 849230  848397 node /data7/yuqingchi/.nvm/versions/node/v22.23.1/bin/codex
+ 849241  849230 /data7/yuqingchi/.nvm/versions/node/v22.23.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex
+ 859094       1 /data2/chenweixing/home_migrated/.vscode-server/code-645f29cc3176500b4b5762ba887cf2a7f0ffdf2c --cli-data-dir /home/chenweixing/.vscode-server/cli agent host
+ 868227  842483 -bash
+ 891139       1 /lib/systemd/systemd --user
+ 891140  891139 (sd-pam)
+ 891273  891139 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 891438       1 /home/sunqianran/.vscode-server/code-520fb30b2d3d324b4cb2342f6e88e2cd93751de1 --cli-data-dir /home/sunqianran/.vscode-server/cli agent host
+ 976583  384220 /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenweixing/home_migrated/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/extensions/json-language-features/server/dist/node/jsonServerMain --node-ipc --clientProcessId=384220
+ 987681       1 bash -c cd /data3/yinkaixuan/dino_wm && setsid nohup /data3/yinkaixuan/miniconda3/envs/dino_wm/bin/python jobrunner.py --no-placeholder run < /dev/null > zzz_jobrunner/调度器标准输出.txt 2>&1 &
+ 987682  987681 /data3/yinkaixuan/miniconda3/envs/dino_wm/bin/python jobrunner.py --no-placeholder run
+ 988432       1 bash -c cd /data3/yinkaixuan/dino_wm && setsid nohup /data3/yinkaixuan/miniconda3/envs/dino_wm/bin/python jobrunner.py --dir zzz_testrun_runner --no-placeholder run < /dev/null > zzz_testrun_runner/调度器标准输出.txt 2>&1 &
+ 988433  988432 /data3/yinkaixuan/miniconda3/envs/dino_wm/bin/python jobrunner.py --dir zzz_testrun_runner --no-placeholder run
+ 989815       1 /lib/systemd/systemd --user
+ 989816  989815 (sd-pam)
+ 989827  989815 /usr/bin/pulseaudio --daemonize=no --log-target=journal
+ 989902  989815 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+1005682       2 [kworker/8:2-events]
+1086276  280728 /bin/bash --init-file /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+1143957       1 /usr/sbin/anacron -d -q -s
+1154663 1143957 /bin/sh -c run-parts --report /etc/cron.daily
+1154664 1154663 run-parts --report /etc/cron.daily
+1154772 1154664 /bin/bash /etc/cron.daily/mlocate
+1154776 1154772 flock --nonblock /run/mlocate.daily.lock /usr/bin/ionice -c3 nice /usr/bin/updatedb.mlocate
+1154777 1154776 /usr/bin/updatedb.mlocate
+1162927 1086276 node /data2/songxinshuai/.npm-global/bin/codex --yolo
+1163208 1162927 /data2/songxinshuai/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex --yolo
+1167964 1163208 /data2/songxinshuai/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex-code-mode-host
+1190952       2 [kworker/17:1-events]
+1289261       2 [kworker/23:1-rcu_par_gp]
+1324711    2768 sshd: chenweixing [priv]
+1326444 1324711 sshd: chenweixing
+1340538       2 [kworker/70:2-events]
+1343885       1 sh /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/bin/code-server --start-server --server-data-dir /data7/home/linjiongxiao/.vscode-server --host=127.0.0.1 --accept-server-license-terms --enable-remote-auto-shutdown --port=0 --telemetry-level all --install-extension ms-python.python --install-extension ms-toolsai.jupyter-renderers --install-extension ms-toolsai.jupyter-keymap --install-extension ms-toolsai.jupyter --connection-token-file /data7/home/linjiongxiao/.vscode-server/.f6cfa2ea2403534de03f069bdf160d06451ed282.token
+1343895 1343885 /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/node /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/server-main.js --start-server --server-data-dir /data7/home/linjiongxiao/.vscode-server --host=127.0.0.1 --accept-server-license-terms --enable-remote-auto-shutdown --port=0 --telemetry-level all --install-extension ms-python.python --install-extension ms-toolsai.jupyter-renderers --install-extension ms-toolsai.jupyter-keymap --install-extension ms-toolsai.jupyter --connection-token-file /data7/home/linjiongxiao/.vscode-server/.f6cfa2ea2403534de03f069bdf160d06451ed282.token
+1344648 1343895 /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/node /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/bootstrap-fork --type=ptyHost --logsPath /data7/home/linjiongxiao/.vscode-server/data/logs/20260921T092601
+1346583 1344648 /bin/bash --init-file /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+1346889 1344648 /bin/bash --init-file /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+1366304       1 /lib/systemd/systemd --user
+1366308 1366304 (sd-pam)
+1366459 1366304 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+1366629       1 /home/luokaijun/.vscode-server/code-a44adf7f53e00964ab890f9f8758a334f1fc15bc --cli-data-dir /home/luokaijun/.vscode-server/cli agent host
+1367535    2768 sshd: chenyue [priv]
+1367617 1367535 sshd: chenyue@notty
+1415491       1 /data7/home/linjiongxiao/.omo/codegraph/node --liftoff-only --disable-warning=ExperimentalWarning /data7/home/linjiongxiao/.omo/codegraph/lib/dist/bin/codegraph.js serve --mcp --path /data7/home/linjiongxiao/projects2
+1415510 1415491 /data7/home/linjiongxiao/.omo/codegraph/node -e  const fs = require('fs'); const parentPid = Number(process.argv[1]); const timeoutMs = Number(process.argv[2]); const capMs = Number(process.argv[3]); const progressPaths = process.argv.slice(4); const secs = Math.round(timeoutMs / 1000); function kill(extra) {   try { fs.writeSync(2, Buffer.from('[CodeGraph] Main thread unresponsive for ~' + secs + 's' + (extra || '') + ' — killing the wedged process so a fresh one can start (#850). Disable with CODEGRAPH_NO_WATCHDOG=1.\n')); } catch (e) {}   try { process.kill(parentPid, 'SIGKILL'); } catch (e) {}   process.exit(0); } // Fingerprint of the watched files (size + mtime). A change between checks is // forward disk progress — a slow synchronous SQLite statement, not a wedge. function snap() {   let s = '';   for (const p of progressPaths) {     try { const st = fs.statSync(p); s += st.size + ':' + st.mtimeMs + ';'; } catch (e) { s += 'x;'; }   }   return s; } let lastSnap = progressPaths.length ? snap() : ''; let lastSnapAt = Date.now(); let silentSince = null; // start of the current continuous-silence episode function onTimeout() {   if (!progressPaths.length) return kill('');   const now = Date.now();   if (silentSince === null) silentSince = now - timeoutMs; // silence began ~one timeout ago   const cur = snap();   if (cur !== lastSnap && now - silentSince < capMs) {     // The event loop is blocked but the DB files are advancing: a legitimate     // long store on slow storage. Defer, re-baseline, keep watching.     lastSnap = cur;     timer = setTimeout(onTimeout, timeoutMs);     return;   }   kill(cur !== lastSnap ? ' despite ongoing disk activity (hard cap ' + Math.round(capMs / 1000) + 's reached)' : ''); } let timer = setTimeout(onTimeout, timeoutMs); process.stdin.on('data', () => {   silentSince = null;   // Keep the baseline fresh while healthy (throttled — a stat per second).   if (progressPaths.length) {     const t = Date.now();     if (t - lastSnapAt >= 1000) { lastSnap = snap(); lastSnapAt = t; }   }   clearTimeout(timer); timer = setTimeout(onTimeout, timeoutMs); }); process.stdin.on('end', () => process.exit(0));   // parent closed the pipe (exited) -> no orphan process.stdin.on('error', () => process.exit(0)); // pipe broke -> parent gone process.stdin.resume();  1415491 60000 600000
+1465687 1838346 -bash
+1465771 1465687 opencode
+1466057 1465771 /usr/bin/node /data7/home/linjiongxiao/.cache/opencode/packages/oh-my-openagent@latest/node_modules/oh-my-openagent/packages/lsp-daemon/dist/cli.js mcp
+1466058 1465771 /data7/home/linjiongxiao/.omo/codegraph/node --liftoff-only --disable-warning=ExperimentalWarning /data7/home/linjiongxiao/.omo/codegraph/lib/dist/bin/codegraph.js serve --mcp
+1474687       2 [kworker/11:1-events]
+1483793    2768 sshd: yinkaixuan [priv]
+1483916 1483793 sshd: yinkaixuan
+1519297       2 [kworker/39:1-mm_percpu_wq]
+1528555    4323 /bin/bash -l -c          shopt -s expand_aliases         [[ -f ~/.bashrc ]] && source ~/.bashrc >/dev/null 2>&1 || true         cd -- "$1"         eval "npm run dev -- --host 127.0.0.1 --port 5173"        kilo /data2/chenweixing/Tool/tool_webui/history_webui
+1528559 1528555 npm run dev --host 127.0.0.1 --port 5173
+1528571 1528559 sh -c vitepress dev docs --host 127.0.0.1 --port 5173
+1528572 1528571 node /data2/chenweixing/Tool/tool_webui/history_webui/node_modules/.bin/vitepress dev docs --host 127.0.0.1 --port 5173
+1528594 1528572 /data2/chenweixing/Tool/tool_webui/history_webui/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.21.5 --ping
+1531392       2 [kworker/3:1-events]
+1534904    2768 sshd: yinkaixuan [priv]
+1534986 1534904 sshd: yinkaixuan
+1543523    2768 sshd: yinkaixuan [priv]
+1543621 1543523 sshd: yinkaixuan
+1621603       2 [kworker/46:0-events]
+1622554       2 [kworker/54:1-events]
+1640861       2 [kworker/25:1-mm_percpu_wq]
+1665150    2768 sshd: chenzexin [priv]
+1665460 1665150 sshd: chenzexin@notty
+1665461 1665460 -bash
+1665590 1665461 sh
+1665842 1665590 /home/chenzexin/.vscode-server/code-c9d77990917f3102ada88be140d28b038d1dd7c7 command-shell --cli-data-dir /home/chenzexin/.vscode-server/cli --parent-process-id 1665590 --on-host=127.0.0.1 --on-port
+1665977 4017504 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/node --dns-result-order=ipv4first /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+1666012 4017504 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/out/bootstrap-fork --type=fileWatcher
+1666612 1665977 /home/chenzexin/.vscode-server/extensions/openai.chatgpt-26.5908.31748-linux-x64/bin/linux-x86_64/codex -c features.code_mode_host=true app-server --analytics-default-enabled
+1667038 4017782 /usr/bin/bash --init-file /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+1667110       2 [kworker/30:2-events]
+1667325    2768 sshd: yinkaixuan [priv]
+1667514 1667325 sshd: yinkaixuan
+1683494    2768 sshd: yinkaixuan [priv]
+1683744 1683494 sshd: yinkaixuan
+1686468       1 /lib/systemd/systemd --user
+1686469 1686468 (sd-pam)
+1686648 1686468 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+1690321       1 /data7/home/zhangweipeng/.vscode-server/code-3c631b164c239e7aeaaae7c626b46c527b361af2 --cli-data-dir /data7/home/zhangweipeng/.vscode-server/cli agent host
+1690992       2 [kworker/6:2-events]
+1693019       2 [kworker/51:0-mm_percpu_wq]
+1693750       2 [kworker/32:1-events]
+1693979       1 /lib/systemd/systemd --user
+1693980 1693979 (sd-pam)
+1694150 1693979 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+1694599       1 /data7/home/annan/.vscode-server/code-3c631b164c239e7aeaaae7c626b46c527b361af2 --cli-data-dir /data7/home/annan/.vscode-server/cli agent host
+1705250       2 [kworker/16:1-mm_percpu_wq]
+1705771       2 [kworker/26:0-events]
+1724078       2 [kworker/67:1-mm_percpu_wq]
+1729911       2 [kworker/62:1-mm_percpu_wq]
+1731914    2768 sshd: linjiongxiao [priv]
+1732134 1731914 sshd: linjiongxiao@notty
+1732140 1732134 bash
+1732382 1343895 /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/node --dns-result-order=ipv4first /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+1732436 1343895 /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/node /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/bootstrap-fork --type=fileWatcher
+1732971 1732382 /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/node /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=1732382
+1732973    2768 sshd: linjiongxiao [priv]
+1733122 1732973 sshd: linjiongxiao@notty
+1733123 1733122 bash
+1733163 1733123 /data7/home/linjiongxiao/.vscode-server/code-f6cfa2ea2403534de03f069bdf160d06451ed282 command-shell --cli-data-dir /data7/home/linjiongxiao/.vscode-server/cli --parent-process-id 1733123 --on-host=127.0.0.1 --on-port
+1733481 1733163 /bin/sh
+1733569 1733163 /bin/sh
+1733676 1732382 /data7/home/linjiongxiao/.vscode-server/extensions/openai.chatgpt-26.5908.31748-linux-x64/bin/linux-x86_64/codex -c features.code_mode_host=true app-server --analytics-default-enabled
+1734240 1732382 /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/node /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/extensions/json-language-features/server/dist/node/jsonServerMain --node-ipc --clientProcessId=1732382
+1736739       2 [kworker/20:1-events]
+1740107    2768 sshd: songxinshuai [priv]
+1745546 1740107 sshd: songxinshuai@notty
+1746077 1745546 bash
+1748875 1746077 bash
+1750562       2 [kworker/22:2-mm_percpu_wq]
+1751057 3970126 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node --dns-result-order=ipv4first /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+1751134 3970126 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=fileWatcher
+1751150 3087935 sh /home/chenzexin/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/bin/code-server --socket-path /tmp/code-bfb6c865-8051-4e09-8761-f92ccfcd8979 --agent-host-path /tmp/code-a7a17407-5680-428b-81ac-354a09c62f41 --start-server --accept-server-license-terms --enable-remote-auto-shutdown --without-connection-token
+1751154 1751150 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/server-main.js --socket-path /tmp/code-bfb6c865-8051-4e09-8761-f92ccfcd8979 --agent-host-path /tmp/code-a7a17407-5680-428b-81ac-354a09c62f41 --start-server --accept-server-license-terms --enable-remote-auto-shutdown --without-connection-token
+1751851 1751154 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=agentHost --logsPath /home/chenzexin/.vscode-server/data/logs/20260921T124055 --user-data-dir /home/chenzexin/.vscode-server/data --telemetry-level all
+1751908 1751057 /home/chenzexin/.vscode-server/extensions/openai.chatgpt-26.5908.31748-linux-x64/bin/linux-x86_64/codex -c features.code_mode_host=true app-server --analytics-default-enabled
+1753755 1751851 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node_modules/@github/copilot-linux-x64/index.js --headless --no-auto-update --log-level info --stdio --no-auto-login
+1754470 1344648 /bin/bash --init-file /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+1754708  280495 /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/node --dns-result-order=ipv4first /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+1754915  280495 /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/node /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/out/bootstrap-fork --type=fileWatcher
+1757242       2 [kworker/53:1-rcu_gp]
+1758265       2 [kworker/7:2-events]
+1765907       2 [kworker/49:1-mm_percpu_wq]
+1766121       1 /lib/systemd/systemd --user
+1766124 1766121 (sd-pam)
+1766155 1766121 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+1766359       1 /home/chenyiang/.vscode-server/code-645f29cc3176500b4b5762ba887cf2a7f0ffdf2c --cli-data-dir /home/chenyiang/.vscode-server/cli agent host
+1770062       2 [kworker/69:2-mm_percpu_wq]
+1770136       2 [kworker/37:1-mm_percpu_wq]
+1777238 1754708 /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/node /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=1754708
+1777852    2768 sshd: yinkaixuan [priv]
+1777958 1777852 sshd: yinkaixuan
+1780453       2 [kworker/29:2-mm_percpu_wq]
+1789306       2 [kworker/18:2-events]
+1794397       2 [kworker/50:1-mm_percpu_wq]
+1797257       2 [kworker/33:2-mm_percpu_wq]
+1800274       2 [kworker/71:2-mm_percpu_wq]
+1801830       2 [kworker/68:2-events]
+1805761       2 [kworker/58:1-mm_percpu_wq]
+1805815    2768 sshd: yinkaixuan [priv]
+1806020 1805815 sshd: yinkaixuan
+1806198       2 [kworker/u145:4-events_unbound]
+1806971       2 [kworker/65:0-events]
+1806981       2 [kworker/12:0-events]
+1807498       2 [kworker/28:0-mm_percpu_wq]
+1811245       2 [kworker/0:1-kacpi_notify]
+1811459       2 [kworker/21:2-events]
+1814139       2 [kworker/u146:0-events_unbound]
+1814930 1754470 tmux attach -t bg2
+1825834    2768 sshd: yinkaixuan [priv]
+1826175 1825834 sshd: yinkaixuan@pts/34
+1826181 1826175 -bash
+1828106       2 [kworker/56:1-mm_percpu_wq]
+1829820       2 [kworker/23:0-mm_percpu_wq]
+1832245       2 [kworker/52:2-mm_percpu_wq]
+1833007       2 [kworker/5:0-mm_percpu_wq]
+1833151       2 [kworker/41:0-i40e]
+1834558       2 [kworker/66:2-mm_percpu_wq]
+1838346       1 tmux new -s bg
+1838347 1838346 -bash
+1838566       2 [kworker/63:2-mm_percpu_wq]
+1840826       2 [kworker/34:1-mm_percpu_wq]
+1844823       2 [kworker/14:1-mm_percpu_wq]
+1845354       2 [kworker/10:0-events]
+1859089       2 [kworker/2:1-events]
+1860695       2 [kworker/15:2-events]
+1866696 1344648 /bin/bash --init-file /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+1871069       2 [kworker/31:1-mm_percpu_wq]
+1871137       2 [kworker/45:1-mm_percpu_wq]
+1871580       2 [kworker/26:1]
+1872332       2 [kworker/38:2-mm_percpu_wq]
+1878962       2 [kworker/44:2-events]
+1880201       2 [kworker/1:2-events]
+1880666       2 [kworker/36:0-events]
+1881603       2 [kworker/19:0-mm_percpu_wq]
+1883461       2 [kworker/42:0-events]
+1885684       2 [kworker/68:1-rcu_par_gp]
+1888801       2 [kworker/53:2-events]
+1891331       2 [kworker/27:2-events]
+1893200 3182753 /usr/lib/x86_64-linux-gnu/xfce4/xfconf/xfconfd
+1893580 1866696 opencode
+1893906       2 [kworker/43:1-events]
+1893935 1893580 /usr/bin/node /data7/home/linjiongxiao/.cache/opencode/packages/oh-my-openagent@latest/node_modules/oh-my-openagent/packages/lsp-daemon/dist/cli.js mcp
+1893936 1893580 /data7/home/linjiongxiao/.omo/codegraph/node --liftoff-only --disable-warning=ExperimentalWarning /data7/home/linjiongxiao/.omo/codegraph/lib/dist/bin/codegraph.js serve --mcp
+1895052       2 [kworker/14:0-rcu_par_gp]
+1896009       2 [kworker/10:2-mm_percpu_wq]
+1897860       2 [kworker/39:0-events]
+1899071       2 [kworker/24:1-events]
+1901748       2 [kworker/11:2-events]
+1903816       2 [kworker/60:0-mm_percpu_wq]
+1903915       2 [kworker/35:2-mm_percpu_wq]
+1905658       2 [kworker/38:0-mm_percpu_wq]
+1906219       2 [kworker/57:2-mm_percpu_wq]
+1906769       2 [kworker/41:1-i40e]
+1907565       2 [kworker/59:0-events]
+1907828       2 [kworker/46:2-cgroup_destroy]
+1910256       2 [kworker/40:2-events]
+1913642       2 [kworker/12:2-events]
+1914500 1344648 /bin/bash --init-file /data7/home/linjiongxiao/.vscode-server/bin/f6cfa2ea2403534de03f069bdf160d06451ed282/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+1915094       2 [kworker/56:0-rcu_par_gp]
+1915184 1914500 tmux attach -t bg
+1916604 1838347 opencode
+1916910 1916604 /usr/bin/node /data7/home/linjiongxiao/.cache/opencode/packages/oh-my-openagent@latest/node_modules/oh-my-openagent/packages/lsp-daemon/dist/cli.js mcp
+1916911 1916604 /data7/home/linjiongxiao/.omo/codegraph/node --liftoff-only --disable-warning=ExperimentalWarning /data7/home/linjiongxiao/.omo/codegraph/lib/dist/bin/codegraph.js serve --mcp
+1917007 1916911 /data7/home/linjiongxiao/.omo/codegraph/node -e  const fs = require('fs'); const parentPid = Number(process.argv[1]); const timeoutMs = Number(process.argv[2]); const capMs = Number(process.argv[3]); const progressPaths = process.argv.slice(4); const secs = Math.round(timeoutMs / 1000); function kill(extra) {   try { fs.writeSync(2, Buffer.from('[CodeGraph] Main thread unresponsive for ~' + secs + 's' + (extra || '') + ' — killing the wedged process so a fresh one can start (#850). Disable with CODEGRAPH_NO_WATCHDOG=1.\n')); } catch (e) {}   try { process.kill(parentPid, 'SIGKILL'); } catch (e) {}   process.exit(0); } // Fingerprint of the watched files (size + mtime). A change between checks is // forward disk progress — a slow synchronous SQLite statement, not a wedge. function snap() {   let s = '';   for (const p of progressPaths) {     try { const st = fs.statSync(p); s += st.size + ':' + st.mtimeMs + ';'; } catch (e) { s += 'x;'; }   }   return s; } let lastSnap = progressPaths.length ? snap() : ''; let lastSnapAt = Date.now(); let silentSince = null; // start of the current continuous-silence episode function onTimeout() {   if (!progressPaths.length) return kill('');   const now = Date.now();   if (silentSince === null) silentSince = now - timeoutMs; // silence began ~one timeout ago   const cur = snap();   if (cur !== lastSnap && now - silentSince < capMs) {     // The event loop is blocked but the DB files are advancing: a legitimate     // long store on slow storage. Defer, re-baseline, keep watching.     lastSnap = cur;     timer = setTimeout(onTimeout, timeoutMs);     return;   }   kill(cur !== lastSnap ? ' despite ongoing disk activity (hard cap ' + Math.round(capMs / 1000) + 's reached)' : ''); } let timer = setTimeout(onTimeout, timeoutMs); process.stdin.on('data', () => {   silentSince = null;   // Keep the baseline fresh while healthy (throttled — a stat per second).   if (progressPaths.length) {     const t = Date.now();     if (t - lastSnapAt >= 1000) { lastSnap = snap(); lastSnapAt = t; }   }   clearTimeout(timer); timer = setTimeout(onTimeout, timeoutMs); }); process.stdin.on('end', () => process.exit(0));   // parent closed the pipe (exited) -> no orphan process.stdin.on('error', () => process.exit(0)); // pipe broke -> parent gone process.stdin.resume();  1916911 60000 600000
+1917268       2 [kworker/24:0]
+1918840       2 [kworker/4:0-mm_percpu_wq]
+1919922       2 [kworker/49:2-events]
+1919972       2 [kworker/50:2-events]
+1920764       2 [kworker/17:0-events]
+1921224       2 [kworker/3:0-mm_percpu_wq]
+1921247       2 [kworker/28:1-rcu_par_gp]
+1923331       2 [kworker/48:1-mm_percpu_wq]
+1925403       2 [kworker/52:1]
+1926387       2 [kworker/47:1-mm_percpu_wq]
+1926801       2 [kworker/6:1-events]
+1927362       2 [kworker/15:0-events]
+1928141       2 [kworker/u145:0-events_unbound]
+1928354       2 [kworker/42:1-events]
+1929530       2 [kworker/5:2-events]
+1931194       2 [kworker/36:3-events]
+1931888       2 [kworker/1:1-events]
+1932328       2 [kworker/20:0]
+1932708       2 [kworker/9:0-mm_percpu_wq]
+1933123       2 [kworker/7:0-events]
+1933323       2 [kworker/55:1]
+1933694       2 [kworker/8:1-events]
+1934570       2 [kworker/13:0-rcu_par_gp]
+1934742       2 [kworker/62:0-rcu_par_gp]
+1935380       2 [kworker/43:0-events]
+1935760       2 [kworker/71:1]
+1937233       2 [kworker/69:1-events]
+1937705       2 [kworker/16:0-events]
+1938363       2 [kworker/54:0]
+1938880       2 [kworker/2:0]
+1939458       2 [kworker/57:0-rcu_par_gp]
+1939757       2 [kworker/51:1]
+1940663       2 [kworker/31:0-rcu_par_gp]
+1940928       2 [kworker/u145:1-events_unbound]
+1941117       2 [kworker/48:2-events]
+1941350       2 [kworker/30:1-rcu_par_gp]
+1941575       2 [kworker/4:1-events]
+1942683       2 [kworker/37:0-mm_percpu_wq]
+1943465       2 [kworker/0:2-events]
+1943726       2 [kworker/60:1-rcu_par_gp]
+1944039 2076470 /bin/bash -c source .env 2>/dev/null; export DEEPSEEK_API_KEY python scripts/run_comic.py --config configs/comic.yaml run \   --project-id comic_quality_e2e_0908 \   --storyline-id fix_verify_v1 \   --story-input "深夜公寓，张伟的领带被?小贤的咖啡弄脏了，胡一菲用?巾帮他应急。" \   --resume-after-fix --restart-from storyboard > /data2/songxinshuai/tmp/opencode/fix_verify_run2.log 2>&1 & RUNPID=$!; echo $RUNPID > /data2/songxinshuai/tmp/opencode/cur.pid; disown $RUNPID sleep 900; ps -p $RUNPID >/dev/null 2>&1 && echo ALIVE || echo DEAD; grep -E "storyboard.approved|blocked" /data2/songxinshuai/tmp/opencode/fix_verify_run2.log | grep -v dri | tail -3
+1944041 1944039 sleep 900
+1944264       2 [kworker/63:0]
+1944637       2 [kworker/34:0]
+1945048       2 [kworker/65:1-rcu_par_gp]
+1945778       2 [kworker/64:0]
+1946666 1665977 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=1665977
+1947295       2 [kworker/9:2-rcu_par_gp]
+1947422       2 [kworker/44:0-mm_percpu_wq]
+1947726       2 [kworker/67:0-rcu_par_gp]
+1948351       2 [kworker/35:1-rcu_par_gp]
+1948810       2 [kworker/27:0-rcu_par_gp]
+1949015       2 [kworker/33:1-rcu_par_gp]
+1949287       2 [kworker/61:1-rcu_par_gp]
+1950617       2 [kworker/21:1]
+1950859       2 [kworker/u146:1-events_unbound]
+1950998       2 [kworker/25:2-rcu_par_gp]
+1951493       2 [kworker/66:1-rcu_par_gp]
+1951542       2 [kworker/11:0-mm_percpu_wq]
+1951543       2 [kworker/12:1-events]
+1951549       2 [kworker/13:2-rcu_par_gp]
+1951981       2 [kworker/45:2-events]
+1952011       2 [kworker/47:2-events]
+1952067       2 [kworker/11:3-events]
+1952198       2 [kworker/29:0]
+1952210       2 [kworker/40:0-events]
+1952601       2 [kworker/18:1-rcu_par_gp]
+1954177       2 [kworker/58:0]
+1954883       1 bash -c for g in "NeurIPS.cc/2025/Conference:neurips2025" "rss-conference.org/RSS/2025/Conference:rss2025" "rss-conference.org/RSS/2026/Conference:rss2026" "ICLR.cc/2026/Conference:iclr2026r"; do grp="${g%%:*}"; tag="${g##*:}"; python3 orbatch2.py "$grp" "${tag}_robots.json" terms_robot.txt >> orsearch2.log 2>&1; done; echo ALLDONE >> orsearch2.log
+1955221       2 [kworker/19:1-events]
+1955522       2 [kworker/70:0]
+1957188       2 [kworker/22:1]
+1957595       2 [kworker/59:1]
+1958807       2 [kworker/32:2]
+1959492       2 [kworker/35:0-rcu_par_gp]
+1959843       2 [kworker/15:1-events]
+1960047       2 [kworker/11:4-events]
+1960391       1 /data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/nodes/gateway/versions/gateway-1.1.0-linux-x86_64/gateway --config gateway.yaml
+1960392       1 /data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/bin/python /data7/home/linjiongxiao/projects2/rekep-skill-paos/nodes/perception/node_main.py
+1960393       1 /data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/bin/python /data7/home/linjiongxiao/projects2/rekep-skill-paos/nodes/plan/node_main.py
+1960882 1960391 /data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/nodes/gateway/versions/gateway-1.1.0-linux-x86_64/gateway --config gateway.yaml
+1961596       2 [kworker/56:2]
+1962039       2 [kworker/69:0-events]
+1962126       2 [kworker/12:3]
+1962317       2 [kworker/60:2]
+1962512       2 [kworker/13:1-mm_percpu_wq]
+1962769       2 [kworker/u146:2-events_unbound]
+1962850       2 [kworker/31:2]
+1963236       2 [kworker/61:2]
+1964147       2 [kworker/67:2]
+1964198       2 [kworker/48:0]
+1964496       2 [kworker/25:0]
+1964870       2 [kworker/18:0]
+1964918 1954883 python3 orbatch2.py ICLR.cc/2026/Conference iclr2026r_robots.json terms_robot.txt
+1965134       2 [kworker/62:2-rcu_par_gp]
+1965222 1465771 /bin/bash -c cd /data7/home/linjiongxiao/projects2/rekep-skill-paos && mkdir -p evidence/P3/dev; cat > scripts/dev_flow.sh <<'EOF' #!/usr/bin/env bash set -u ROOT="/data7/home/linjiongxiao/projects2/rekep-skill-paos" source "$ROOT/scripts/env.sh" PAOS_ENV=/data7/home/linjiongxiao/miniconda3/envs/paos export PATH="$PAOS_ENV/bin:$PATH" export NO_PROXY=127.0.0.1,localhost no_proxy=127.0.0.1,localhost EV="$ROOT/evidence/P3/dev" D="$(readlink -f /data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/environments/rekep-sim/sim/current)/launch/profiles/sim" cd "$D" pkill -x dora 2>/dev/null; sleep 1 ( dora up > "$EV/up.log" 2>&1 & ) sleep 6 ( dora run dataflow.yaml > "$EV/run.log" 2>&1 & ) sleep 90 ss -ltn > "$EV/ss.log" 2>&1 ps -eo pid,ppid,cmd > "$EV/ps.log" 2>&1 curl -s --noproxy '*' -m 5 http://127.0.0.1:19021/tools > "$EV/tools.json" 2>&1 echo "done" EOF timeout 150 bash scripts/nsrun.sh bash scripts/dev_flow.sh 2>&1 | tail -5; echo "=== ss ==="; grep -E "19021|6|53" evidence/P3/dev/ss.log | head; echo "=== tools.json ==="; head -c 500 evidence/P3/dev/tools.json; echo; echo "=== run.log gateway lines ==="; grep -a "gateway" evidence/P3/dev/run.log | grep -av "spawner\|daemon" | tail -20
+1965225 1965222 timeout 150 bash scripts/nsrun.sh bash scripts/dev_flow.sh
+1965226 1965222 tail -5
+1965227 1965225 bash scripts/dev_flow.sh
+1965254       1 /data7/home/linjiongxiao/miniconda3/envs/paos/bin/python3.11 /data7/home/linjiongxiao/miniconda3/envs/paos/bin/dora coordinator --quiet
+1965332       1 /data7/home/linjiongxiao/miniconda3/envs/paos/bin/python3.11 /data7/home/linjiongxiao/miniconda3/envs/paos/bin/dora daemon --quiet
+1965451   28542 sleep 180
+1965489       1 /data7/home/linjiongxiao/miniconda3/envs/paos/bin/python3.11 /data7/home/linjiongxiao/miniconda3/envs/paos/bin/dora run dataflow.yaml
+1965580 1965489 /data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/bin/python /data7/home/linjiongxiao/projects2/rekep-skill-paos/nodes/execute/node_main.py
+1965581 1965489 /data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/nodes/gateway/versions/gateway-1.1.0-linux-x86_64/gateway --config gateway.yaml
+1965582 1965489 /data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/bin/python /data7/home/linjiongxiao/projects2/rekep-skill-paos/nodes/perception/node_main.py
+1965583 1965489 /data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/bin/python /data7/home/linjiongxiao/projects2/rekep-skill-paos/nodes/plan/node_main.py
+1966100       2 [kworker/57:1]
+1966114 1965581 /data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/nodes/gateway/versions/gateway-1.1.0-linux-x86_64/gateway --config gateway.yaml
+1966486       2 [kworker/23:2]
+1966499 1665590 sleep 180
+1966903 1916604 /bin/bash -c cd /data7/home/linjiongxiao/paper1/.kilo/scripts && cat > resolve_arxiv.py <<'EOF' import urllib.parse, urllib.request, re, time, sys, json def search(title):     url=("http://export.arxiv.org/api/query?search_query="+urllib.parse.quote(f'ti:"{title}"')+          "&start=0&max_results=5")     try:         with urllib.request.urlopen(url, timeout=40) as r: x=r.read().decode()     except Exception as e:         return None, str(e)     entries=re.findall(r"<entry>(.*?)</entry>", x, re.S)     res=[]     for e in entries:         t=re.search(r"<title>(.*?)</title>", e, re.S); idm=re.search(r"<id>(.*?)</id>", e, re.S)         pub=re.search(r"<published>(.*?)</published>", e, re.S)         res.append((t.group(1).strip().replace("\n"," ") if t else "?", idm.group(1).split("/abs/")[-1] if idm else "?", pub.group(1)[:10] if pub else ""))     return res, None titles = [  "COOPERA: Continual Open-Ended Human-Robot Assistance",  "ReinFlow: Fine-tuning Flow Matching Policy with Online Reinforcement Learning",  "OGPO: Sample Efficient Full-Finetuning of Generative Control Policies",  "Steering Your Diffusion Policy with Latent Space Reinforcement Learning",  "SEEA-R1: Tree-Structured Reinforcement Fine-Tuning for Self-Evolving Embodied Agents",  "RICL: Adding In-Context Adaptability to Pre-Trained Vision-Language-Action Models",  "RDD: Retrieval-Based Demonstration Decomposer for Planner Alignment in Long-Horizon Tasks",  "XSkill: Continual Learning from Experience and Skills in Multimodal Agents",  "VLAW: Iterative Co-Improvement of Vision-Language-Action Policy and World Model",  "DiWA: Diffusion Policy Adaptation with World Models",  "Self-Improving Embodied Foundation Models",  "DexFlyWheel: A Scalable and Self-improving Data Generation Framework for Dexterous Manipulation",  "Towards Long-Horizon Vision-Language-Action System: Reasoning, Acting and Memory",  "Open-World Skill Discovery from Unsegmented Demonstration Videos",  "Pretrained Vision-Language-Action Models are Surprisingly Resistant to Forgetting in Continual Learning",  "Think Small, Act Big: Primitive Prompt Learning for Lifelong Robot Manipulation", ] out={} for t in titles:     res,err=search(t)     if err: print(f"!! {t}: ERR {err}"); continue     if not res: print(f"?? {t}: no result"); continue     best=res[0]     out[t]={"arxiv":best[1],"pub":best[2],"title":best[0]}     print(f"{best[1]:20} {best[2]}  {best[0][:80]}   <-- {t[:45]}")     time.sleep(1) json.dump(out,open("resolved_arxiv.json","w"),ensure_ascii=False,indent=1) EOF python3 resolve_arxiv.py 2>&1 | head -60
+1966905 1966903 python3 resolve_arxiv.py
+1966906 1966903 head -60
+1966929       2 [kworker/68:0]
+1966986  179981 sleep 180
+1967178 3701017 sleep 60
+1967274 1732140 sleep 180
+1967352 2076847 sleep 180
+1967353    2768 sshd: chenzexin [priv]
+1967407  296417 /bin/bash -lc set -u root=research_review/2026-09-21_gated_transport_universal_composition_gate mkdir -p "$root" pids=(); i=0 for regime in step_rotate step_wind rotate_wind triple; do   device="cuda:$i"; mkdir -p "$root/$regime"   python scripts/audit/pilot_agent_attention_step3.py \     --output "$root/$regime/seed65001" --device "$device" --seed 65001 --steps 1600 \     --regime "$regime" --variant gated_correlation_transport --universal-source \     --context-contrast-weight .5 --binding-contrast-weight .5 \     > "$root/$regime/seed65001.log" 2>&1 &   pids+=("$!"); i=$((i+1)) done rc=0 for pid in "${pids[@]}"; do wait "$pid" || rc=$?; done exit "$rc"
+1967413 1967407 python scripts/audit/pilot_agent_attention_step3.py --output research_review/2026-09-21_gated_transport_universal_composition_gate/step_rotate/seed65001 --device cuda:0 --seed 65001 --steps 1600 --regime step_rotate --variant gated_correlation_transport --universal-source --context-contrast-weight .5 --binding-contrast-weight .5
+1967415 1967407 python scripts/audit/pilot_agent_attention_step3.py --output research_review/2026-09-21_gated_transport_universal_composition_gate/step_wind/seed65001 --device cuda:1 --seed 65001 --steps 1600 --regime step_wind --variant gated_correlation_transport --universal-source --context-contrast-weight .5 --binding-contrast-weight .5
+1967417 1967407 python scripts/audit/pilot_agent_attention_step3.py --output research_review/2026-09-21_gated_transport_universal_composition_gate/rotate_wind/seed65001 --device cuda:2 --seed 65001 --steps 1600 --regime rotate_wind --variant gated_correlation_transport --universal-source --context-contrast-weight .5 --binding-contrast-weight .5
+1967420 1967407 python scripts/audit/pilot_agent_attention_step3.py --output research_review/2026-09-21_gated_transport_universal_composition_gate/triple/seed65001 --device cuda:3 --seed 65001 --steps 1600 --regime triple --variant gated_correlation_transport --universal-source --context-contrast-weight .5 --binding-contrast-weight .5
+1967746 1967353 sshd: chenzexin@notty
+1967747 1967746 sh
+1967836 1733123 sleep 180
+1967888       2 [kworker/28:2]
+1968263 1967747 /home/chenzexin/.vscode-server/code-7debcd0e2acdea1c52de81bf9ee1620444407dda command-shell --cli-data-dir /home/chenzexin/.vscode-server/cli --parent-process-id 1967747 --on-host=127.0.0.1 --on-port
+1968725 1967747 sleep 180
+1968726       2 [kworker/u145:2-events_unbound]
+1968745 3970126 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node --dns-result-order=ipv4first /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+1968754 3970126 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=fileWatcher
+1968775       2 [kworker/14:2]
+1968910 3970206 /bin/sh -c wget --version > /dev/null if [ $? -eq 0 ] then ?wget --no-config --connect-timeout=7 --tries=1 --dns-timeout=7 -q --header='Metadata:true' -O - http://169.254.169.254/metadata/instance?api-version=2019-03-11 else ?curl --version > /dev/null ?if [ $? -eq 0 ] ?then ??curl --disable --connect-timeout 7 -s --header='Metadata:true' http://169.254.169.254/metadata/instance?api-version=2019-03-11 ?fi fi exit 0
+1968912 3970206 /bin/sh -c wget --version > /dev/null if [ $? -eq 0 ] then ?wget --no-config --connect-timeout=7 --tries=1 --dns-timeout=7 -q  -O - http://169.254.169.254/latest/meta-data/instance-id else ?curl --version > /dev/null ?if [ $? -eq 0 ] ?then ??curl --disable --connect-timeout 7 -s  http://169.254.169.254/latest/meta-data/instance-id ?fi fi exit 0
+1968915 3970206 /bin/sh -c wget --version > /dev/null if [ $? -eq 0 ] then ?wget --no-config --connect-timeout=7 --tries=1 --dns-timeout=7 -q  -O - http://169.254.169.254/metadata/v1/id else ?curl --version > /dev/null ?if [ $? -eq 0 ] ?then ??curl --disable --connect-timeout 7 -s  http://169.254.169.254/metadata/v1/id ?fi fi exit 0
+1968921 1968910 wget --no-config --connect-timeout=7 --tries=1 --dns-timeout=7 -q --header=Metadata:true -O - http://169.254.169.254/metadata/instance?api-version=2019-03-11
+1968923 1968912 wget --no-config --connect-timeout=7 --tries=1 --dns-timeout=7 -q -O - http://169.254.169.254/latest/meta-data/instance-id
+1968925 1968915 wget --no-config --connect-timeout=7 --tries=1 --dns-timeout=7 -q -O - http://169.254.169.254/metadata/v1/id
+1968956 3701020 sleep 5
+1968957 1968745 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node_modules/@vscode/ripgrep-universal/bin/linux-x64/rg --files --hidden --case-sensitive --no-require-git -g **/*.* -g !**/.git -g !**/.svn -g !**/.hg -g !**/.DS_Store -g !**/Thumbs.db -g !**/node_modules/** --no-ignore --no-config --no-ignore-global
+1969109 1965227 ps -eo pid,ppid,cmd
+2003187       2 [kworker/64:1-mm_percpu_wq]
+2038501  280728 /bin/bash --init-file /home/songxinshuai/.vscode-server/bin/7debcd0e2acdea1c52de81bf9ee1620444407dda/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+2061148   50340 /usr/bin/bash --init-file /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+2076470 2038501 opencode --yolo
+2076748    2768 sshd: baiyongjie_manibench [priv]
+2076841 2076748 sshd: baiyongjie_manibench@notty
+2076842 2076841 -bash
+2076847 2076842 sh
+2076872 2076847 /home/baiyongjie_manibench/.vscode-server/code-df53daabb18cd157bdb08c7f01c34df936cf12f4 command-shell --cli-data-dir /home/baiyongjie_manibench/.vscode-server/cli --parent-process-id 2076847 --on-host=127.0.0.1 --on-port
+2084551       1 /usr/sbin/cupsd -l
+2084553       1 /usr/sbin/cups-browsed
+2126904       1 /data7/home/lvqinhan/workspace/phyagentos/.venv/bin/python /data7/home/lvqinhan/workspace/phyagentos/.venv/bin/dora start --name manual-vision-grasp dataflow.yaml
+2130775   50039 /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/node --dns-result-order=ipv4first /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+2130781   50039 /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/node /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/bootstrap-fork --type=fileWatcher
+2131280 2130775 /home/baiyongjie_manibench/.vscode-server/extensions/ms-python.vscode-python-envs-1.36.0-linux-x64/python-env-tools/bin/pet server
+2187177       1 /lib/systemd/systemd --user
+2187178 2187177 (sd-pam)
+2187240 2187177 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+2187570       1 tmux new -s libero
+2187571 2187570 -bash
+2348544   50340 /usr/bin/bash --init-file /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+2348562   50340 /usr/bin/bash --init-file /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+2353486 2130775 /home/baiyongjie_manibench/.vscode-server/extensions/openai.chatgpt-26.908.40401-linux-x64/bin/linux-x86_64/codex -c features.code_mode_host=true app-server --analytics-default-enabled
+2370305   50039 /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/node --dns-result-order=ipv4first /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+2370317   50039 /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/node /home/baiyongjie_manibench/.vscode-server/cli/servers/Stable-df53daabb18cd157bdb08c7f01c34df936cf12f4/server/out/bootstrap-fork --type=fileWatcher
+2370817 2370305 /home/baiyongjie_manibench/.vscode-server/extensions/openai.chatgpt-26.908.40401-linux-x64/bin/linux-x86_64/codex -c features.code_mode_host=true app-server --analytics-default-enabled
+2461660       2 [kworker/61:0-mm_percpu_wq]
+2754610       1 /usr/lib/udisks2/udisksd
+3087207       1 /lib/systemd/systemd --user
+3087209 3087207 (sd-pam)
+3087328 3087207 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+3087935       1 /data2/chenzexin/vscode/.vscode-server/code-645f29cc3176500b4b5762ba887cf2a7f0ffdf2c --cli-data-dir /home/chenzexin/.vscode-server/cli agent host
+3090352       1 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-645f29cc3176500b4b5762ba887cf2a7f0ffdf2c/server/node /home/chenzexin/.vscode-server/extensions/baiducomate.comate-4.14.1/dist/zulu-cli/bin/zulu serve --port 8318 --host 0.0.0.0 --license c2db34a5-80a2-4722-8342-90db61822e87
+3095826 3087207 /usr/libexec/xdg-document-portal
+3095833 3087207 /usr/libexec/xdg-permission-store
+3095937 3087207 /usr/lib/x86_64-linux-gnu/xfce4/xfconf/xfconfd
+3095938 3087207 /usr/libexec/at-spi-bus-launcher
+3108142  849241 /data7/yuqingchi/.nvm/versions/node/v22.23.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex-code-mode-host
+3108727       1 /data7/home/liuhaoyang/.vscode-server/code-645f29cc3176500b4b5762ba887cf2a7f0ffdf2c --cli-data-dir /data7/home/liuhaoyang/.vscode-server/cli agent host
+3182753       1 /lib/systemd/systemd --user
+3182755 3182753 (sd-pam)
+3182899 3182753 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+3184535       1 /data7/home/linjiongxiao/.vscode-server/code-f6cfa2ea2403534de03f069bdf160d06451ed282 --cli-data-dir /data7/home/linjiongxiao/.vscode-server/cli agent host
+3209563 3970126 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node --dns-result-order=ipv4first /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+3242256 3209563 /home/chenzexin/.vscode-server/extensions/openai.chatgpt-26.5908.31748-linux-x64/bin/linux-x86_64/codex -c features.code_mode_host=true app-server --analytics-default-enabled
+3326913   50429 /usr/bin/gnome-keyring-daemon --start --foreground --components=secrets
+3700856    2902 /usr/bin/docker-proxy -proto tcp -host-ip 127.0.0.1 -host-port 3202 -container-ip 172.18.0.2 -container-port 4081
+3700901    2902 /usr/bin/docker-proxy -proto tcp -host-ip 127.0.0.1 -host-port 3200 -container-ip 172.18.0.2 -container-port 4080
+3700927       1 /usr/bin/containerd-shim-runc-v2 -namespace moby -id 7c9a7bfab1c738c990bdcc9fce3aa0efec30fc5d84c04ea58cc829a3adddb479 -address /run/containerd/containerd.sock
+3700948 3700927 bash /usr/local/bin/jimi-entrypoint
+3701016 3700948 node /usr/local/bin/jimi-files
+3701017 3700948 bash /usr/local/bin/jimi-entrypoint
+3701020 3700948 bash /usr/local/bin/jimi-entrypoint
+3758881       1 /data7/home/lvqinhan/workspace/phyagentos/.venv/bin/python /data7/home/lvqinhan/workspace/phyagentos/.venv/bin/dora coordinator --quiet
+3803763 3700948 node /usr/local/bin/kilo serve --port 4080 --hostname 0.0.0.0
+3803770 3803763 /usr/local/lib/node_modules/@kilocode/cli/bin/.kilo serve --port 4080 --hostname 0.0.0.0
+3970122       1 sh /home/chenzexin/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/bin/code-server --connection-token=remotessh --accept-server-license-terms --agent-host-bridge-port=36643 --agent-host-bridge-host=127.0.0.1 --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-4bfcf63e-0487-4def-abd9-ad681024c92f
+3970126 3970122 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/server-main.js --connection-token=remotessh --accept-server-license-terms --agent-host-bridge-port=36643 --agent-host-bridge-host=127.0.0.1 --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-4bfcf63e-0487-4def-abd9-ad681024c92f
+3970206 3970126 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/bootstrap-fork --type=ptyHost --logsPath /home/chenzexin/.vscode-server/data/logs/20260920T100851
+3970367 3970206 /bin/bash --init-file /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+3971294 3970206 /bin/bash --init-file /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+3971296 3970206 /bin/bash --init-file /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-7debcd0e2acdea1c52de81bf9ee1620444407dda/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+4017500       1 sh /home/chenzexin/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/bin/code-server --connection-token=remotessh --accept-server-license-terms --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-222cbf7a-4bce-4252-af1e-9fef96605333
+4017504 4017500 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/out/server-main.js --connection-token=remotessh --accept-server-license-terms --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-222cbf7a-4bce-4252-af1e-9fef96605333
+4017782 4017504 /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/node /data2/chenzexin/vscode/.vscode-server/cli/servers/Stable-c9d77990917f3102ada88be140d28b038d1dd7c7/server/out/bootstrap-fork --type=ptyHost --logsPath /home/chenzexin/.vscode-server/data/logs/20260920T103323

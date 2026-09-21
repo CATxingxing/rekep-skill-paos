@@ -90,16 +90,24 @@ class ReKepRuntime:
         self.env = env
         self.config = config or RuntimeConfig()
         refimpl.ensure_reference_on_path()
-        import path_solver as path_solver_mod
-        import subgoal_solver as subgoal_solver_mod
         import transform_utils as T
         import utils as ref_utils
 
         self._T = T
         self._ref_utils = ref_utils
-        subgoal_cfg, path_cfg = _solver_configs(env, self.config)
-        reset = env.reset_joint_positions()
-        self.ik = IKAdapter(env)
+        self.ik = None
+        self.subgoal_solver = None
+        self.path_solver = None
+        if env is not None:
+            self._build_solvers()
+
+    def _build_solvers(self) -> None:
+        import path_solver as path_solver_mod
+        import subgoal_solver as subgoal_solver_mod
+
+        subgoal_cfg, path_cfg = _solver_configs(self.env, self.config)
+        reset = self.env.reset_joint_positions()
+        self.ik = IKAdapter(self.env)
         self.subgoal_solver = subgoal_solver_mod.SubgoalSolver(subgoal_cfg, self.ik, reset)
         self.path_solver = path_solver_mod.PathSolver(path_cfg, self.ik, reset)
 
@@ -171,9 +179,9 @@ class ReKepRuntime:
         }
         core["plan_id"] = f"plan_{uuid.uuid4().hex}"
         core["created_timestamp_ns"] = str(time.time_ns())
-        core["plan_digest"] = _digest({k: v for k, v in core.items() if k != "plan_digest"})
         if vlm_trace:
             core["vlm_trace"] = vlm_trace
+        core["plan_digest"] = _digest({k: v for k, v in core.items() if k != "plan_digest"})
         return core
 
     def plan(self, instruction: str, snapshot: dict, *, source: str = "template") -> dict:

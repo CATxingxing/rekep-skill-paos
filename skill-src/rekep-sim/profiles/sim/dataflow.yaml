@@ -1,0 +1,38 @@
+nodes:
+  - id: gateway
+    path: ${FORGE_RUNTIME_BIN}/gateway
+    args: --config gateway.yaml
+    inputs:
+      tick: dora/timer/millis/50
+      perception_tool_in: perception/tool_out
+      plan_tool_in: plan/tool_out
+      execute_tool_in: execute/tool_out
+    outputs:
+      - tool_response
+      - perception_tool_out
+      - plan_tool_out
+      - execute_tool_out
+
+  - id: perception
+    path: ${FORGE_RUNTIME_BIN}/rekep_perception
+    inputs:
+      tick: dora/timer/millis/100
+      tool_in: gateway/perception_tool_out
+    outputs:
+      - tool_out
+
+  - id: plan
+    path: ${FORGE_RUNTIME_BIN}/rekep_plan
+    inputs:
+      tick: dora/timer/millis/100
+      tool_in: gateway/plan_tool_out
+    outputs:
+      - tool_out
+
+  - id: execute
+    path: ${FORGE_RUNTIME_BIN}/rekep_execute
+    inputs:
+      tick: dora/timer/millis/50
+      tool_in: gateway/execute_tool_out
+    outputs:
+      - tool_out

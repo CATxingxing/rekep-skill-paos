@@ -1,0 +1,74 @@
+[2m2026-09-21T06:21:40.300247Z[0m [32m INFO[0m [2mzenoh::net::runtime[0m[2m:[0m Using ZID: 203127af810236cd9c26544a40f0deec
+[2m2026-09-21T06:21:40.301676Z[0m [33m WARN[0m [2mzenoh::net::runtime::orchestrator[0m[2m:[0m Unable to find active, non-loopback multicast interface. Will use [::].
+[2m2026-09-21T06:21:40.301758Z[0m [33m WARN[0m [2mzenoh::net::runtime::orchestrator[0m[2m:[0m Cannot join IpV4 multicast group 224.0.0.224 on IpV6 iface ::
+[2m2026-09-21T06:21:40.301830Z[0m [32m INFO[0m [2mzenoh::net::runtime::orchestrator[0m[2m:[0m zenohd listening scout messages on 224.0.0.224:7446
+14:21:40 DEBUG   execute: daemon::spawner  spawning node
+14:21:40 DEBUG   gateway: daemon::spawner  spawning node
+14:21:40 DEBUG   perception: daemon::spawner  spawning node
+14:21:40 DEBUG   plan: daemon::spawner  spawning node
+14:21:40 INFO    dora daemon  finished building nodes, spawning...
+14:21:40 INFO    execute: spawner  spawning `/data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/nodes/rekep_execute/versions/rekep_execute-0.1.1-linux-x86_64/rekep_execute` in `/data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/environments/rekep-sim/sim/7469cf9d7e90edb4fc7c297fdce8d2f6a80acd4af1e5fb3eb87287654daf5c27/launch/profiles/sim`
+14:21:40 DEBUG   execute: spawner  spawned node with pid 1965580
+14:21:40 INFO    gateway: spawner  spawning `/data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/nodes/gateway/versions/gateway-1.1.0-linux-x86_64/gateway` in `/data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/environments/rekep-sim/sim/7469cf9d7e90edb4fc7c297fdce8d2f6a80acd4af1e5fb3eb87287654daf5c27/launch/profiles/sim`
+14:21:40 DEBUG   gateway: spawner  spawned node with pid 1965581
+14:21:40 INFO    perception: spawner  spawning `/data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/nodes/rekep_perception/versions/rekep_perception-0.1.1-linux-x86_64/rekep_perception` in `/data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/environments/rekep-sim/sim/7469cf9d7e90edb4fc7c297fdce8d2f6a80acd4af1e5fb3eb87287654daf5c27/launch/profiles/sim`
+14:21:40 DEBUG   perception: spawner  spawned node with pid 1965582
+14:21:40 INFO    plan: spawner  spawning `/data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/nodes/rekep_plan/versions/rekep_plan-0.1.1-linux-x86_64/rekep_plan` in `/data7/home/linjiongxiao/.PhyAgentOS/forge_runtime/environments/rekep-sim/sim/7469cf9d7e90edb4fc7c297fdce8d2f6a80acd4af1e5fb3eb87287654daf5c27/launch/profiles/sim`
+14:21:40 DEBUG   plan: spawner  spawned node with pid 1965583
+14:21:41 INFO    perception: daemon  node is ready
+14:21:43 INFO    plan: daemon  node is ready
+14:21:45 INFO    gateway: daemon  node is ready
+14:23:11 INFO    execute: daemon  node is ready
+14:23:11 INFO    daemon  all nodes are ready, starting dataflow
+14:23:11 INFO    perception: opentelemetry  Global meter provider is set. Meters can now be created using global::meter() or global::meter_with_scope().
+14:23:11 INFO    plan: opentelemetry  Global meter provider is set. Meters can now be created using global::meter() or global::meter_with_scope().
+14:23:11 INFO    gateway: opentelemetry  Global meter provider is set. Meters can now be created using global::meter() or global::meter_with_scope().
+14:23:11 stdout  execute:  Traceback (most recent call last):
+14:23:11 stdout  execute:    File "/data7/home/linjiongxiao/projects2/rekep-skill-paos/nodes/execute/node_main.py", line 59, in <module>
+14:23:11 stdout  execute:      main()
+14:23:11 stdout  execute:    File "/data7/home/linjiongxiao/projects2/rekep-skill-paos/nodes/execute/node_main.py", line 50, in main
+14:23:11 stdout  execute:      Provider(
+14:23:11 stdout  execute:    File "/data7/home/linjiongxiao/projects2/rekep-skill-paos/src/rekep_sim/provider.py", line 86, in __init__
+14:23:11 stdout  execute:      ToolOperationDescriptor(
+14:23:11 stdout  gateway:  INFO:     Started server process [1966114]
+14:23:11 stdout  execute:    File "<string>", line 9, in __init__
+14:23:11 stdout  gateway:  INFO:     Uvicorn running on http://127.0.0.1:19021 (Press CTRL+C to quit)
+14:23:11 stdout  execute:    File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/forge_tool/endpoint/models.py", line 185, in __post_init__
+14:23:11 stdout  gateway:  2026-09-21 14:23:11 - forge_gateway.cli - INFO - gateway serving http/ws on 127.0.0.1:19021
+14:23:11 stdout  execute:      raise ValueError("session operations must not be cancellable")
+14:23:11 stdout  execute:  ValueError: session operations must not be cancellable
+14:23:11 stdout  execute:  Exception ignored in: <function Renderer.__del__ at 0x7f8c79709080>
+14:23:11 stdout  execute:  Traceback (most recent call last):
+14:23:11 stdout  execute:    File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/mujoco/rendering/classic/renderer.py", line 343, in __del__
+14:23:11 stdout  execute:      self.close()
+14:23:11 stdout  execute:    File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/mujoco/rendering/classic/renderer.py", line 329, in close
+14:23:11 stdout  execute:      self._gl_context.free()
+14:23:11 stdout  execute:    File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/mujoco/egl/__init__.py", line 131, in free
+14:23:11 stdout  execute:      EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE,
+14:23:11 stdout  execute:    File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/OpenGL/error.py", line 230, in glCheckError
+14:23:11 stdout  execute:      raise self._errorClass(
+14:23:11 stdout  execute:  OpenGL.raw.EGL._errors.EGLError: <exception str() failed>
+14:23:11 stdout  execute:  Exception ignored in: <function GLContext.__del__ at 0x7f8c79708a40>
+14:23:12 stdout  execute:  Traceback (most recent call last):
+14:23:12 stdout  execute:    File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/mujoco/egl/__init__.py", line 138, in __del__
+14:23:12 stdout  execute:      self.free()
+14:23:12 stdout  execute:    File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/mujoco/egl/__init__.py", line 131, in free
+14:23:12 stdout  execute:      EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE,
+14:23:12 stdout  execute:    File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/OpenGL/error.py", line 230, in glCheckError
+14:23:12 stdout  execute:      raise self._errorClass(
+14:23:12 stdout  execute:  
+14:23:12 stdout  execute:  OpenGL.raw.EGL._errors.EGLError: <exception str() failed>
+14:23:12 stdout  execute:  
+14:23:12 DEBUG   execute: daemon  handling node stop with exit status ExitCode(1) (restart: false)
+14:23:12 ERROR   execute: daemon  exited with code 1 with stderr output:
+---------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/mujoco/egl/__init__.py", line 138, in __del__
+    self.free()
+  File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/mujoco/egl/__init__.py", line 131, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE,
+  File "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: <exception str() failed>
+---------------------------------------------------------------------------------
+

@@ -1,0 +1,18 @@
+=== start ===
+✓ Skill rekep-sim is running (profile=sim, flow=paos-rekep-sim-sim)
+=== status ===
+Skill: rekep-sim
+State: running
+Profile: sim
+Dora flow: paos-rekep-sim-sim (running)
+Gateway GET /tools: ready
+Tool context rekep.get_context: ready
+Tool context rekep.plan_task: ready
+Tool context rekep.execute_task: ready
+=== probe ===
+TOOLS: ['rekep.execute_task', 'rekep.get_context', 'rekep.plan_task']
+PERCEPTION observation_id: sha256:2588b6ba6f578a0d887622090ca40bfb387462bd7cfb3362c92130590cccd6d3
+PERCEPTION keypoints: [{"index": 0, "object": "place_zone", "pixel_uv": [125, 160], "position_m": [0.00289055029861629, -0.4260154068470001, 0.011253449134528637]}, {"index": 1, "object": "pick_cube", "pixel_uv": [178, 199], "position_m": [0.2647310197353363, -0.4423179030418396, 0.07683223485946655]}]
+PLAN: {"grasp_keypoints": [1, -1, -1], "instruction": "pick the orange cube and place it in the green target zone", "num_stages": 3, "observation_id": "sha256:2588b6ba6f578a0d887622090ca40bfb387462bd7cfb3362c92130590cccd6d3", "plan_digest": "sha256:dcca46303eb0b5b725f805bcbabf5b6fb21454d92cd3005dcfb6429a1a070226", "plan_id": "plan_162a3b4bb8ab4fddbcef8a8de4ddf93d", "release_keypoints": [-1, -1, 1], "source": "template"}
+EXECUTE: {"status": "succeeded", "video": "/data7/home/linjiongxiao/.paos-rekep/tmp/rekep_mujoco.mp4", "place_error_m": 0.0353}
+ACCEPTANCE_OK

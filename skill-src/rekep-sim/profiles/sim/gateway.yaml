@@ -1,0 +1,81 @@
+host: 127.0.0.1
+port: 19021
+joint_order: []
+image_input_ids: []
+readiness: {require_proprio_state: false, require_images: false}
+tools:
+  enabled: true
+  lease_ttl_ms: 5000
+  invoke_timeout_ms: 1800000
+  request_input_id: tool_request
+  response_output_id: tool_response
+  specs:
+    - tool_id: rekep.get_context
+      implementation_id: rekep.perception.mujoco
+      endpoint_id: rekep.perception
+      operation: get_context
+      semantics: query
+      description: Capture the MuJoCo scene and return DINOv2-grounded ReKep keypoints.
+      input_schema:
+        type: object
+        additionalProperties: false
+        properties:
+          refresh: {type: boolean}
+          seed: {type: integer, minimum: 0}
+      output_schema: {type: object}
+      readiness: []
+      robot_frame_profile:
+        robot_id: dobot_nova2
+        base_frame: nova2_base
+        tool_frame: pinch
+        frames: {}
+        directions: {up: {frame: nova2_base, axis: z, sign: 1}}
+    - tool_id: rekep.plan_task
+      implementation_id: rekep.constraint_planner
+      endpoint_id: rekep.plan
+      operation: plan_task
+      semantics: action
+      description: Generate ReKep constraints and solve a digest-bound plan without motion.
+      input_schema:
+        type: object
+        additionalProperties: false
+        required: [instruction]
+        properties:
+          instruction: {type: string, minLength: 1}
+          observation_id: {type: string}
+          source: {enum: [template, vlm]}
+      output_schema: {type: object}
+      readiness: []
+      robot_frame_profile:
+        robot_id: dobot_nova2
+        base_frame: nova2_base
+        tool_frame: pinch
+        frames: {}
+        directions: {up: {frame: nova2_base, axis: z, sign: 1}}
+    - tool_id: rekep.execute_task
+      implementation_id: rekep.plan_executor
+      endpoint_id: rekep.executor
+      operation: execute_task
+      semantics: session
+      description: Execute an exact ReKep plan in headless MuJoCo and produce an MP4.
+      input_schema:
+        type: object
+        additionalProperties: false
+        required: [plan_id, plan_digest, allow_motion, deadline_ms]
+        properties:
+          plan_id: {type: string, minLength: 1}
+          plan_digest: {type: string, pattern: "^sha256:[0-9a-f]{64}$"}
+          allow_motion: {const: true}
+          deadline_ms: {type: integer, minimum: 1, maximum: 1800000}
+      output_schema: {type: object}
+      readiness: []
+      robot_frame_profile:
+        robot_id: dobot_nova2
+        base_frame: nova2_base
+        tool_frame: pinch
+        frames: {}
+        directions: {up: {frame: nova2_base, axis: z, sign: 1}}
+  providers:
+    - {endpoint_id: rekep.perception, input_id: perception_tool_in, output_id: perception_tool_out}
+    - {endpoint_id: rekep.plan, input_id: plan_tool_in, output_id: plan_tool_out}
+    - {endpoint_id: rekep.executor, input_id: execute_tool_in, output_id: execute_tool_out}

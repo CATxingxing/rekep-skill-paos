@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Forge node entrypoint for the rekep-sim execution endpoint.
+set -euo pipefail
+: "${REKEP_SIM_PYTHON:?set REKEP_SIM_PYTHON to the node runtime python}"
+: "${REKEP_SIM_SRC:?set REKEP_SIM_SRC to the rekep-skill-paos source root}"
+export PYTHONPATH="${REKEP_SIM_SRC}/src${REKEP_SIM_EXTRA_PYTHONPATH:+:${REKEP_SIM_EXTRA_PYTHONPATH}}${PYTHONPATH:+:${PYTHONPATH}}"
+exec "${REKEP_SIM_PYTHON}" "${REKEP_SIM_SRC}/nodes/execute/node_main.py" "$@"

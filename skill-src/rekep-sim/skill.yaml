@@ -1,0 +1,68 @@
+manifest_version: 2
+name: rekep-sim
+version: "0.1.1"
+description: Constraint-driven ReKep pick-and-place in headless MuJoCo (Dobot Nova2 + Robotiq 2F-85).
+skill_document: SKILL.md
+gateway_url: http://127.0.0.1:19021
+required_tools:
+  - rekep.get_context
+  - rekep.plan_task
+  - rekep.execute_task
+profiles:
+  sim:
+    dataflow: profiles/sim/dataflow.yaml
+    required_binaries:
+      - gateway
+      - rekep_perception
+      - rekep_plan
+      - rekep_execute
+    required_assets:
+      - profiles/sim/gateway.yaml
+    required_environment: []
+    environment:
+      MUJOCO_GL: egl
+      PYTHONDONTWRITEBYTECODE: "1"
+      REKEP_SIM_PYTHON: "/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/bin/python"
+      REKEP_SIM_SRC: "/data7/home/linjiongxiao/projects2/rekep-skill-paos"
+      REKEP_SIM_EXTRA_PYTHONPATH: "/data7/home/linjiongxiao/projects2/rekep-skill-paos/reference/rekep-real-plugin/runtime"
+      REKEP_SIM_SCENE: "/data7/home/linjiongxiao/projects2/rekep-skill-paos/skill-src/rekep-sim/assets/dobot-nova2-robotiq/mjcf/dobot_nova2_robotiq_2f85_pick_place.xml"
+      REKEP_SIM_STATE_DIR: "/data7/home/linjiongxiao/.paos-rekep/run/rekep-sim"
+      REKEP_PLAN_SOURCE: template
+      REKEP_DINOV2_REPO: "/data7/home/linjiongxiao/.paos-rekep/models/dinov2"
+      REKEP_DINOV2_WEIGHTS: "/data7/home/linjiongxiao/.paos-rekep/models/weights/dinov2_vits14.pth"
+      REKEP_DINOV2_MODEL: dinov2_vits14
+artifacts:
+  resolver: local
+  nodes:
+    gateway:
+      artifact_id: gateway-1.1.0-linux-x86_64
+      version: "1.1.0"
+      platform: linux
+      arch: x86_64
+      artifact_type: executable_tar_gz
+      entrypoint: gateway
+      sha256: bb42c141b299a854fed2ff31f20be5b83551c7c47a30bce06fccd717da202387
+    rekep_perception:
+      artifact_id: rekep_perception-0.1.1-linux-x86_64
+      version: "0.1.1"
+      platform: linux
+      arch: x86_64
+      artifact_type: executable_tar_gz
+      entrypoint: rekep_perception
+      sha256: 34b65a4ed02f997cd8a03e51775ea10df7800274ef87a488df45da0fbb9bd283
+    rekep_plan:
+      artifact_id: rekep_plan-0.1.1-linux-x86_64
+      version: "0.1.1"
+      platform: linux
+      arch: x86_64
+      artifact_type: executable_tar_gz
+      entrypoint: rekep_plan
+      sha256: 82ba82f5245204a66ba58afc03ce95c07fe1b794b3e4f7643de84de4423618d7
+    rekep_execute:
+      artifact_id: rekep_execute-0.1.1-linux-x86_64
+      version: "0.1.1"
+      platform: linux
+      arch: x86_64
+      artifact_type: executable_tar_gz
+      entrypoint: rekep_execute
+      sha256: 0df7e48e376378198ad8d2b52ad283fc1db9e819ffa2e3b795452465833abd4b
