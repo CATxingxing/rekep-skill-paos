@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "vendor": "Dobot",
+  "model": "Nova2 + Robotiq 2F-85",
+  "source": {
+    "official_ros2_v4": {
+      "repository": "https://github.com/Dobot-Arm/DOBOT_6Axis_ROS2_V4",
+      "revision": "0f67ed938c0cec4ed0808af759ddbb608e573dbe",
+      "license": "Apache-2.0",
+      "purpose": "official Nova2 URDF, meshes, MoveIt configuration and TCP/IP V4 ROS2 bridge"
+    }
+  },
+  "units": {
+    "joint_position": "rad",
+    "joint_velocity": "rad/s",
+    "joint_effort": "N*m"
+  },
+  "models": [
+    {
+      "id": "dobot_nova2",
+      "name": "Dobot Nova2",
+      "configuration": "Nova2 + Robotiq 2F-85",
+      "family": "Dobot Nova",
+      "category": "arm",
+      "urdf": "assets/urdf/dobot_rviz/nova2_robot.urdf",
+      "urdf_xacro": "assets/urdf/cra_description/nova2_robot.xacro",
+      "mjcf": "assets/mjcf/dobot_nova2/nova2.xml",
+      "scene_mjcf": "assets/mjcf/dobot_nova2/scene.xml",
+      "pick_place_mjcf": "assets/mjcf/dobot_nova2_robotiq_2f85_pick_place.xml",
+      "dof": 6,
+      "joint_names": ["joint1", "joint2", "joint3", "joint4", "joint5", "joint6"],
+      "mjcf_joint_names": ["joint1", "joint2", "joint3", "joint4", "joint5", "joint6"],
+      "joints": [
+        {"name": "joint1", "type": "revolute", "axis": [0, 0, 1], "lower": -6.28, "upper": 6.28, "effort": 100.0, "velocity": 2.36},
+        {"name": "joint2", "type": "revolute", "axis": [0, 0, 1], "lower": -3.14, "upper": 3.14, "effort": 100.0, "velocity": 2.36},
+        {"name": "joint3", "type": "revolute", "axis": [0, 0, 1], "lower": -2.79, "upper": 2.79, "effort": 100.0, "velocity": 2.36},
+        {"name": "joint4", "type": "revolute", "axis": [0, 0, 1], "lower": -6.28, "upper": 6.28, "effort": 100.0, "velocity": 2.36},
+        {"name": "joint5", "type": "revolute", "axis": [0, 0, 1], "lower": -6.28, "upper": 6.28, "effort": 100.0, "velocity": 2.36},
+        {"name": "joint6", "type": "revolute", "axis": [0, 0, 1], "lower": -6.28, "upper": 6.28, "effort": 100.0, "velocity": 2.36}
+      ],
+      "zero_pose": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+      "zero_pose_source": "official Nova2 URDF joint origin; not a calibrated controller home",
+      "positive_direction_source": "official Nova2 URDF axes and TCP/IP feedback converted by the official ROS2 V4 bridge",
+      "end_effector": "Link6"
+    }
+  ],
+  "grippers": [
+    {
+      "id": "robotiq_2f85",
+      "name": "Robotiq 2F-85 Adaptive Gripper",
+      "category": "gripper",
+      "dof": 1,
+      "command": "normalized_opening",
+      "command_unit": "0..1",
+      "position_byte": {"closed": 255, "open": 0},
+      "nominal_stroke_mm": 85.0,
+      "urdf": "assets/urdf/robotiq_2f_85_description/urdf/robotiq_arg2f_85_model.urdf",
+      "mjcf": "assets/mjcf/robotiq_2f85/2f85.xml",
+      "pick_place_mjcf": "assets/mjcf/dobot_nova2_robotiq_2f85_pick_place.xml",
+      "end_effector_frame": "Link6"
+    },
+    {
+      "id": "xtrainer_feetech",
+      "name": "Xtrainer Feetech SMS/STS servo gripper",
+      "category": "gripper",
+      "scope": "installed real hardware only",
+      "command": "normalized_opening",
+      "command_unit": "0..1",
+      "normalized_opening": {"closed": 0.0, "open": 1.0},
+      "xtrainer_position_byte": {"open": 0, "closed": 255},
+      "raw_position": {"open": 2048, "closed": 3052},
+      "baudrate": 1000000,
+      "left": {"servo_id": 21, "port_env": "DOBOT_LEFT_GRIPPER_PORT"},
+      "right": {"servo_id": 22, "port_env": "DOBOT_RIGHT_GRIPPER_PORT"},
+      "source": "DOBOT_XTRAINER_SDK"
+    }
+  ]
+}

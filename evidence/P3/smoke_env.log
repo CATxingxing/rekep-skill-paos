@@ -1,0 +1,18 @@
+/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/swiglu_ffn.py:51: UserWarning: xFormers is not available (SwiGLU)
+  warnings.warn("xFormers is not available (SwiGLU)")
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/attention.py:33: UserWarning: xFormers is not available (Attention)
+  warnings.warn("xFormers is not available (Attention)")
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
+  warnings.warn("xFormers is not available (Block)")
+rgb (240, 320, 3) depth (240, 320) points (240, 320, 3) seg labels [0, 1, 2]
+running k-means on cpu..
+running k-means on cpu..
+proposed keypoints: 2
+[[0.003000000026077032, -0.4259999990463257, 0.010999999940395355], [0.26499998569488525, -0.44200000166893005, 0.07699999958276749]]
+tracked keypoints: 2 [[0.003, -0.426, 0.011], [0.265, -0.442, 0.077]]
+ee0 [0.361, -0.625, 0.253, -0.5, 0.5, -0.5, 0.5]
+target [0.25, -0.42, 0.22]
+ee1 [0.25, -0.419, 0.215, -0.495, 0.503, -0.497, 0.505] pos err 0.0049
+video /data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P3/smoke_mujoco_env.mp4 frames 80

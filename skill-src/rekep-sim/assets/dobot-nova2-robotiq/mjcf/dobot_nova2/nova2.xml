@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="dobot_nova2">
+  <compiler angle="radian" meshdir="." autolimits="true" />
+  <option integrator="implicitfast" />
+  <default>
+    <default class="visual">
+      <geom type="mesh" contype="0" conaffinity="0" group="2" />
+    </default>
+    <default class="collision">
+      <geom type="mesh" group="3" />
+    </default>
+    <default class="joint_actuator" />
+  </default>
+  <asset>
+    <material name="nova_gray" rgba="0.7921579 0.8196078 0.9333333 1" />
+    <mesh name="base_link" file="assets/nova2/base_link.STL" />
+    <mesh name="Link1" file="assets/nova2/Link1.STL" />
+    <mesh name="Link2" file="assets/nova2/Link2.STL" />
+    <mesh name="Link3" file="assets/nova2/Link3.STL" />
+    <mesh name="Link4" file="assets/nova2/Link4.STL" />
+    <mesh name="Link5" file="assets/nova2/Link5.STL" />
+    <mesh name="Link6" file="assets/nova2/Link6.STL" />
+  </asset>
+  <worldbody>
+    <light name="key" pos="0 0 1.5" dir="0 0 -1" directional="true" />
+    <body name="base_link" pos="0 0 0.03">
+      <inertial pos="1.31739325e-05 -7.84959719e-06 0.0647773078" mass="0.939873286768969" diaginertia="0.00191682867137382 0.00192279468074328 0.00127269960160789" />
+      <geom class="visual" mesh="base_link" material="nova_gray" pos="0 0 0" euler="0 0 0" />
+      <geom class="collision" mesh="base_link" pos="0 0 0" euler="0 0 0" />
+      <body name="Link1" pos="0 0 0.2234" euler="0 0 0">
+        <inertial pos="-5.44523391e-07 -0.0218722569 -0.0236239645" mass="0.803371401390743" diaginertia="0.00167952903521413 0.00146965832921226 0.00103706598237737" />
+        <joint name="joint1" axis="0 0 1" range="-6.28 6.28" />
+        <geom class="visual" mesh="Link1" material="nova_gray" pos="0 0 0" euler="0 0 0" />
+        <geom class="collision" mesh="Link1" pos="0 0 0" euler="0 0 0" />
+        <body name="Link2" pos="0 0 0" euler="1.5708 1.5708 0">
+          <inertial pos="-0.15031375 4.18877523e-06 0.0931448461" mass="1.57815975340995" diaginertia="0.00156674973214016 0.0216397042193888 0.0217363605210336" />
+          <joint name="joint2" axis="0 0 1" range="-3.14 3.14" />
+          <geom class="visual" mesh="Link2" material="nova_gray" pos="0 0 0" euler="0 0 0" />
+          <geom class="collision" mesh="Link2" pos="0 0 0" euler="0 0 0" />
+          <body name="Link3" pos="-0.28 0 0" euler="0 0 0">
+            <inertial pos="-0.118295307 3.91200534e-06 0.0113008076" mass="0.99867391089996" diaginertia="0.000775712315283709 0.00938204904571472 0.00940115973618697" />
+            <joint name="joint3" axis="0 0 1" range="-2.79 2.79" />
+            <geom class="visual" mesh="Link3" material="nova_gray" pos="0 0 0" euler="0 0 0" />
+            <geom class="collision" mesh="Link3" pos="0 0 0" euler="0 0 0" />
+            <body name="Link4" pos="-0.22501 0 0.1175" euler="0 0 -1.5708">
+              <inertial pos="-7.47431367e-06 -0.0226550274 -0.0204586562" mass="0.441608812891546" diaginertia="0.000641172450255966 0.000455371502301378 0.000482718528361731" />
+              <joint name="joint4" axis="0 0 1" range="-6.28 6.28" />
+              <geom class="visual" mesh="Link4" material="nova_gray" pos="0 0 0" euler="0 0 0" />
+              <geom class="collision" mesh="Link4" pos="0 0 0" euler="0 0 0" />
+              <body name="Link5" pos="0 -0.12 0" euler="1.5708 0 0">
+                <inertial pos="-2.6272342e-06 0.00191303346 -0.00761123062" mass="0.574835130262751" diaginertia="0.000663176880312698 0.000397520642705227 0.000641156755381468" />
+                <joint name="joint5" axis="0 0 1" range="-6.28 6.28" />
+                <geom class="visual" mesh="Link5" material="nova_gray" pos="0 0 0" euler="0 0 0" />
+                <geom class="collision" mesh="Link5" pos="0 0 0" euler="0 0 0" />
+                <body name="Link6" pos="0 0.088004 0" euler="-1.5708 0 0">
+                  <inertial pos="-4.63325246e-07 -4.92709727e-05 -0.0196921496" mass="0.124247087839584" diaginertia="4.97044850239183E-05 4.99145981166397E-05 7.67222809720147E-05" />
+                  <joint name="joint6" axis="0 0 1" range="-6.28 6.28" />
+                  <geom class="visual" mesh="Link6" material="nova_gray" pos="0 0 0" euler="0 0 0" />
+                  <geom class="collision" mesh="Link6" pos="0 0 0" euler="0 0 0" />
+                  <site name="attachment_site" pos="0 0 0" size="0.005" rgba="0.9 0.9 0.9 1" />
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+    <position name="joint1" joint="joint1" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-6.28 6.28" />
+    <position name="joint2" joint="joint2" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-3.14 3.14" />
+    <position name="joint3" joint="joint3" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-2.79 2.79" />
+    <position name="joint4" joint="joint4" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-6.28 6.28" />
+    <position name="joint5" joint="joint5" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-6.28 6.28" />
+    <position name="joint6" joint="joint6" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-6.28 6.28" />
+  </actuator>
+  <keyframe>
+    <key name="home" qpos="0 0 0 0 0 0" ctrl="0 0 0 0 0 0" />
+  </keyframe>
+</mujoco>
