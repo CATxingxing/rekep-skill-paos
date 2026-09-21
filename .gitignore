@@ -1,0 +1,17 @@
+# build / runtime artifacts
+dist/
+*.tar.gz
+*.egg-info/
+.rekep-install.*
+.paos-node.json
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# local state / caches (should live outside the repo on /data7)
+.paos-rekep/
+*.log.tmp

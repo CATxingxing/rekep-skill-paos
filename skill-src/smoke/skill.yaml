@@ -1,0 +1,27 @@
+manifest_version: 2
+name: paos-smoke
+version: "0.0.1"
+description: Minimal Skill Runtime and single-file node install/verify smoke test.
+skill_document: SKILL.md
+gateway_url: http://127.0.0.1:19299
+required_tools:
+  - smoke.ping
+profiles:
+  smoke:
+    dataflow: profiles/smoke/dataflow.yaml
+    required_binaries:
+      - gateway
+    required_assets: []
+    required_environment: []
+    environment: {}
+artifacts:
+  resolver: registry
+  nodes:
+    gateway:
+      artifact_id: gateway-1.1.0-linux-x86_64
+      version: "1.1.0"
+      platform: linux
+      arch: x86_64
+      artifact_type: executable_tar_gz
+      entrypoint: gateway
+      sha256: bb42c141b299a854fed2ff31f20be5b83551c7c47a30bce06fccd717da202387

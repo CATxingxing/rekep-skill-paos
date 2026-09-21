@@ -1,0 +1,12 @@
+paos-smoke 0.0.1
+Minimal Skill Runtime and single-file node install/verify smoke test.
+Document: SKILL.md
+Gateway: http://127.0.0.1:19299
+Tools: smoke.ping
+                       Runtime Profiles                       
+┏━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━┓
+┃ Profile ┃ Dataflow                     ┃ Binaries ┃ Assets ┃
+┡━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━┩
+│ smoke   │ profiles/smoke/dataflow.yaml │ 1        │ 0      │
+└─────────┴──────────────────────────────┴──────────┴────────┘
+Runtime: not started
