@@ -1,0 +1,25 @@
+{
+  "experiment": "GEN7_repeat",
+  "status": "succeeded",
+  "objectives": {
+    "ok": true,
+    "mode": "in_region",
+    "object": "red_cube",
+    "region": "region_a",
+    "dx": 0.0232,
+    "dy": 0.008,
+    "dz": 0.093
+  },
+  "stages": [
+    {
+      "phase": "stage1_grasp",
+      "ok": true
+    },
+    {
+      "phase": "stage3_release",
+      "ok": true
+    }
+  ],
+  "elapsed_s": 229.22,
+  "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN7_repeat.mp4"
+}

@@ -22,20 +22,14 @@ DEFAULT_PROPOSER_CONFIG = {
 
 
 def _nearest_object(env, point: np.ndarray) -> str:
+    """Return the display name of the scene object/region nearest to a keypoint."""
     best_name, best_dist = None, np.inf
-    for name, gid in zip(env.objects.keys(), env.objects.values()):
-        # env.objects maps geom-name -> label; find the geom by name
-        import mujoco
-
-        geom_id = mujoco.mj_name2id(env.model, mujoco.mjtObj.mjOBJ_GEOM, name)
-        d = float(np.linalg.norm(env.data.geom_xpos[geom_id] - point))
+    for info in env.objects_info.values():
+        pos = env.data.geom_xpos[info["geom_id"]]
+        d = float(np.linalg.norm(pos - point))
         if d < best_dist:
-            best_name, best_dist = name, d
-    # normalize geom names to semantic roles
-    return {
-        "pick_cube_geom": "pick_cube",
-        "place_zone": "place_zone",
-    }.get(best_name, best_name)
+            best_name, best_dist = info["display"], d
+    return best_name if best_name is not None else "unknown"
 
 
 _PROPOSER_CACHE: dict[str, Any] = {}
@@ -113,6 +107,19 @@ def perceive(env, *, proposer_config: dict | None = None, seed: int = 0) -> tupl
                 "position_m": [float(x) for x in p],
                 "pixel_uv": [int(pixels[i][1]), int(pixels[i][0])],
                 "object": _nearest_object(env, p),
+                "kind": "proposal",
+            }
+        )
+    # Add one exact center keypoint per object/region so constraints can target
+    # object/region centres precisely (not just DINOv2 surface patches).
+    for info in env.objects_info.values():
+        keypoints.append(
+            {
+                "index": len(keypoints),
+                "position_m": [float(x) for x in env.data.geom_xpos[info["geom_id"]]],
+                "pixel_uv": [-1, -1],
+                "object": info["display"],
+                "kind": "center",
             }
         )
     rgb_sha = hashlib.sha256(obs["rgb"].tobytes()).hexdigest()
@@ -127,6 +134,16 @@ def perceive(env, *, proposer_config: dict | None = None, seed: int = 0) -> tupl
         "bounds_min": env.bounds_min.tolist(),
         "bounds_max": env.bounds_max.tolist(),
         "keypoints": keypoints,
+        "objects": [
+            {
+                "name": v["display"],
+                "geom": v["name"],
+                "movable": v["movable"],
+                "region": v["region"],
+                "position_m": [float(x) for x in env.data.geom_xpos[v["geom_id"]]],
+            }
+            for v in env.objects_info.values()
+        ],
         "rgb": obs["rgb"],
         "projected": projected,
     }

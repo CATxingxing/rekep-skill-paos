@@ -29,9 +29,11 @@ DEFAULT_CAMERA = {
     "fovy": 45.0,
 }
 
-# objects that get a unique segmentation label and can carry keypoints
-# name -> label, where name is a MuJoCo *geom* name
-DEFAULT_OBJECTS = {"pick_cube_geom": 1, "place_zone": 2}
+# Object model: by default the env auto-enumerates scene geoms into
+#   * movable objects  (parent body has a free joint)
+#   * regions          (name contains "zone" or starts with "region")
+# An explicit mapping ``{geom_name: label}`` can still be passed to override.
+_EXCLUDE_NAME_TOKENS = ("floor", "ground", "platform", "table", "wall", "ceiling")
 
 
 @dataclass
@@ -70,7 +72,7 @@ class MujocoReKepEnv:
         self.bounds_min = np.asarray(bounds_min, dtype=float)
         self.bounds_max = np.asarray(bounds_max, dtype=float)
         self.camera_cfg = dict(camera or DEFAULT_CAMERA)
-        self.objects = dict(objects or DEFAULT_OBJECTS)
+        self.objects_override = dict(objects) if objects else None
         self.video_size = int(video_size)
         self.rng = np.random.default_rng(seed)
         self.verbose = False
@@ -106,12 +108,12 @@ class MujocoReKepEnv:
             self.model, mujoco.mjtObj.mjOBJ_CAMERA, self.camera_cfg["name"]
         )
         self.pinch_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_SITE, "pinch")
+        if self.pinch_id < 0:
+            raise RuntimeError("scene is missing the 'pinch' site")
         self.cube_joint = mujoco.mj_name2id(
             self.model, mujoco.mjtObj.mjOBJ_JOINT, "pick_cube_free"
         )
-        if self.pinch_id < 0 or self.cube_joint < 0:
-            raise RuntimeError("scene is missing pinch site or pick_cube_free joint")
-        self.cube_qposadr = int(self.model.jnt_qposadr[self.cube_joint])
+        self.cube_qposadr = int(self.model.jnt_qposadr[self.cube_joint]) if self.cube_joint >= 0 else -1
         self.arm_joints = [
             mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, f"joint{i}")
             for i in range(1, 7)
@@ -122,17 +124,64 @@ class MujocoReKepEnv:
         self.arm_hi = self.model.jnt_range[self.arm_joints, 1].copy()
         self.target_rot = np.diag([1.0, -1.0, -1.0])
 
+    def _body_has_freejoint(self, body_id: int) -> bool:
+        if body_id <= 0:
+            return False
+        adr, num = int(self.model.body_jntadr[body_id]), int(self.model.body_jntnum[body_id])
+        return any(
+            self.model.jnt_type[j] == mujoco.mjtJoint.mjJNT_FREE for j in range(adr, adr + num)
+        )
+
     def _build_objects(self) -> None:
-        self.geom_label: dict[int, int] = {}
-        self.label_geom: dict[int, int] = {}
-        self.label_body: dict[int, int] = {}
-        for name, label in self.objects.items():
-            gid = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, name)
-            if gid < 0:
-                raise RuntimeError(f"scene is missing geom {name!r}")
-            self.geom_label[int(gid)] = int(label)
-            self.label_geom[int(label)] = int(gid)
-            self.label_body[int(label)] = int(self.model.geom_bodyid[gid])
+        """Enumerate scene objects/regions (or use an explicit override)."""
+        self.objects_info: dict[int, dict] = {}
+        robot_bodies = self._robot_body_ids()
+        if self.objects_override is not None:
+            items = sorted(self.objects_override.items(), key=lambda kv: kv[1])
+            for name, label in items:
+                gid = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, name)
+                if gid < 0:
+                    raise RuntimeError(f"scene is missing geom {name!r}")
+                body_id = int(self.model.geom_bodyid[gid])
+                self.objects_info[int(label)] = {
+                    "name": name,
+                    "display": name.removesuffix("_geom"),
+                    "geom_id": int(gid),
+                    "body_id": body_id,
+                    "movable": self._body_has_freejoint(body_id),
+                    "region": name.startswith("region") or "zone" in name,
+                }
+        else:
+            label = 0
+            for gid in range(self.model.ngeom):
+                name = self.model.geom(gid).name or ""
+                body_id = int(self.model.geom_bodyid[gid])
+                if not name or body_id in robot_bodies:
+                    continue
+                if self.model.geom_type[gid] == mujoco.mjtGeom.mjGEOM_PLANE:
+                    continue
+                if any(tok in name.lower() for tok in _EXCLUDE_NAME_TOKENS):
+                    continue
+                movable = self._body_has_freejoint(body_id)
+                is_region = name.startswith("region") or "zone" in name
+                if not (movable or is_region):
+                    continue
+                label += 1
+                self.objects_info[label] = {
+                    "name": name,
+                    "display": name.removesuffix("_geom"),
+                    "geom_id": int(gid),
+                    "body_id": body_id,
+                    "movable": movable,
+                    "region": is_region and not movable,
+                }
+        # derived maps used by tracking / grasping
+        self.geom_label = {v["geom_id"]: k for k, v in self.objects_info.items()}
+        self.label_geom = {k: v["geom_id"] for k, v in self.objects_info.items()}
+        self.label_body = {k: v["body_id"] for k, v in self.objects_info.items()}
+        self.label_display = {k: v["display"] for k, v in self.objects_info.items()}
+        self.movable_labels = [k for k, v in self.objects_info.items() if v["movable"]]
+        self.region_labels = [k for k, v in self.objects_info.items() if v["region"]]
 
     # ------------------------------------------------------------- rendering
     def _render(self) -> Capture:
@@ -203,6 +252,39 @@ class MujocoReKepEnv:
 
     def get_object_by_keypoint(self, keypoint_idx: int) -> int:
         return self._keypoint2object[int(keypoint_idx)]
+
+    def geom_id_for_display(self, name: str) -> int:
+        for info in self.objects_info.values():
+            if info["display"] == name or info["name"] == name:
+                return info["geom_id"]
+        return -1
+
+    def object_positions(self) -> dict[str, list[float]]:
+        return {
+            info["display"]: [float(x) for x in self.data.geom_xpos[info["geom_id"]]]
+            for info in self.objects_info.values()
+        }
+
+    def object_state(self) -> list[dict]:
+        out = []
+        for label, info in self.objects_info.items():
+            gid = info["geom_id"]
+            out.append(
+                {
+                    "label": label,
+                    "name": info["display"],
+                    "geom": info["name"],
+                    "movable": info["movable"],
+                    "region": info["region"],
+                    "position_m": [float(x) for x in self.data.geom_xpos[gid]],
+                    "quaternion_xyzw": [
+                        float(x)
+                        for x in _mat_to_quat_xyzw(self.data.geom_xmat[gid].reshape(3, 3))
+                    ],
+                    "geom_size": [float(x) for x in self.model.geom_size[gid]],
+                }
+            )
+        return out
 
     def is_grasping(self, candidate_obj=None) -> bool:
         """Assisted grasp (if attached) or gripper-pad contact with the object."""

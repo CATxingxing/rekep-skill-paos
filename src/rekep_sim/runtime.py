@@ -31,7 +31,9 @@ class RuntimeConfig:
     interpolate_rot_step_size: float = 0.34
     max_iterations: int = 60
     seed: int = 0
-    force_tool_down: bool = True
+    # When False (default) the end-effector pose is driven by the constraints;
+    # set True only for degenerate envs that cannot reach arbitrary orientations.
+    force_tool_down: bool = False
     subgoal_sampling_maxfun: int = 2000
     path_sampling_maxfun: int = 2000
     minimizer_maxiter: int = 100
@@ -113,10 +115,15 @@ class ReKepRuntime:
 
     # ------------------------------------------------------------------ plan
     def make_template_program(self, snapshot: dict, instruction: str) -> dict:
-        """Deterministic 3-stage pick/place program from a perception snapshot."""
+        """Deterministic pick/place program derived from the scene objects."""
         kps = snapshot["keypoints"]
-        cube_idx = _role_index(kps, "pick_cube")
-        place_idx = _role_index(kps, "place_zone")
+        objects = snapshot.get("objects", [])
+        movables = [o["name"] for o in objects if o.get("movable")]
+        regions = [o["name"] for o in objects if o.get("region")]
+        cube_name = movables[0] if movables else "pick_cube"
+        place_name = regions[0] if regions else "place_zone"
+        cube_idx = _role_index(kps, cube_name)
+        place_idx = _role_index(kps, place_name)
         prog = (
             "num_stages = 3\n"
             "def stage1_subgoal_constraint1(end_effector, keypoints):\n"
@@ -130,10 +137,11 @@ class ReKepRuntime:
             f"grasp_keypoints = [{cube_idx}, -1, -1]\n"
             f"release_keypoints = [-1, -1, {cube_idx}]\n"
         )
-        return self._program_from_text(prog, snapshot, instruction, source="template")
+        success = {"object": cube_name, "target_region": place_name, "mode": "in_region", "tol": 0.06}
+        return self._program_from_text(prog, snapshot, instruction, source="template", success=success)
 
     def _program_from_text(self, text: str, snapshot: dict, instruction: str, *, source: str,
-                          vlm_trace: str | None = None) -> dict:
+                          vlm_trace: str | None = None, success: dict | None = None) -> dict:
         import re
 
         num_stages = int(re.search(r"num_stages\s*=\s*(\d+)", text).group(1))
@@ -177,6 +185,8 @@ class ReKepRuntime:
             ],
             "source": source,
         }
+        if success is not None:
+            core["success"] = success
         core["plan_id"] = f"plan_{uuid.uuid4().hex}"
         core["created_timestamp_ns"] = str(time.time_ns())
         if vlm_trace:
@@ -198,19 +208,28 @@ class ReKepRuntime:
         # Ground the model on the exact keypoint IDs (mirrors the reference
         # real-path index guard). Without this the VLM remaps IDs arbitrarily.
         keypoints = snapshot["keypoints"]
+        objects = snapshot.get("objects", [])
         guard_lines = ["Use exact keypoint IDs from this table. Never remap ID meanings:"]
         for k in keypoints:
             guard_lines.append(
                 f"- id {k['index']}: object={k.get('object', 'unknown')}, "
                 f"position_m={[round(float(x), 3) for x in k['position_m']]}"
             )
-        grasp_id = next(
-            (k["index"] for k in keypoints if k.get("object") == "pick_cube"), None
-        )
-        if grasp_id is not None:
-            guard_lines.append(
-                f"- The first grasping stage must grasp the pick_cube keypoint id {grasp_id}."
+        if objects:
+            guard_lines.append("Scene objects:")
+            for o in objects:
+                kind = "movable object" if o.get("movable") else "region"
+                guard_lines.append(f"- {o['name']}: {kind}")
+        movables = [o["name"] for o in objects if o.get("movable")]
+        if len(movables) == 1:
+            grasp_id = next(
+                (k["index"] for k in keypoints if k.get("object") == movables[0]), None
             )
+            if grasp_id is not None:
+                guard_lines.append(
+                    f"- The first grasping stage must grasp the movable "
+                    f"'{movables[0]}' keypoint id {grasp_id}."
+                )
         guard = "\n".join(guard_lines)
         _orig_build_prompt = gen._build_prompt
 
@@ -252,8 +271,9 @@ class ReKepRuntime:
         text += f"\nnum_stages = {num_stages}\n"
         text += f"grasp_keypoints = {meta['grasp_keypoints']}\n"
         text += f"release_keypoints = {meta['release_keypoints']}\n"
+        success = _derive_success(meta["grasp_keypoints"], meta["release_keypoints"], snapshot["keypoints"])
         return self._program_from_text(text, snapshot, instruction, source="vlm",
-                                       vlm_trace=f"{task_dir}/vlm_trace.json")
+                                       vlm_trace=f"{task_dir}/vlm_trace.json", success=success)
 
     # --------------------------------------------------------------- execute
     def execute(self, program: dict, *, cancel=None, progress: Callable[[dict], None] | None = None,
@@ -279,6 +299,7 @@ class ReKepRuntime:
                 }
             )
         env.register_keypoints(init_kps)
+        initial_object_positions = env.object_positions()
         keypoint_movable_mask = np.zeros(len(init_kps) + 1, dtype=bool)
         keypoint_movable_mask[0] = True
 
@@ -380,29 +401,15 @@ class ReKepRuntime:
                 phases.append({"phase": f"stage{stage}_release", "ok": True})
                 _progress(progress, {"phase": f"stage{stage}_release"})
             if stage == num_stages:
-                env.sleep(0.3)
+                env.sleep(1.5)
                 video = env.save_video()
-                cube_joint = env.cube_qposadr
-                final_cube = env.data.qpos[cube_joint:cube_joint + 3].tolist()
-                # verify the cube reached the place keypoint (no blind success)
-                scene = env.get_keypoint_positions()
-                place_idx = next(
-                    (
-                        int(k["index"])
-                        for k in program["keypoints"]
-                        if k.get("object") == "place_zone"
-                    ),
-                    0,
-                )
-                target = scene[place_idx]
-                err = float(np.linalg.norm(np.asarray(final_cube) - target))
-                ok = err < 0.06 and final_cube[2] < 0.06
+                outcome = _evaluate_success(env, program.get("success"), initial_object_positions)
                 return {
-                    "status": "succeeded" if ok else "failed",
+                    "status": "succeeded" if outcome.get("ok") else "failed",
                     "video": video,
                     "stages": phases,
-                    "final_cube_position_m": final_cube,
-                    "place_error_m": round(err, 4),
+                    "objectives": outcome,
+                    "final_state": env.object_state(),
                     "elapsed_s": round(time.monotonic() - started, 2),
                 }
             stage += 1
@@ -480,6 +487,83 @@ def _role_index(keypoints: list[dict], object_name: str) -> int:
             return int(k["index"])
     # fall back to positional: cube is last, place zone is first
     return 0 if object_name == "place_zone" else len(keypoints) - 1
+
+
+def _derive_success(grasp: list[int], release: list[int], keypoints: list[dict]) -> dict | None:
+    """Generic success spec: the object moved by the task must have moved."""
+    goal_idx = None
+    for idx in reversed(release):
+        if int(idx) != -1:
+            goal_idx = int(idx)
+            break
+    if goal_idx is None:
+        for idx in grasp:
+            if int(idx) != -1:
+                goal_idx = int(idx)
+                break
+    if goal_idx is None or not (0 <= goal_idx < len(keypoints)):
+        return None
+    obj = keypoints[goal_idx].get("object")
+    if not obj:
+        return None
+    return {"object": obj, "mode": "moved", "min_delta_m": 0.03}
+
+
+def _evaluate_success(env, spec: dict | None, initial: dict[str, list[float]]) -> dict:
+    import math
+
+    if not spec:
+        return {"ok": None, "reason": "no success spec"}
+    mode = spec.get("mode", "in_region")
+    name = spec["object"]
+    gid = env.geom_id_for_display(name)
+    if gid < 0:
+        return {"ok": False, "reason": f"unknown object {name!r}", "mode": mode}
+    pos = env.data.geom_xpos[gid].copy()
+    tol = float(spec.get("tol", 0.05))
+
+    if mode == "moved":
+        start = np.asarray(initial.get(name, pos.tolist()), dtype=float)
+        delta = float(np.linalg.norm(pos - start))
+        return {"ok": bool(delta >= float(spec.get("min_delta_m", 0.03))), "mode": mode,
+                "delta_m": round(delta, 4), "object": name}
+
+    if mode == "in_region":
+        rid = env.geom_id_for_display(spec["target_region"])
+        rpos = env.data.geom_xpos[rid].copy()
+        rsize = env.model.geom_size[rid]
+        dx, dy = abs(pos[0] - rpos[0]), abs(pos[1] - rpos[1])
+        dz = pos[2] - (rpos[2] + rsize[2])
+        ok = dx <= rsize[0] + tol and dy <= rsize[1] + tol and dz <= 0.05 + tol
+        return {"ok": bool(ok), "mode": mode, "object": name, "region": spec["target_region"],
+                "dx": round(dx, 4), "dy": round(dy, 4), "dz": round(float(dz), 4)}
+
+    if mode == "on_top":
+        tid = env.geom_id_for_display(spec["target_object"])
+        tpos = env.data.geom_xpos[tid].copy()
+        tsize = env.model.geom_size[tid]
+        dx, dy = abs(pos[0] - tpos[0]), abs(pos[1] - tpos[1])
+        top = tpos[2] + tsize[2]
+        z_ok = top - tol <= pos[2] <= top + tol + 0.06
+        ok = dx <= tsize[0] + tol and dy <= tsize[1] + tol and z_ok
+        return {"ok": bool(ok), "mode": mode, "object": name, "target_object": spec["target_object"],
+                "dx": round(dx, 4), "dy": round(dy, 4), "z": round(float(pos[2]), 4), "top": round(float(top), 4)}
+
+    if mode == "upright":
+        rot = env.data.geom_xmat[gid].reshape(3, 3)
+        axis = rot[:, 2]
+        cos = float(np.clip(axis @ np.array([0.0, 0.0, 1.0]), -1.0, 1.0))
+        angle = math.degrees(math.acos(cos))
+        ok = angle <= float(spec.get("tol_deg", 15.0))
+        result = {"ok": bool(ok), "mode": mode, "object": name, "angle_deg": round(angle, 2)}
+        if spec.get("target_region"):
+            region = _evaluate_success(env, {"object": name, "target_region": spec["target_region"],
+                                             "mode": "in_region", "tol": tol}, initial)
+            result["in_region"] = region
+            result["ok"] = bool(result["ok"] and region.get("ok"))
+        return result
+
+    return {"ok": False, "reason": f"unknown success mode {mode!r}"}
 
 
 def _digest(value: Any) -> str:

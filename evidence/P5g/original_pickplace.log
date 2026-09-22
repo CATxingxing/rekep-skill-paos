@@ -1,0 +1,75 @@
+/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/swiglu_ffn.py:51: UserWarning: xFormers is not available (SwiGLU)
+  warnings.warn("xFormers is not available (SwiGLU)")
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/attention.py:33: UserWarning: xFormers is not available (Attention)
+  warnings.warn("xFormers is not available (Attention)")
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
+  warnings.warn("xFormers is not available (Block)")
+keypoints: [(0, 'place_zone', [0.029, -0.425, 0.011]), (1, 'pick_cube', [0.263, -0.411, 0.077]), (2, 'place_zone', [0.0, -0.42, 0.006]), (3, 'pick_cube', [0.25, -0.42, 0.05])]
+program stages: 3 grasp [1, -1, -1] release [-1, -1, 1]
+progress {'phase': 'stage1_grasp', 'ok': True}
+progress {'phase': 'stage3_release'}
+RESULT {
+  "status": "succeeded",
+  "video": "/data7/home/linjiongxiao/.paos-rekep/tmp/rekep_mujoco.mp4",
+  "objectives": {
+    "ok": true,
+    "mode": "in_region",
+    "object": "pick_cube",
+    "region": "place_zone",
+    "dx": 0.0835,
+    "dy": 0.0316,
+    "dz": 0.0156
+  },
+  "final_state": [
+    {
+      "label": 1,
+      "name": "place_zone",
+      "geom": "place_zone",
+      "movable": false,
+      "region": true,
+      "position_m": [
+        0.0,
+        -0.42,
+        0.006
+      ],
+      "quaternion_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "geom_size": [
+        0.045,
+        0.045,
+        0.003
+      ]
+    },
+    {
+      "label": 2,
+      "name": "pick_cube",
+      "geom": "pick_cube_geom",
+      "movable": true,
+      "region": false,
+      "position_m": [
+        0.08345101990214024,
+        -0.38841717555427163,
+        0.024588289293262133
+      ],
+      "quaternion_xyzw": [
+        0.7090057567643625,
+        -0.008556197904552778,
+        -0.7050838537963189,
+        -0.009715321309279422
+      ],
+      "geom_size": [
+        0.025,
+        0.025,
+        0.025
+      ]
+    }
+  ],
+  "elapsed_s": 154.97
+}
+stages [{'phase': 'stage1_grasp', 'ok': True}, {'phase': 'stage3_release', 'ok': True}]

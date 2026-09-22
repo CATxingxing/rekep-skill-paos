@@ -1,0 +1,88 @@
+{
+  "scene": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/skill-src/rekep-sim/assets/dobot-nova2-robotiq/mjcf/tabletop_general.xml",
+  "proposer": {
+    "num_candidates_per_mask": 12,
+    "min_dist_bt_keypoints": 0.01
+  },
+  "results": {
+    "GEN1_pick_red_to_region_a": "succeeded",
+    "GEN7_repeat": "succeeded",
+    "GEN2_pick_blue_to_region_b": "succeeded",
+    "GEN3_stack_red_on_blue": "succeeded",
+    "GEN4_reorient_pen": "failed",
+    "GEN5_noop_constraints": "failed",
+    "GEN6_objective_mismatch": "failed"
+  },
+  "objectives": {
+    "GEN1_pick_red_to_region_a": {
+      "ok": true,
+      "mode": "in_region",
+      "object": "red_cube",
+      "region": "region_a",
+      "dx": 0.0232,
+      "dy": 0.008,
+      "dz": 0.093
+    },
+    "GEN7_repeat": {
+      "ok": true,
+      "mode": "in_region",
+      "object": "red_cube",
+      "region": "region_a",
+      "dx": 0.0232,
+      "dy": 0.008,
+      "dz": 0.093
+    },
+    "GEN2_pick_blue_to_region_b": {
+      "ok": true,
+      "mode": "in_region",
+      "object": "blue_cube",
+      "region": "region_b",
+      "dx": 0.034,
+      "dy": 0.0433,
+      "dz": 0.0677
+    },
+    "GEN3_stack_red_on_blue": {
+      "ok": true,
+      "mode": "on_top",
+      "object": "red_cube",
+      "target_object": "blue_cube",
+      "dx": 0.027,
+      "dy": 0.0252,
+      "z": 0.0213,
+      "top": 0.0399
+    },
+    "GEN4_reorient_pen": {
+      "ok": false,
+      "mode": "upright",
+      "object": "pen",
+      "angle_deg": 62.32,
+      "in_region": {
+        "ok": false,
+        "mode": "in_region",
+        "object": "pen",
+        "region": "region_holder",
+        "dx": 0.2223,
+        "dy": 0.1414,
+        "dz": 0.1026
+      }
+    },
+    "GEN5_noop_constraints": {
+      "ok": false,
+      "mode": "in_region",
+      "object": "red_cube",
+      "region": "region_a",
+      "dx": 0.12,
+      "dy": 0.1,
+      "dz": 0.0109
+    },
+    "GEN6_objective_mismatch": {
+      "ok": false,
+      "mode": "in_region",
+      "object": "red_cube",
+      "region": "region_holder",
+      "dx": 0.1568,
+      "dy": 0.132,
+      "dz": 0.079
+    }
+  }
+}

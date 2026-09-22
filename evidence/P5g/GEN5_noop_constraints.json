@@ -1,0 +1,16 @@
+{
+  "experiment": "GEN5_noop_constraints",
+  "status": "failed",
+  "objectives": {
+    "ok": false,
+    "mode": "in_region",
+    "object": "red_cube",
+    "region": "region_a",
+    "dx": 0.12,
+    "dy": 0.1,
+    "dz": 0.0109
+  },
+  "stages": [],
+  "elapsed_s": 200.58,
+  "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN5_noop_constraints.mp4"
+}

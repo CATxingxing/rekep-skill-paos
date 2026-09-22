@@ -1,0 +1,26 @@
+{
+  "experiment": "GEN3_stack_red_on_blue",
+  "status": "succeeded",
+  "objectives": {
+    "ok": true,
+    "mode": "on_top",
+    "object": "red_cube",
+    "target_object": "blue_cube",
+    "dx": 0.027,
+    "dy": 0.0252,
+    "z": 0.0213,
+    "top": 0.0399
+  },
+  "stages": [
+    {
+      "phase": "stage1_grasp",
+      "ok": true
+    },
+    {
+      "phase": "stage3_release",
+      "ok": true
+    }
+  ],
+  "elapsed_s": 266.69,
+  "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN3_stack_red_on_blue.mp4"
+}

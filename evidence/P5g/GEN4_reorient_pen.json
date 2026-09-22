@@ -1,0 +1,31 @@
+{
+  "experiment": "GEN4_reorient_pen",
+  "status": "failed",
+  "objectives": {
+    "ok": false,
+    "mode": "upright",
+    "object": "pen",
+    "angle_deg": 62.32,
+    "in_region": {
+      "ok": false,
+      "mode": "in_region",
+      "object": "pen",
+      "region": "region_holder",
+      "dx": 0.2223,
+      "dy": 0.1414,
+      "dz": 0.1026
+    }
+  },
+  "stages": [
+    {
+      "phase": "stage1_grasp",
+      "ok": true
+    },
+    {
+      "phase": "stage3_release",
+      "ok": true
+    }
+  ],
+  "elapsed_s": 237.32,
+  "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN4_reorient_pen.mp4"
+}
