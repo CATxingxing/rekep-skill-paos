@@ -13,14 +13,16 @@ import cv2  # noqa: E402
 from rekep_sim.env.mujoco_env import MujocoReKepEnv  # noqa: E402
 from rekep_sim.perception import perceive, warmup  # noqa: E402
 from rekep_sim.provider import Provider  # noqa: E402
-from rekep_sim.state import scene_path, state_dir, write_json  # noqa: E402
+from rekep_sim.state import env_kwargs, scene_path, state_dir, write_json  # noqa: E402
 
 
 def main() -> None:
+    scene = scene_path()
     env = MujocoReKepEnv(
-        scene_path(),
-        height=int(os.environ.get("REKEP_SIM_HEIGHT", "240")),
-        width=int(os.environ.get("REKEP_SIM_WIDTH", "320")),
+        scene,
+        height=int(os.environ.get("REKEP_SIM_HEIGHT", "320")),
+        width=int(os.environ.get("REKEP_SIM_WIDTH", "420")),
+        **env_kwargs(scene),
     )
     # Warm the DINOv2 model in the background: register the provider immediately
     # (fast node readiness) while the model loads.

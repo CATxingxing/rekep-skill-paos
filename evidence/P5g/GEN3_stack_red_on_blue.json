@@ -6,10 +6,10 @@
     "mode": "on_top",
     "object": "red_cube",
     "target_object": "blue_cube",
-    "dx": 0.027,
-    "dy": 0.0252,
-    "z": 0.0213,
-    "top": 0.0399
+    "dx": 0.0089,
+    "dy": 0.004,
+    "z": 0.0197,
+    "top": 0.04
   },
   "stages": [
     {
@@ -21,6 +21,6 @@
       "ok": true
     }
   ],
-  "elapsed_s": 266.69,
+  "elapsed_s": 117.23,
   "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN3_stack_red_on_blue.mp4"
 }

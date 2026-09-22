@@ -25,11 +25,11 @@ tools:
       output_schema: {type: object}
       readiness: []
       robot_frame_profile:
-        robot_id: dobot_nova2
-        base_frame: nova2_base
-        tool_frame: pinch
+        robot_id: franka_panda
+        base_frame: link0
+        tool_frame: tool
         frames: {}
-        directions: {up: {frame: nova2_base, axis: z, sign: 1}}
+        directions: {up: {frame: link0, axis: z, sign: 1}}
     - tool_id: rekep.plan_task
       implementation_id: rekep.constraint_planner
       endpoint_id: rekep.plan
@@ -47,11 +47,11 @@ tools:
       output_schema: {type: object}
       readiness: []
       robot_frame_profile:
-        robot_id: dobot_nova2
-        base_frame: nova2_base
-        tool_frame: pinch
+        robot_id: franka_panda
+        base_frame: link0
+        tool_frame: tool
         frames: {}
-        directions: {up: {frame: nova2_base, axis: z, sign: 1}}
+        directions: {up: {frame: link0, axis: z, sign: 1}}
     - tool_id: rekep.execute_task
       implementation_id: rekep.plan_executor
       endpoint_id: rekep.executor
@@ -70,11 +70,11 @@ tools:
       output_schema: {type: object}
       readiness: []
       robot_frame_profile:
-        robot_id: dobot_nova2
-        base_frame: nova2_base
-        tool_frame: pinch
+        robot_id: franka_panda
+        base_frame: link0
+        tool_frame: tool
         frames: {}
-        directions: {up: {frame: nova2_base, axis: z, sign: 1}}
+        directions: {up: {frame: link0, axis: z, sign: 1}}
   providers:
     - {endpoint_id: rekep.perception, input_id: perception_tool_in, output_id: perception_tool_out}
     - {endpoint_id: rekep.plan, input_id: plan_tool_in, output_id: plan_tool_out}

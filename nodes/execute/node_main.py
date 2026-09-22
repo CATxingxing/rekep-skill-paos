@@ -9,7 +9,7 @@ os.environ.setdefault("MUJOCO_GL", "egl")
 from rekep_sim.env.mujoco_env import MujocoReKepEnv  # noqa: E402
 from rekep_sim.provider import Provider, ProviderFailure  # noqa: E402
 from rekep_sim.runtime import ReKepRuntime  # noqa: E402
-from rekep_sim.state import digest, read_json, scene_path, state_dir  # noqa: E402
+from rekep_sim.state import digest, env_kwargs, read_json, scene_path, state_dir  # noqa: E402
 
 
 def main() -> None:
@@ -19,10 +19,12 @@ def main() -> None:
         # Heavy init (MuJoCo + solver warmup) is deferred so the dataflow starts
         # promptly and the gateway can bind before the runtime health deadline.
         if "runtime" not in holder:
+            scene = scene_path()
             env = MujocoReKepEnv(
-                scene_path(),
-                height=int(os.environ.get("REKEP_SIM_HEIGHT", "240")),
-                width=int(os.environ.get("REKEP_SIM_WIDTH", "320")),
+                scene,
+                height=int(os.environ.get("REKEP_SIM_HEIGHT", "320")),
+                width=int(os.environ.get("REKEP_SIM_WIDTH", "420")),
+                **env_kwargs(scene),
             )
             holder["env"] = env
             holder["runtime"] = ReKepRuntime(env)

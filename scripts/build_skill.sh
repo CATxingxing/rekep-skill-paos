@@ -16,7 +16,7 @@ ARCH=x86_64
 PLATFORM=linux
 GATEWAY_ARCHIVE="${REKEP_GATEWAY_ARCHIVE:-/data7/home/linjiongxiao/.tmp/opencode/gw/gateway.tar.gz}"
 REF_RUNTIME="$ROOT/reference/rekep-real-plugin/runtime"
-SCENE="$ROOT/skill-src/rekep-sim/assets/dobot-nova2-robotiq/mjcf/dobot_nova2_robotiq_2f85_pick_place.xml"
+SCENE="$ROOT/skill-src/rekep-sim/assets/franka-panda/tabletop_panda.xml"
 STATE_DIR="${REKEP_SIM_STATE_DIR:-$PAOS_REKEP_ROOT/run/rekep-sim}"
 
 DIST="$ROOT/dist"
@@ -72,6 +72,7 @@ profiles:
       - rekep_execute
     required_assets:
       - profiles/sim/gateway.yaml
+      - assets/franka-panda/tabletop_panda.xml
     required_environment: []
     environment:
       MUJOCO_GL: egl

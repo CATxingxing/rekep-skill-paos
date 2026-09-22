@@ -18,6 +18,7 @@ from typing import Any, Callable
 import numpy as np
 
 from . import refimpl
+from .errors import UnreachablePose
 from .sandbox import load_functions
 
 
@@ -379,7 +380,15 @@ class ReKepRuntime:
                     if cfg.force_tool_down:
                         act = act.copy()
                         act[3:7] = env.tool_down_quat()
-                    env.execute_action(act, precise=len(action_queue) == 0)
+                    try:
+                        env.execute_action(act, precise=len(action_queue) == 0)
+                    except UnreachablePose as exc:
+                        if not action_queue:
+                            video = env.save_video()
+                            return {"status": "failed", "error": f"unreachable pose: {exc}",
+                                    "video": video, "stages": phases}
+                        _progress(progress, {"phase": "skip_unreachable_pose"})
+                        continue
                 count += 1
             if action_queue:
                 continue

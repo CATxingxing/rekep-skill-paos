@@ -6,9 +6,9 @@
     "mode": "in_region",
     "object": "blue_cube",
     "region": "region_b",
-    "dx": 0.034,
-    "dy": 0.0433,
-    "dz": 0.0677
+    "dx": 0.0043,
+    "dy": 0.007,
+    "dz": 0.0144
   },
   "stages": [
     {
@@ -20,6 +20,6 @@
       "ok": true
     }
   ],
-  "elapsed_s": 292.68,
+  "elapsed_s": 127.01,
   "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN2_pick_blue_to_region_b.mp4"
 }

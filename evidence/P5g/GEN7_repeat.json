@@ -6,9 +6,9 @@
     "mode": "in_region",
     "object": "red_cube",
     "region": "region_a",
-    "dx": 0.0232,
-    "dy": 0.008,
-    "dz": 0.093
+    "dx": 0.0011,
+    "dy": 0.0208,
+    "dz": 0.0108
   },
   "stages": [
     {
@@ -20,6 +20,6 @@
       "ok": true
     }
   ],
-  "elapsed_s": 229.22,
+  "elapsed_s": 119.03,
   "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN7_repeat.mp4"
 }

@@ -22,9 +22,10 @@ import numpy as np  # noqa: E402
 from rekep_sim.env.mujoco_env import MujocoReKepEnv  # noqa: E402
 from rekep_sim.perception import perceive  # noqa: E402
 from rekep_sim.runtime import ReKepRuntime, RuntimeConfig  # noqa: E402
+from rekep_sim.state import env_kwargs  # noqa: E402
 
-SCENE = ROOT / "skill-src/rekep-sim/assets/dobot-nova2-robotiq/mjcf/tabletop_general.xml"
-PROPOSER = {"num_candidates_per_mask": 12, "min_dist_bt_keypoints": 0.01}
+SCENE = ROOT / "skill-src/rekep-sim/assets/franka-panda/tabletop_panda.xml"
+PROPOSER = {"num_candidates_per_mask": 10, "min_dist_bt_keypoints": 0.02}
 OUT = ROOT / "evidence/P5g"
 
 
@@ -115,7 +116,7 @@ def upright(obj, region, a, b):
 
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
-    env = MujocoReKepEnv(SCENE, height=240, width=320)
+    env = MujocoReKepEnv(SCENE, height=320, width=420, **env_kwargs(SCENE))
     runtime = ReKepRuntime(env, RuntimeConfig())
     snapshot, _proj, kp = perceive(env, proposer_config=PROPOSER)
     kps = snapshot["keypoints"]

@@ -35,6 +35,23 @@ DEFAULT_CAMERA = {
 # An explicit mapping ``{geom_name: label}`` can still be passed to override.
 _EXCLUDE_NAME_TOKENS = ("floor", "ground", "platform", "table", "wall", "ceiling")
 
+# Robot spec (explicit). If omitted the env auto-detects joint1..7|joint1..6, a
+# gripper actuator, and an existing tool site (pinch/tool); if none exists it
+# injects one on ``tool_body`` (used for the Franka Panda).
+_ROBOT_PANDA = {
+    "arm_joints": [f"joint{i}" for i in range(1, 8)],
+    "gripper_actuator": "actuator8",
+    "gripper_open": 0.0,
+    "gripper_close": 255.0,
+    "tool_site": "tool",
+    "tool_body": "hand",
+    "tool_offset": [0.0, 0.0, 0.10],
+    "base_frame": "link0",
+}
+
+
+from ..errors import UnreachablePose  # noqa: E402
+
 
 @dataclass
 class Capture:
@@ -64,6 +81,7 @@ class MujocoReKepEnv:
         bounds_max=(0.7, 0.6, 1.3),
         camera: dict | None = None,
         objects: dict[str, int] | None = None,
+        robot: dict | None = None,
         video_size: int = 2000,
         seed: int = 0,
     ):
@@ -73,6 +91,7 @@ class MujocoReKepEnv:
         self.bounds_max = np.asarray(bounds_max, dtype=float)
         self.camera_cfg = dict(camera or DEFAULT_CAMERA)
         self.objects_override = dict(objects) if objects else None
+        self.robot_override = dict(robot) if robot else None
         self.video_size = int(video_size)
         self.rng = np.random.default_rng(seed)
         self.verbose = False
@@ -83,7 +102,7 @@ class MujocoReKepEnv:
         self.intr = intrinsics(self.camera_cfg["fovy"], self.height, self.width)
         self.video_cache: list[np.ndarray] = []
         self.step_counter = 0
-        self.last_og_gripper_action = 1.0
+        self.last_og_gripper_action = float(self.robot["gripper_open"])
         self._grasp_label: int | None = None
         self._grasp_offset = np.eye(4)
         self.grasp_distance_threshold = 0.06
@@ -93,6 +112,13 @@ class MujocoReKepEnv:
         self.reset()
 
     # ---------------------------------------------------------------- model
+    @staticmethod
+    def _spec_has(collection, name: str) -> bool:
+        try:
+            return collection(name) is not None
+        except Exception:
+            return False
+
     def _build_model(self) -> None:
         spec = mujoco.MjSpec.from_file(self.scene_path)
         inject_camera(
@@ -102,26 +128,85 @@ class MujocoReKepEnv:
             self.camera_cfg["target"],
             self.camera_cfg["fovy"],
         )
+        override = self.robot_override or {}
+        arm_joints = override.get("arm_joints") or [
+            f"joint{i}" for i in range(1, 8) if self._spec_has(spec.joint, f"joint{i}")
+        ]
+        if not arm_joints:
+            arm_joints = [f"joint{i}" for i in range(1, 7)]
+        gripper_act = override.get("gripper_actuator") or next(
+            (n for n in ("actuator8", "fingers_actuator", "gripper") if self._spec_has(spec.actuator, n)),
+            "",
+        )
+        desired_site = override.get("tool_site")
+        if desired_site and self._spec_has(spec.site, desired_site):
+            tool_site = desired_site
+        elif desired_site is None:
+            tool_site = next(
+                (n for n in ("pinch", "tool", "attachment_site", "end_effector") if self._spec_has(spec.site, n)),
+                "",
+            )
+        else:
+            tool_site = ""  # requested but not present -> inject below
+        if not tool_site:
+            tool_body = override.get("tool_body") or next(
+                (n for n in ("hand", "r2f85_base", "Link6") if self._spec_has(spec.body, n)), ""
+            )
+            if not tool_body:
+                raise RuntimeError("scene has no tool site and no tool body")
+            site = spec.body(tool_body).add_site()
+            site.name = "tool"
+            site.pos = list(override.get("tool_offset", [0.0, 0.0, 0.10]))
+            site.size = [0.005, 0.005, 0.005]
+            tool_site = "tool"
+        self.robot = {
+            "arm_joints": list(arm_joints),
+            "gripper_actuator": gripper_act,
+            "gripper_open": float(override.get("gripper_open", 0.0)),
+            "gripper_close": float(override.get("gripper_close", 255.0)),
+            "tool_site": tool_site,
+            "base_frame": override.get("base_frame", "base"),
+        }
         self.model = spec.compile()
         self.data = mujoco.MjData(self.model)
         self.cam_id = mujoco.mj_name2id(
             self.model, mujoco.mjtObj.mjOBJ_CAMERA, self.camera_cfg["name"]
         )
-        self.pinch_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_SITE, "pinch")
+        self.pinch_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_SITE, tool_site)
         if self.pinch_id < 0:
-            raise RuntimeError("scene is missing the 'pinch' site")
+            raise RuntimeError(f"scene is missing tool site {tool_site!r}")
         self.cube_joint = mujoco.mj_name2id(
             self.model, mujoco.mjtObj.mjOBJ_JOINT, "pick_cube_free"
         )
         self.cube_qposadr = int(self.model.jnt_qposadr[self.cube_joint]) if self.cube_joint >= 0 else -1
-        self.arm_joints = [
-            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, f"joint{i}")
-            for i in range(1, 7)
+        jids = [
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, n)
+            for n in self.robot["arm_joints"]
         ]
+        self.arm_joints = [j for j in jids if j >= 0]
+        if not self.arm_joints:
+            raise RuntimeError("no arm joints resolved")
         self.arm_qposadr = np.array([self.model.jnt_qposadr[j] for j in self.arm_joints])
         self.arm_dofadr = np.array([self.model.jnt_dofadr[j] for j in self.arm_joints])
         self.arm_lo = self.model.jnt_range[self.arm_joints, 0].copy()
         self.arm_hi = self.model.jnt_range[self.arm_joints, 1].copy()
+        # Resolve the robot base frame as the root of the first arm joint's chain.
+        if not override.get("base_frame"):
+            b = int(self.model.jnt_bodyid[self.arm_joints[0]])
+            while int(self.model.body_parentid[b]) > 0:
+                b = int(self.model.body_parentid[b])
+            self.robot["base_frame"] = self.model.body(b).name or self.robot.get("base_frame", "base")
+        joint_to_act: dict[int, int] = {}
+        for a in range(self.model.nu):
+            if self.model.actuator_trntype[a] == mujoco.mjtTrn.mjTRN_JOINT:
+                joint_to_act[int(self.model.actuator_trnid[a][0])] = a
+        self.arm_actuator_ids = np.array(
+            [joint_to_act[j] for j in self.arm_joints if j in joint_to_act], dtype=int
+        )
+        grip = self.robot["gripper_actuator"]
+        self.gripper_actuator_id = (
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_ACTUATOR, grip) if grip else -1
+        )
         self.target_rot = np.diag([1.0, -1.0, -1.0])
 
     def _body_has_freejoint(self, body_id: int) -> bool:
@@ -331,30 +416,49 @@ class MujocoReKepEnv:
         return self.reset_joint_pos.copy()
 
     # ------------------------------------------------------------------- IK
-    def ik(self, target_pos, target_rot=None, seed=None, iterations: int = 1500,
+    def ik(self, target_pos, target_rot=None, seed=None, iterations: int = 2000,
            pos_tol: float = 2e-5, rot_tol: float = 2e-4, step: float = 0.25) -> np.ndarray:
         target_pos = np.asarray(target_pos, dtype=float)
         target_rot = self.target_rot if target_rot is None else np.asarray(target_rot, dtype=float)
         q = (self.reset_joint_pos.copy() if seed is None else np.asarray(seed, dtype=float).copy())
         q = np.clip(q, self.arm_lo + 1e-5, self.arm_hi - 1e-5)
-        for _ in range(iterations):
-            self.data.qpos[self.arm_qposadr] = q
+
+        def _err(qq):
+            self.data.qpos[self.arm_qposadr] = qq
             mujoco.mj_forward(self.model, self.data)
-            pos_err = target_pos - self.data.site_xpos[self.pinch_id]
-            cur_rot = self.data.site_xmat[self.pinch_id].reshape(3, 3)
-            rot_err = 0.5 * sum(
-                np.cross(cur_rot[:, i], target_rot[:, i]) for i in range(3)
-            )
-            if np.linalg.norm(pos_err) < pos_tol and np.linalg.norm(rot_err) < rot_tol:
+            pe = target_pos - self.data.site_xpos[self.pinch_id]
+            cur = self.data.site_xmat[self.pinch_id].reshape(3, 3)
+            re = 0.5 * sum(np.cross(cur[:, i], target_rot[:, i]) for i in range(3))
+            return pe, re
+
+        pe, re = _err(q)
+        err = np.concatenate([pe, re])
+        for _ in range(iterations):
+            if np.linalg.norm(pe) < pos_tol and np.linalg.norm(re) < rot_tol:
                 return q
             jacp = np.zeros((3, self.model.nv))
             jacr = np.zeros((3, self.model.nv))
             mujoco.mj_jacSite(self.model, self.data, jacp, jacr, self.pinch_id)
             dof = self.arm_dofadr
             jac = np.vstack([jacp[:, dof], jacr[:, dof]])
-            err = np.concatenate([pos_err, rot_err])
             dq = jac.T @ np.linalg.solve(jac @ jac.T + 1e-4 * np.eye(6), err)
-            q = np.clip(q + step * dq, self.arm_lo + 1e-5, self.arm_hi - 1e-5)
+            # adaptive (Levenberg-Marquardt style) step: accept improvements,
+            # otherwise shrink until progress or give up.
+            accepted = False
+            for _attempt in range(10):
+                q_new = np.clip(q + step * dq, self.arm_lo + 1e-5, self.arm_hi - 1e-5)
+                pe2, re2 = _err(q_new)
+                err2 = np.concatenate([pe2, re2])
+                if np.linalg.norm(err2) < np.linalg.norm(err):
+                    q, pe, re, err = q_new, pe2, re2, err2
+                    step = min(step * 1.4, 0.6)
+                    accepted = True
+                    break
+                step *= 0.5
+                if step < 1e-4:
+                    break
+            if not accepted and step < 1e-4:
+                break
         raise RuntimeError(f"IK failed for target {target_pos.round(3).tolist()}")
 
     def solve_ik_result(
@@ -385,22 +489,26 @@ class MujocoReKepEnv:
             descents = iters
         return _IKResult(success, descents, pos_err, q)
 
-    def _robust_ik(self, target_pos, target_rot, iterations: int = 3000) -> np.ndarray:
+    def _robust_ik(self, target_pos, target_rot, iterations: int = 4000,
+                   pos_tol: float = 2e-5, rot_tol: float = 2e-4) -> np.ndarray:
         seeds = [self.get_arm_joint_postions(), self.reset_joint_positions()]
-        for _ in range(4):
+        for _ in range(14):
             seeds.append(self.rng.uniform(self.arm_lo, self.arm_hi))
         last_err = None
         for seed in seeds:
             try:
-                return self.ik(target_pos, target_rot, seed=seed, iterations=iterations)
+                return self.ik(target_pos, target_rot, seed=seed, iterations=iterations,
+                               pos_tol=pos_tol, rot_tol=rot_tol)
             except RuntimeError as exc:
                 last_err = exc
         raise RuntimeError(str(last_err))
 
     def _move_to(self, q_target, gripper: float, steps: int = 60) -> None:
         for _ in range(steps):
-            self.data.ctrl[:6] = q_target
-            self.data.ctrl[6] = gripper
+            if len(self.arm_actuator_ids):
+                self.data.ctrl[self.arm_actuator_ids] = q_target
+            if self.gripper_actuator_id >= 0:
+                self.data.ctrl[self.gripper_actuator_id] = gripper
             mujoco.mj_step(self.model, self.data)
             if self._grasp_label is not None:
                 self._apply_grasp()
@@ -455,32 +563,37 @@ class MujocoReKepEnv:
         target_quat_xyzw = action[3:7]
         gripper = action[7]
         target_rot = _quat_xyzw_to_mat(target_quat_xyzw)
+        # Faithful: exact orientation first; if unreachable, retry within a small
+        # controller tolerance (~6 deg; the reference OSC uses 3-5 deg rotation
+        # thresholds). No silent change of the commanded orientation.
         try:
             q = self._robust_ik(target_pos, target_rot)
         except RuntimeError:
-            # the Nova2 scene is 6-DOF; fall back to a feasible top-down grasp
-            q = self._robust_ik(target_pos, self.target_rot)
+            try:
+                q = self._robust_ik(target_pos, target_rot, pos_tol=0.01, rot_tol=0.1)
+            except RuntimeError as exc:
+                raise UnreachablePose(str(exc)) from exc
         g = self.last_og_gripper_action
         if gripper == self.get_gripper_close_action():
-            g = 255.0
+            g = float(self.robot["gripper_close"])
         elif gripper == self.get_gripper_open_action():
-            g = 0.0
+            g = float(self.robot["gripper_open"])
         self._move_to(q, g, steps=80 if precise else 40)
         self.last_og_gripper_action = g
         pos_err = float(np.linalg.norm(target_pos - self.data.site_xpos[self.pinch_id]))
         return pos_err, 0.0
 
     def open_gripper(self) -> None:
-        if self.last_og_gripper_action == 0.0 and self._grasp_label is None:
+        if self.last_og_gripper_action == float(self.robot["gripper_open"]) and self._grasp_label is None:
             return
-        self._move_to(self.get_arm_joint_postions(), 0.0, steps=30)
-        self.last_og_gripper_action = 0.0
+        self._move_to(self.get_arm_joint_postions(), float(self.robot["gripper_open"]), steps=30)
+        self.last_og_gripper_action = float(self.robot["gripper_open"])
         self._grasp_label = None
 
     def close_gripper(self) -> None:
-        if self.last_og_gripper_action != 255.0:
-            self._move_to(self.get_arm_joint_postions(), 255.0, steps=30)
-            self.last_og_gripper_action = 255.0
+        if self.last_og_gripper_action != float(self.robot["gripper_close"]):
+            self._move_to(self.get_arm_joint_postions(), float(self.robot["gripper_close"]), steps=30)
+            self.last_og_gripper_action = float(self.robot["gripper_close"])
         self._try_attach()
 
     def get_gripper_open_action(self) -> float:
@@ -552,8 +665,10 @@ class MujocoReKepEnv:
         }
         for geom_id in range(self.model.ngeom):
             body_id = int(self.model.geom_bodyid[geom_id])
-            name = (self.model.geom(geom_id).name or "")
-            is_gripper = body_id in body_ids and ("pad" in name or "gripper" in name)
+            body_name = (self.model.body(body_id).name or "").lower()
+            is_gripper = body_id in body_ids and any(
+                tok in body_name for tok in ("finger", "hand", "pad", "gripper")
+            )
             if not is_gripper and body_id not in grasped_bodies:
                 continue
             sampled = self._sample_geom_points(geom_id, 200)
@@ -589,25 +704,32 @@ class MujocoReKepEnv:
         return local @ rot.T + self.data.geom_xpos[geom_id]
 
     def _robot_body_ids(self) -> set[int]:
-        ids = set()
-        base = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, "base_link")
+        """All bodies in the kinematic subtree of the robot base frame."""
+        base = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, self.robot["base_frame"])
+        if base < 0:
+            base = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, "base_link")
+        if base < 0:
+            return set()
+        ids: set[int] = set()
         for body_id in range(self.model.nbody):
-            name = self.model.body(body_id).name or ""
-            if body_id == base or any(
-                tok in name for tok in ("Link", "r2f85", "robotiq", "base_link")
-            ):
-                ids.add(body_id)
+            ancestor = body_id
+            while ancestor > 0:
+                if ancestor == base:
+                    ids.add(body_id)
+                    break
+                ancestor = int(self.model.body_parentid[ancestor])
+        ids.add(base)
         return ids
 
     # ----------------------------------------------------------------- reset
     def reset(self) -> None:
         mujoco.mj_resetData(self.model, self.data)
-        # place the cube at a fixed pick position
-        self.data.qpos[self.cube_qposadr:self.cube_qposadr + 3] = [0.25, -0.42, 0.05]
-        self.data.qpos[self.cube_qposadr + 3:self.cube_qposadr + 7] = [1, 0, 0, 0]
+        if self.cube_qposadr >= 0:  # legacy demo scene keeps its cube at the XML pose
+            self.data.qpos[self.cube_qposadr:self.cube_qposadr + 3] = [0.25, -0.42, 0.05]
+            self.data.qpos[self.cube_qposadr + 3:self.cube_qposadr + 7] = [1, 0, 0, 0]
         mujoco.mj_forward(self.model, self.data)
         self.video_cache = []
-        self.last_og_gripper_action = 1.0
+        self.last_og_gripper_action = float(self.robot["gripper_open"])
         self._grasp_label = None
 
     def _record_frame(self) -> None:

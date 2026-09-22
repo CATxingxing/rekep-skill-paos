@@ -28,9 +28,26 @@ def scene_path() -> Path:
     if root:
         return (
             Path(root)
-            / "assets/dobot-nova2-robotiq/mjcf/dobot_nova2_robotiq_2f85_pick_place.xml"
+            / "assets/franka-panda/tabletop_panda.xml"
         )
     raise RuntimeError("REKEP_SIM_SCENE or PAOS_SKILL_ROOT must be set")
+
+
+def env_kwargs(scene: Path) -> dict:
+    """Per-scene camera/workspace defaults (Panda vs the legacy Dobot demo)."""
+    name = scene.name.lower()
+    if "panda" in name:
+        return {
+            "bounds_min": (0.10, -0.50, 0.0),
+            "bounds_max": (0.85, 0.45, 1.20),
+            "camera": {
+                "name": "vlm",
+                "eye": (1.00, -0.70, 1.00),
+                "target": (0.45, -0.05, 0.10),
+                "fovy": 50.0,
+            },
+        }
+    return {"bounds_min": (-0.6, -0.9, 0.0), "bounds_max": (0.7, 0.6, 1.3), "camera": None}
 
 
 def write_json(path: Path, value: Any) -> None:
