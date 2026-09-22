@@ -5,16 +5,7 @@
     "ok": false,
     "mode": "upright",
     "object": "pen",
-    "angle_deg": 121.93,
-    "in_region": {
-      "ok": false,
-      "mode": "in_region",
-      "object": "pen",
-      "region": "region_holder",
-      "dx": 0.4281,
-      "dy": 0.2029,
-      "dz": 0.0206
-    }
+    "angle_deg": 166.89
   },
   "stages": [
     {
@@ -26,6 +17,6 @@
       "ok": true
     }
   ],
-  "elapsed_s": 144.91,
+  "elapsed_s": 123.57,
   "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN4_reorient_pen.mp4"
 }

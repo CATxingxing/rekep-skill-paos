@@ -122,6 +122,27 @@ def perceive(env, *, proposer_config: dict | None = None, seed: int = 0) -> tupl
                 "kind": "center",
             }
         )
+    # Axis endpoints for elongated (capsule) objects so a correct long-axis vector
+    # exists for reorientation/axis-alignment constraints.
+    import mujoco
+
+    for info in env.objects_info.values():
+        gid = info["geom_id"]
+        if env.model.geom_type[gid] != mujoco.mjtGeom.mjGEOM_CAPSULE:
+            continue
+        gpos = env.data.geom_xpos[gid].copy()
+        gmat = env.data.geom_xmat[gid].reshape(3, 3)
+        axis = gmat[:, 2] * float(env.model.geom_size[gid][1])
+        for kind, sign in (("axis_min", -1.0), ("axis_max", 1.0)):
+            keypoints.append(
+                {
+                    "index": len(keypoints),
+                    "position_m": [float(x) for x in (gpos + sign * axis)],
+                    "pixel_uv": [-1, -1],
+                    "object": info["display"],
+                    "kind": kind,
+                }
+            )
     rgb_sha = hashlib.sha256(obs["rgb"].tobytes()).hexdigest()
     observation_id = "sha256:" + hashlib.sha256(
         json.dumps({"rgb": rgb_sha, "kps": [k["position_m"] for k in keypoints]},

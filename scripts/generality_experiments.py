@@ -44,7 +44,11 @@ def _ids(kps, name):
 
 
 def _pen_axis_pair(kps, name):
-    """Two proposal keypoints on the object farthest apart (best axis estimate)."""
+    """Prefer the object's geometric long-axis endpoints; else two far proposals."""
+    lo = [k for k in kps if k.get("object") == name and k.get("kind") == "axis_min"]
+    hi = [k for k in kps if k.get("object") == name and k.get("kind") == "axis_max"]
+    if lo and hi:
+        return int(lo[0]["index"]), int(hi[0]["index"])
     proposals = [k for k in kps if k.get("object") == name and k.get("kind") == "proposal"]
     if len(proposals) < 2:
         return None, None
@@ -95,7 +99,8 @@ def stack(a_name, b_name):
     return text, {"object": a_name, "mode": "on_top", "target_object": b_name, "tol": 0.03}
 
 
-def upright(obj, region, a, b):
+def upright(center, a, b, region, region_name, obj_name):
+    """Reorient an elongated object so its long axis becomes vertical (3 stages)."""
     text = (
         "num_stages = 3\n"
         "def stage1_subgoal_constraint1(end_effector, keypoints):\n"
@@ -111,7 +116,7 @@ def upright(obj, region, a, b):
         f"grasp_keypoints = [{a}, -1, -1]\n"
         f"release_keypoints = [-1, -1, {a}]\n"
     )
-    return text, {"object": obj, "mode": "upright", "tol_deg": 30.0, "target_region": region}
+    return text, {"object": obj_name, "mode": "upright", "tol_deg": 30.0}
 
 
 def main() -> int:
@@ -122,8 +127,11 @@ def main() -> int:
     kps = snapshot["keypoints"]
     names = sorted({k["object"] for k in kps})
     print("keypoints by object:", {n: len(_ids(kps, n)) for n in names})
+    only = __import__("os").environ.get("GEN_ONLY", "")
 
     def run(name, text_template, success, obj=None, region=None):
+        if only and only not in name:
+            return {}
         text = text_template
         if obj is not None:
             text = text.replace("OBJ", str(_idx(kps, obj)))
@@ -165,8 +173,8 @@ def main() -> int:
     # GEN4: reorient pen upright into holder
     pa, pb = _pen_axis_pair(kps, "pen")
     if pb is not None:
-        t, s = upright("pen", "region_holder", pa, pb)
-        results["GEN4_reorient_pen"] = run("GEN4_reorient_pen", t, s, "pen", "region_holder")
+        t, s = upright(_idx(kps, "pen"), pa, pb, _idx(kps, "region_holder"), "region_holder", "pen")
+        results["GEN4_reorient_pen"] = run("GEN4_reorient_pen", t, s)
     else:
         print("GEN4 skipped: pen has <2 usable keypoints")
 

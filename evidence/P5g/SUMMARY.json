@@ -5,84 +5,26 @@
     "min_dist_bt_keypoints": 0.02
   },
   "results": {
-    "GEN1_pick_red_to_region_a": "succeeded",
-    "GEN7_repeat": "succeeded",
-    "GEN2_pick_blue_to_region_b": "succeeded",
-    "GEN3_stack_red_on_blue": "succeeded",
+    "GEN1_pick_red_to_region_a": null,
+    "GEN7_repeat": null,
+    "GEN2_pick_blue_to_region_b": null,
+    "GEN3_stack_red_on_blue": null,
     "GEN4_reorient_pen": "failed",
-    "GEN5_noop_constraints": "failed",
-    "GEN6_objective_mismatch": "failed"
+    "GEN5_noop_constraints": null,
+    "GEN6_objective_mismatch": null
   },
   "objectives": {
-    "GEN1_pick_red_to_region_a": {
-      "ok": true,
-      "mode": "in_region",
-      "object": "red_cube",
-      "region": "region_a",
-      "dx": 0.0114,
-      "dy": 0.0149,
-      "dz": 0.0192
-    },
-    "GEN7_repeat": {
-      "ok": true,
-      "mode": "in_region",
-      "object": "red_cube",
-      "region": "region_a",
-      "dx": 0.0011,
-      "dy": 0.0208,
-      "dz": 0.0108
-    },
-    "GEN2_pick_blue_to_region_b": {
-      "ok": true,
-      "mode": "in_region",
-      "object": "blue_cube",
-      "region": "region_b",
-      "dx": 0.0043,
-      "dy": 0.007,
-      "dz": 0.0144
-    },
-    "GEN3_stack_red_on_blue": {
-      "ok": true,
-      "mode": "on_top",
-      "object": "red_cube",
-      "target_object": "blue_cube",
-      "dx": 0.0089,
-      "dy": 0.004,
-      "z": 0.0197,
-      "top": 0.04
-    },
+    "GEN1_pick_red_to_region_a": null,
+    "GEN7_repeat": null,
+    "GEN2_pick_blue_to_region_b": null,
+    "GEN3_stack_red_on_blue": null,
     "GEN4_reorient_pen": {
       "ok": false,
       "mode": "upright",
       "object": "pen",
-      "angle_deg": 121.93,
-      "in_region": {
-        "ok": false,
-        "mode": "in_region",
-        "object": "pen",
-        "region": "region_holder",
-        "dx": 0.4281,
-        "dy": 0.2029,
-        "dz": 0.0206
-      }
+      "angle_deg": 166.89
     },
-    "GEN5_noop_constraints": {
-      "ok": false,
-      "mode": "in_region",
-      "object": "red_cube",
-      "region": "region_a",
-      "dx": 0.15,
-      "dy": 0.35,
-      "dz": 0.0109
-    },
-    "GEN6_objective_mismatch": {
-      "ok": false,
-      "mode": "in_region",
-      "object": "red_cube",
-      "region": "region_holder",
-      "dx": 0.1514,
-      "dy": 0.0671,
-      "dz": -0.0031
-    }
+    "GEN5_noop_constraints": null,
+    "GEN6_objective_mismatch": null
   }
 }

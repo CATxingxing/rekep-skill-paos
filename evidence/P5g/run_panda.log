@@ -6,14 +6,14 @@
   warnings.warn("xFormers is not available (Attention)")
 /data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
   warnings.warn("xFormers is not available (Block)")
-keypoints by object: {'blue_cube': 5, 'pen': 4, 'red_cube': 5, 'region_a': 8, 'region_b': 1, 'region_holder': 2}
+keypoints by object: {'blue_cube': 5, 'pen': 6, 'red_cube': 4, 'region_a': 5, 'region_b': 7, 'region_holder': 2}
 [GEN1_pick_red_to_region_a] succeeded objectives={'ok': True, 'mode': 'in_region', 'object': 'red_cube', 'region': 'region_a', 'dx': 0.0114, 'dy': 0.0149, 'dz': 0.0192}
 [GEN7_repeat] succeeded objectives={'ok': True, 'mode': 'in_region', 'object': 'red_cube', 'region': 'region_a', 'dx': 0.0011, 'dy': 0.0208, 'dz': 0.0108}
 [GEN2_pick_blue_to_region_b] succeeded objectives={'ok': True, 'mode': 'in_region', 'object': 'blue_cube', 'region': 'region_b', 'dx': 0.0043, 'dy': 0.007, 'dz': 0.0144}
 [GEN3_stack_red_on_blue] succeeded objectives={'ok': True, 'mode': 'on_top', 'object': 'red_cube', 'target_object': 'blue_cube', 'dx': 0.0089, 'dy': 0.004, 'z': 0.0197, 'top': 0.04}
-[GEN4_reorient_pen] failed objectives={'ok': False, 'mode': 'upright', 'object': 'pen', 'angle_deg': 121.93, 'in_region': {'ok': False, 'mode': 'in_region', 'object': 'pen', 'region': 'region_holder', 'dx': 0.4281, 'dy': 0.2029, 'dz': 0.0206}}
+[GEN4_reorient_pen] failed objectives=None
 [GEN5_noop_constraints] failed objectives={'ok': False, 'mode': 'in_region', 'object': 'red_cube', 'region': 'region_a', 'dx': 0.15, 'dy': 0.35, 'dz': 0.0109}
-[GEN6_objective_mismatch] failed objectives={'ok': False, 'mode': 'in_region', 'object': 'red_cube', 'region': 'region_holder', 'dx': 0.1514, 'dy': 0.0671, 'dz': -0.0031}
+[GEN6_objective_mismatch] failed objectives={'ok': False, 'mode': 'in_region', 'object': 'red_cube', 'region': 'region_holder', 'dx': 0.1396, 'dy': 0.0922, 'dz': -0.0034}
 
 SUMMARY: {
   "GEN1_pick_red_to_region_a": "succeeded",
