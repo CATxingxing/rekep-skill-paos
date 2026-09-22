@@ -9,10 +9,11 @@ os.environ.setdefault("MUJOCO_GL", "egl")
 from rekep_sim.env.mujoco_env import MujocoReKepEnv  # noqa: E402
 from rekep_sim.provider import Provider, ProviderFailure  # noqa: E402
 from rekep_sim.runtime import ReKepRuntime  # noqa: E402
-from rekep_sim.state import digest, env_kwargs, read_json, scene_path, state_dir  # noqa: E402
+from rekep_sim.state import digest, env_kwargs, load_service_env, read_json, scene_path, state_dir  # noqa: E402
 
 
 def main() -> None:
+    load_service_env()
     holder: dict = {}
 
     def _runtime():

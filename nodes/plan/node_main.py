@@ -11,10 +11,11 @@ import os
 
 from rekep_sim.provider import Provider, ProviderFailure  # noqa: E402
 from rekep_sim.runtime import ReKepRuntime  # noqa: E402
-from rekep_sim.state import read_json, state_dir, write_json  # noqa: E402
+from rekep_sim.state import load_service_env, read_json, state_dir, write_json  # noqa: E402
 
 
 def main() -> None:
+    load_service_env()
     planner = ReKepRuntime(env=None)
 
     def handler(arguments, _cancel, _progress):

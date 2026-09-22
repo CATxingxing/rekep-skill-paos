@@ -20,6 +20,29 @@ def state_dir() -> Path:
     return path
 
 
+def load_service_env() -> None:
+    """Load an external env file (secrets stay out of the Skill bundle).
+
+    Dora sets each node's environment from the rendered dataflow, so values
+    exported in the launching shell (e.g. REKEP_VLM_API_KEY) do not reach the
+    nodes. Read them from ``$REKEP_SIM_ENV_FILE`` or
+    ``$PAOS_HOME/run/rekep-sim/service.env`` at startup instead.
+    """
+    path = os.environ.get("REKEP_SIM_ENV_FILE")
+    if not path:
+        home = os.environ.get("PAOS_HOME", str(Path.home() / ".PhyAgentOS"))
+        path = str(Path(home) / "run" / "rekep-sim" / "service.env")
+    candidate = Path(path).expanduser()
+    if not candidate.is_file():
+        return
+    for line in candidate.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
 def scene_path() -> Path:
     explicit = os.environ.get("REKEP_SIM_SCENE")
     if explicit:

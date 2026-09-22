@@ -1,14 +1,14 @@
 {
-  "experiment": "GEN7_repeat",
+  "experiment": "GEN1_pick_red_to_region_red",
   "status": "succeeded",
   "objectives": {
     "ok": true,
     "mode": "in_region",
     "object": "red_cube",
     "region": "region_red",
-    "dx": 0.049,
-    "dy": 0.0077,
-    "dz": 0.0106
+    "dx": 0.0338,
+    "dy": 0.0012,
+    "dz": 0.0107
   },
   "stages": [
     {
@@ -20,6 +20,6 @@
       "ok": true
     }
   ],
-  "elapsed_s": 127.86,
-  "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN7_repeat.mp4"
+  "elapsed_s": 126.12,
+  "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN1_pick_red_to_region_red.mp4"
 }

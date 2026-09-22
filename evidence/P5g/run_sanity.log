@@ -1,0 +1,20 @@
+/data7/home/linjiongxiao/.paos-rekep/envs/rekep-sim/lib/python3.12/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/swiglu_ffn.py:51: UserWarning: xFormers is not available (SwiGLU)
+  warnings.warn("xFormers is not available (SwiGLU)")
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/attention.py:33: UserWarning: xFormers is not available (Attention)
+  warnings.warn("xFormers is not available (Attention)")
+/data7/home/linjiongxiao/.paos-rekep/models/dinov2/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
+  warnings.warn("xFormers is not available (Block)")
+keypoints by object: {'blue_cube': 5, 'pen': 6, 'red_cube': 4, 'region_blue': 7, 'region_holder': 2, 'region_red': 7}
+[GEN1_pick_red_to_region_red] succeeded objectives={'ok': True, 'mode': 'in_region', 'object': 'red_cube', 'region': 'region_red', 'dx': 0.0114, 'dy': 0.0149, 'dz': 0.0192}
+
+SUMMARY: {
+  "GEN1_pick_red_to_region_red": "succeeded",
+  "GEN7_repeat": null,
+  "GEN2_pick_blue_to_region_blue": null,
+  "GEN3_stack_red_on_blue": null,
+  "GEN4_reorient_pen": null,
+  "GEN5_noop_constraints": null,
+  "GEN6_objective_mismatch": null
+}

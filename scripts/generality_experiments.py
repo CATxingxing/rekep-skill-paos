@@ -156,14 +156,14 @@ def main() -> int:
         return result
 
     results = {}
-    # GEN1/GEN7: pick red cube -> region_a (run twice for reproducibility)
-    t, s = pick_place("red_cube", "region_a")
-    results["GEN1_pick_red_to_region_a"] = run("GEN1_pick_red_to_region_a", t, s, "red_cube", "region_a")
-    results["GEN7_repeat"] = run("GEN7_repeat", t, s, "red_cube", "region_a")
+    # GEN1/GEN7: pick red cube -> region_red (run twice for reproducibility)
+    t, s = pick_place("red_cube", "region_red")
+    results["GEN1_pick_red_to_region_red"] = run("GEN1_pick_red_to_region_red", t, s, "red_cube", "region_red")
+    results["GEN7_repeat"] = run("GEN7_repeat", t, s, "red_cube", "region_red")
 
-    # GEN2: pick blue cube -> region_b
-    t, s = pick_place("blue_cube", "region_b")
-    results["GEN2_pick_blue_to_region_b"] = run("GEN2_pick_blue_to_region_b", t, s, "blue_cube", "region_b")
+    # GEN2: pick blue cube -> region_blue
+    t, s = pick_place("blue_cube", "region_blue")
+    results["GEN2_pick_blue_to_region_blue"] = run("GEN2_pick_blue_to_region_blue", t, s, "blue_cube", "region_blue")
 
     # GEN3: stack red on blue
     t, s = stack("red_cube", "blue_cube")
@@ -187,15 +187,15 @@ def main() -> int:
         "def stage3_subgoal_constraint1(end_effector, keypoints):\n    return 0.0\n"
         "grasp_keypoints = [-1, -1, -1]\nrelease_keypoints = [-1, -1, -1]\n"
     )
-    t, s = pick_place("red_cube", "region_a")
+    t, s = pick_place("red_cube", "region_red")
     results["GEN5_noop_constraints"] = run(
-        "GEN5_noop_constraints", noop, {"object": "red_cube", "mode": "in_region", "target_region": "region_a", "tol": 0.05}
+        "GEN5_noop_constraints", noop, {"object": "red_cube", "mode": "in_region", "target_region": "region_red", "tol": 0.05}
     )
 
     # GEN6: fail-closed -- objective mismatched with constraints
-    t, s = pick_place("red_cube", "region_a")
+    t, s = pick_place("red_cube", "region_red")
     results["GEN6_objective_mismatch"] = run(
-        "GEN6_objective_mismatch", t, {"object": "red_cube", "mode": "in_region", "target_region": "region_holder", "tol": 0.03}, "red_cube", "region_a"
+        "GEN6_objective_mismatch", t, {"object": "red_cube", "mode": "in_region", "target_region": "region_holder", "tol": 0.03}, "red_cube", "region_red"
     )
 
     summary = {

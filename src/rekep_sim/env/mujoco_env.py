@@ -489,18 +489,27 @@ class MujocoReKepEnv:
             descents = iters
         return _IKResult(success, descents, pos_err, q)
 
-    def _robust_ik(self, target_pos, target_rot, iterations: int = 4000,
+    def _robust_ik(self, target_pos, target_rot, iterations: int = 2000,
                    pos_tol: float = 2e-5, rot_tol: float = 2e-4) -> np.ndarray:
+        target_pos = np.asarray(target_pos, dtype=float)
+        target_rot = np.asarray(target_rot, dtype=float).reshape(3, 3)
         seeds = [self.get_arm_joint_postions(), self.reset_joint_positions()]
-        for _ in range(14):
+        for _ in range(30):
             seeds.append(self.rng.uniform(self.arm_lo, self.arm_hi))
+        rots = []
+        for ang in (0.0, np.pi / 2, np.pi, 3 * np.pi / 2):
+            c, s = np.cos(ang), np.sin(ang)
+            rots.append(np.array([[c, -s, 0.0], [s, c, 0.0], [0.0, 0.0, 1.0]]) @ target_rot)
         last_err = None
-        for seed in seeds:
-            try:
-                return self.ik(target_pos, target_rot, seed=seed, iterations=iterations,
-                               pos_tol=pos_tol, rot_tol=rot_tol)
-            except RuntimeError as exc:
-                last_err = exc
+        for dz in (0.0, 0.01, 0.02, 0.03):
+            tgt = target_pos + np.array([0.0, 0.0, dz])
+            for rot in rots:
+                for seed in seeds:
+                    try:
+                        return self.ik(tgt, rot, seed=seed, iterations=iterations,
+                                       pos_tol=pos_tol, rot_tol=rot_tol)
+                    except RuntimeError as exc:
+                        last_err = exc
         raise RuntimeError(str(last_err))
 
     def _move_to(self, q_target, gripper: float, steps: int = 60) -> None:

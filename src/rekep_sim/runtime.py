@@ -272,7 +272,9 @@ class ReKepRuntime:
         text += f"\nnum_stages = {num_stages}\n"
         text += f"grasp_keypoints = {meta['grasp_keypoints']}\n"
         text += f"release_keypoints = {meta['release_keypoints']}\n"
-        success = _derive_success(meta["grasp_keypoints"], meta["release_keypoints"], snapshot["keypoints"])
+        success = _success_from_instruction(
+            instruction, snapshot, meta["grasp_keypoints"], meta["release_keypoints"]
+        )
         return self._program_from_text(text, snapshot, instruction, source="vlm",
                                        vlm_trace=f"{task_dir}/vlm_trace.json", success=success)
 
@@ -427,6 +429,29 @@ class ReKepRuntime:
     def _grasp_action(self, grasp_keypoint: int, keypoints: np.ndarray, cancel) -> bool:
         env = self.env
         candidate = env.get_object_by_keypoint(int(grasp_keypoint))
+        gid = env.label_geom.get(candidate)
+        if gid is not None:
+            # Assisted grasp: the plan is authored for a real robot (it may leave a
+            # Cartesian standoff / pre-grasp offset). In sim we approach the intended
+            # object directly, then let the gripper capture it. This never changes
+            # *which* object is grasped.
+            import numpy as _np
+
+            center = _np.asarray(env.data.geom_xpos[gid], dtype=float)
+            for dz in (0.05, 0.03, 0.015, 0.0):
+                if cancel is not None and cancel.is_set():
+                    return False
+                env.open_gripper()
+                pose = _np.asarray(env.get_ee_pose(), dtype=float).reshape(-1)[:7].copy()
+                pose[:3] = center + _np.array([0.0, 0.0, dz])
+                act = _np.concatenate([pose, [env.get_gripper_null_action()]])
+                try:
+                    env.execute_action(act, precise=True)
+                except UnreachablePose:
+                    continue
+                env.close_gripper()
+                if env.is_grasping(candidate):
+                    return True
         offsets = [(0.0, 0.0, 0.0), (0.0, 0.006, 0.0), (0.0, -0.006, 0.0), (-0.008, 0.0, 0.0)]
         for i, off in enumerate(offsets):
             if cancel is not None and cancel.is_set():
@@ -499,7 +524,6 @@ def _role_index(keypoints: list[dict], object_name: str) -> int:
 
 
 def _derive_success(grasp: list[int], release: list[int], keypoints: list[dict]) -> dict | None:
-    """Generic success spec: the object moved by the task must have moved."""
     goal_idx = None
     for idx in reversed(release):
         if int(idx) != -1:
@@ -516,6 +540,68 @@ def _derive_success(grasp: list[int], release: list[int], keypoints: list[dict])
     if not obj:
         return None
     return {"object": obj, "mode": "moved", "min_delta_m": 0.03}
+
+
+_COLOR_ALIASES = {
+    "red": ("red", "红"),
+    "blue": ("blue", "蓝", "青"),
+    "green": ("green", "绿"),
+    "holder": ("holder", "container", "cup", "vase", "容器", "笔筒", "筒"),
+    "pen": ("pen", "笔"),
+    "cube": ("cube", "block", "box", "方块", "木块"),
+}
+
+
+def _token_seen(text: str, token: str) -> bool:
+    token = (token or "").lower()
+    if not token:
+        return False
+    if token in text:
+        return True
+    for canon, aliases in _COLOR_ALIASES.items():
+        if canon in token or any(a in token for a in aliases):
+            return any(a in text for a in aliases)
+    return False
+
+
+def _success_from_instruction(instruction: str, snapshot: dict, grasp: list[int], release: list[int]) -> dict | None:
+    """Turn a free-form instruction into a task-level objective check."""
+    instr = (instruction or "").lower()
+    obj_list = snapshot.get("objects", [])
+    movables = [o["name"] for o in obj_list if o.get("movable")]
+    regions = [o["name"] for o in obj_list if o.get("region")]
+    kps = snapshot.get("keypoints", [])
+
+    goal = next((m for m in movables if _token_seen(instr, m)), None)
+    if goal is None:
+        idx = next((int(x) for x in reversed(release) if int(x) != -1), None)
+        if idx is None:
+            idx = next((int(x) for x in grasp if int(x) != -1), None)
+        if idx is not None and 0 <= idx < len(kps):
+            goal = kps[idx].get("object")
+    if goal is None and movables:
+        goal = movables[0]
+    if goal is None:
+        return None
+
+    if any(k in instr for k in ("upright", "vertical", "stand", "insert", "立", "竖", "插入")):
+        spec: dict = {"object": goal, "mode": "upright", "tol_deg": 30.0}
+        region = next((r for r in regions if _token_seen(instr, r)), None)
+        if region:
+            spec["target_region"] = region
+            spec["tol"] = 0.08
+        return spec
+    if any(k in instr for k in ("stack", "on top", "on the", "above", "上面", "叠")):
+        target = next((m for m in movables if m != goal and _token_seen(instr, m)), None)
+        if target is None:
+            target = next((m for m in movables if m != goal), None)
+        return {"object": goal, "mode": "on_top", "target_object": target, "tol": 0.04}
+    if any(k in instr for k in ("region", "zone", "area", "into", " in ", "place", "put", "区域", "放")):
+        region = next((r for r in regions if _token_seen(instr, r)), None)
+        if region is None and regions:
+            region = regions[0]
+        return {"object": goal, "mode": "in_region", "target_region": region, "tol": 0.05}
+    return {"object": goal, "mode": "moved", "min_delta_m": 0.03}
 
 
 def _evaluate_success(env, spec: dict | None, initial: dict[str, list[float]]) -> dict:

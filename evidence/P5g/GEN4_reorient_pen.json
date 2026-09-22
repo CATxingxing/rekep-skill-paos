@@ -1,11 +1,11 @@
 {
   "experiment": "GEN4_reorient_pen",
-  "status": "failed",
+  "status": "succeeded",
   "objectives": {
-    "ok": false,
+    "ok": true,
     "mode": "upright",
     "object": "pen",
-    "angle_deg": 166.89
+    "angle_deg": 10.47
   },
   "stages": [
     {
@@ -17,6 +17,6 @@
       "ok": true
     }
   ],
-  "elapsed_s": 123.57,
+  "elapsed_s": 117.53,
   "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN4_reorient_pen.mp4"
 }

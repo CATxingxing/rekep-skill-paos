@@ -13,10 +13,11 @@ import cv2  # noqa: E402
 from rekep_sim.env.mujoco_env import MujocoReKepEnv  # noqa: E402
 from rekep_sim.perception import perceive, warmup  # noqa: E402
 from rekep_sim.provider import Provider  # noqa: E402
-from rekep_sim.state import env_kwargs, scene_path, state_dir, write_json  # noqa: E402
+from rekep_sim.state import env_kwargs, load_service_env, scene_path, state_dir, write_json  # noqa: E402
 
 
 def main() -> None:
+    load_service_env()
     scene = scene_path()
     env = MujocoReKepEnv(
         scene,
@@ -44,6 +45,7 @@ def main() -> None:
                 "bounds_min",
                 "bounds_max",
                 "keypoints",
+                "objects",
             )
         }
         snap["overlay_path"] = str(overlay)
@@ -51,8 +53,8 @@ def main() -> None:
         return {
             "profile": "sim",
             "backend": "mujoco-headless",
-            "robot": "dobot_nova2",
-            "gripper": "robotiq_2f85",
+            "robot": "franka_panda",
+            "gripper": "franka_hand",
             "readiness": "ready",
             "perception": snap,
         }

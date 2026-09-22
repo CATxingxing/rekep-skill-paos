@@ -6,9 +6,9 @@
     "mode": "in_region",
     "object": "red_cube",
     "region": "region_holder",
-    "dx": 0.1396,
-    "dy": 0.0922,
-    "dz": -0.0034
+    "dx": 0.1879,
+    "dy": 0.0555,
+    "dz": -0.0033
   },
   "stages": [
     {
@@ -20,6 +20,6 @@
       "ok": true
     }
   ],
-  "elapsed_s": 122.86,
+  "elapsed_s": 124.91,
   "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN6_objective_mismatch.mp4"
 }

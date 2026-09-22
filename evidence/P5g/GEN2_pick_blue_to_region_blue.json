@@ -1,0 +1,25 @@
+{
+  "experiment": "GEN2_pick_blue_to_region_blue",
+  "status": "succeeded",
+  "objectives": {
+    "ok": true,
+    "mode": "in_region",
+    "object": "blue_cube",
+    "region": "region_blue",
+    "dx": 0.0165,
+    "dy": 0.0052,
+    "dz": 0.0106
+  },
+  "stages": [
+    {
+      "phase": "stage1_grasp",
+      "ok": true
+    },
+    {
+      "phase": "stage3_release",
+      "ok": true
+    }
+  ],
+  "elapsed_s": 117.79,
+  "video": "/data7/home/linjiongxiao/projects2/rekep-skill-paos/evidence/P5g/GEN2_pick_blue_to_region_blue.mp4"
+}
