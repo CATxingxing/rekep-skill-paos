@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "upstreams": {
+    "rekep_real_plugin": {
+      "source": "https://github.com/baiyu858/PhyAgentOS-rekep-real-plugin.git",
+      "revision": "c532a28ddd69809bbc63ac0604d72866582e047f",
+      "license": "MIT",
+      "notice": "LICENSES/upstream-rekep-MIT.txt",
+      "migrated_concepts": [
+        "bounded DINOv2 keypoint clustering",
+        "subgoal constraint optimization",
+        "path constraint optimization"
+      ]
+    }
+  }
+}

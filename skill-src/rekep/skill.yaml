@@ -1,0 +1,30 @@
+manifest_version: 2
+name: rekep
+version: "0.3.15"
+description: Observation-bound DINOv2 and VLM ReKep planning with serial standard-controller execution.
+skill_document: SKILL.md
+gateway_url: http://127.0.0.1:19021
+required_tools: [rekep.get_context, rekep.plan_task, rekep.execute_task]
+profiles:
+  sim-dobot-nova2-robotiq:
+    dataflow: profiles/sim-dobot-nova2-robotiq/dataflow.yaml
+    startup_timeout_s: 90
+    required_binaries:
+      - gateway
+      - mujoco_sim
+      - motion_server
+      - joint_trajectory_controller
+      - gripper_action_controller
+      - rekep_perception
+      - rekep_planner
+      - rekep_executor
+    required_assets:
+      - assets/dobot-nova2-robotiq/mjcf/dobot_nova2_robotiq_2f85_pick_place.xml
+      - assets/dobot-nova2-robotiq/urdf/dobot_rviz/nova2_robot.urdf
+    required_environment: []
+    environment:
+      MUJOCO_GL: egl
+      PYTHONUNBUFFERED: "1"
+artifacts:
+  resolver: local
+  nodes: {}

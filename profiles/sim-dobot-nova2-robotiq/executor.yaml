@@ -1,0 +1,18 @@
+workspace_m: {x: [-0.60, 0.60], y: [-0.80, 0.20], z: [0.02, 0.75]}
+default_end_effector_pose:
+  position_m: [0.35, -0.20, 0.35]
+  quaternion_xyzw: [1.0, 0.0, 0.0, 0.0]
+max_segment_length_m: 0.45
+# Keep the DLS seed on the same numerical branch near the far side of the
+# Nova2 workspace; 50 mm steps can cross a line-search basin boundary.
+max_cartesian_step_m: 0.025
+transport_clearance_m: 0.12
+path_samples_per_segment: 9
+move_deadline_ms: 15000
+# Allow five 50 Hz state updates after a terminal trajectory result before
+# the motion server validates the next segment's start velocity.
+inter_segment_settle_ms: 100
+# Must exceed the controller's 12 s terminal deadline so its structured
+# success/failure result wins instead of the parent timing out first.
+gripper_deadline_ms: 15000
+automatic_physical_retry: false

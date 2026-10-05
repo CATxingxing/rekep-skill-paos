@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "platform": "linux",
+  "arch": "x86_64",
+  "source_catalogs": [
+    {"url": "https://github.com/Forgelab-Robotics", "access": "anonymous"},
+    {"url": "https://gitlab.ex-ai.cn/PhyAgentOS/framework", "access": "credentials_required"}
+  ],
+  "nodes": [
+    {
+      "node_id": "gateway",
+      "artifact_id": "gateway-1.1.0-linux-x86_64",
+      "entrypoint": "gateway",
+      "version": "1.1.0",
+      "repository": "gateway",
+      "source": "https://github.com/Forgelab-Robotics/adapter-forge-gateway.git",
+      "revision": "49caba94d641aff4664fbdf9d4c8b1402add1ce6",
+      "build_script": "scripts/build_pyinstaller.sh",
+      "source_executable": "dist/gateway"
+    },
+    {
+      "node_id": "mujoco_sim",
+      "artifact_id": "mujoco_sim-1.1.1-linux-x86_64",
+      "entrypoint": "mujoco_sim",
+      "version": "1.1.1",
+      "repository": "mujoco",
+      "source": "https://github.com/Forgelab-Robotics/operator-simulator-mujoco.git",
+      "revision": "0a84a1a81807b467338e696032a38b084cb35747",
+      "build_script": "scripts/build_pyinstaller.sh",
+      "source_executable": "dist/mujoco_sim"
+    },
+    {
+      "node_id": "motion_server",
+      "artifact_id": "motion_server-0.1.0-linux-x86_64",
+      "entrypoint": "motion_server",
+      "version": "0.1.0",
+      "repository": "motion",
+      "source": "https://github.com/Forgelab-Robotics/operator-motion.git",
+      "revision": "24c8a430715f697eea8431bf169c21b8cbb5eb92",
+      "build_script": "scripts/build_pyinstaller.sh",
+      "source_executable": "dist/motion_server"
+    },
+    {
+      "node_id": "joint_trajectory_controller",
+      "artifact_id": "joint_trajectory_controller-0.1.0-linux-x86_64",
+      "entrypoint": "joint_trajectory_controller",
+      "version": "0.1.0",
+      "repository": "controls",
+      "source": "https://github.com/Forgelab-Robotics/operator-controls.git",
+      "revision": "cde73dc2a6222d81b01ffc32f69f12cb12e42760",
+      "build_script": "scripts/build_pyinstaller.sh",
+      "source_executable": "dist/joint_trajectory_controller"
+    },
+    {
+      "node_id": "gripper_action_controller",
+      "artifact_id": "gripper_action_controller-0.1.0-linux-x86_64",
+      "entrypoint": "gripper_action_controller",
+      "version": "0.1.0",
+      "repository": "controls",
+      "source": "https://github.com/Forgelab-Robotics/operator-controls.git",
+      "revision": "cde73dc2a6222d81b01ffc32f69f12cb12e42760",
+      "build_script": "scripts/build_pyinstaller.sh",
+      "source_executable": "dist/gripper_action_controller"
+    }
+  ]
+}

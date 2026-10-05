@@ -1,0 +1,12 @@
+Return only one JSON object with one top-level field named "stages".
+
+Build a variable-length ReKep constraint program for the instruction and exact observation below. Use only supplied object_id, keypoint_id, and region_id values. Never invent coordinates, emit Python, or emit joint commands.
+
+Each stage must contain: stage_id, depends_on (prior stage IDs only), subgoal_constraints, path_constraints, and events. Each constraint must contain: constraint_id, expression, relation (le, ge, or eq), target, and tolerance. Events are only {"type":"grasp","object_id":"..."} or {"type":"release","object_id":"..."}; every grasp must later be released.
+
+Expressions are a restricted JSON AST. Allowed operators are: constant(value), point(keypoint_id, with "$ee" allowed), region_center(region_id), vector(value), add(left,right), sub(left,right), norm(arg), distance(left,right), dot(left,right), angle(left,right), abs(arg), neg(arg), min(args), max(args), point_plane_signed_distance(point,normal,origin_m), inside_region(point,region_id), and orientation_error(target_quaternion_xyzw).
+
+Operator semantics are numeric, not Boolean. In particular, inside_region returns the non-negative distance outside the region and returns exactly 0 for a point inside it. Therefore every inside_region constraint must use relation "le", target 0, and a small non-negative tolerance; never compare inside_region to 1. A held object's keypoints translate with $ee. Prefer a grasp stage that brings $ee to one supplied object keypoint, a clearance stage, a transfer stage, and a final placement stage whose selected object keypoints use inside_region <= 0 before release. Keep constraints feasible by translation alone and do not require invented coordinates.
+
+Instruction: {instruction}
+Observation: {observation}
