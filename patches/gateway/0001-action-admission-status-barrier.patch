@@ -1,0 +1,90 @@
+diff --git a/src/forge_gateway/services/tool_gateway_service.py b/src/forge_gateway/services/tool_gateway_service.py
+index 5236f34..586d786 100644
+--- a/src/forge_gateway/services/tool_gateway_service.py
++++ b/src/forge_gateway/services/tool_gateway_service.py
+@@ -772,6 +772,13 @@ class ToolGatewayService:
+         item = self.action_invocations.get(key, now=now)
+         if item is None:
+             raise KeyError(key)
++        # Provider status/result is meaningful only after the invoke handshake
++        # establishes admission.  Before that barrier, a lookup can overtake the
++        # queued invoke request and a conforming provider will report not_found.
++        # Keep the Gateway-owned dispatching state instead of turning that
++        # transport-ordering race into an irreversible unknown physical outcome.
++        if not item.accepted_established:
++            return False
+         if any(
+             exchange.execution_key == key and exchange.purpose == purpose
+             for exchange in self._action_exchanges.values()
+diff --git a/tests/test_tool_actions.py b/tests/test_tool_actions.py
+index e10c894..d0c2d16 100644
+--- a/tests/test_tool_actions.py
++++ b/tests/test_tool_actions.py
+@@ -316,25 +316,50 @@ def test_dora_action_invoke_returns_accepted_without_provider_instance() -> None
+         runtime.close()
+ 
+ 
+-def test_action_phase_never_regresses_and_accepted_is_independent_barrier() -> None:
++def test_action_lookup_waits_for_invoke_acceptance_barrier() -> None:
+     runtime = GatewayRuntime(_config())
+     try:
+         _register(runtime)
+         created = runtime.tool_gateway.submit_http_action("robot.pick", {})
+-        key = (created["invocation_id"], created["attempt_id"])
++
++        # A caller may poll immediately after the HTTP 202.  The provider invoke
++        # is still queued, so status/result requests must not be allowed to
++        # overtake it and observe a spurious not_found execution.
++        assert not runtime.tool_gateway.refresh_action(
++            created["invocation_id"], "status"
++        )
+         provider_invoke = runtime.tool_gateway.take_outbound()
+         assert provider_invoke is not None
++        assert provider_invoke.envelope.message_type == "tool.invoke.request"
++        assert not runtime.tool_gateway.refresh_action(
++            created["invocation_id"], "result"
++        )
++        assert runtime.tool_gateway.take_outbound() is None
+ 
+-        assert runtime.tool_gateway.refresh_action(created["invocation_id"], "status")
+-        status_request = runtime.tool_gateway.take_outbound()
+-        assert status_request is not None
+         runtime.tool_gateway.handle_input(
+             "arm/to_gateway",
+-            make_status_response_envelope(
+-                ToolExecutionStatus(phase="running"), status_request.envelope
+-            ),
++            make_invoke_response_envelope(ToolAccepted(), provider_invoke.envelope),
+             received_at=time.monotonic(),
+         )
++        assert runtime.tool_gateway.refresh_action(
++            created["invocation_id"], "status"
++        )
++        status_request = runtime.tool_gateway.take_outbound()
++        assert status_request is not None
++        assert status_request.envelope.message_type == "tool.status.request"
++    finally:
++        runtime.close()
++
++
++def test_action_acceptance_releases_events_that_arrived_early() -> None:
++    runtime = GatewayRuntime(_config())
++    try:
++        _register(runtime)
++        created = runtime.tool_gateway.submit_http_action("robot.pick", {})
++        key = (created["invocation_id"], created["attempt_id"])
++        provider_invoke = runtime.tool_gateway.take_outbound()
++        assert provider_invoke is not None
++
+         _, context = invoke_request_from_envelope(provider_invoke.envelope)
+         runtime.tool_gateway.handle_input(
+             "arm/to_gateway",
+@@ -359,7 +384,7 @@ def test_action_phase_never_regresses_and_accepted_is_independent_barrier() -> N
+             key, now=time.monotonic()
+         )
+         assert snapshot is not None
+-        assert snapshot["phase"] == "running"
++        assert snapshot["phase"] == "accepted"
+         assert snapshot["accepted"] is True
+         assert len(
+             runtime.tool_gateway.action_invocations.events_after(

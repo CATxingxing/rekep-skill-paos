@@ -48,7 +48,14 @@ def evaluate(expression: dict[str, Any], context: EvaluationContext) -> float | 
         return finite_vector(expression["value"], 3, "vector.value")
     if op == "point":
         identifier = expression["keypoint_id"]
-        return list(context.ee_position if identifier == "$ee" else context.points[identifier])
+        if identifier == "$ee":
+            return list(context.ee_position)
+        try:
+            return list(context.points[identifier])
+        except KeyError as exc:
+            raise ContractError(
+                f"post-stage observation is missing keypoint {identifier!r}"
+            ) from exc
     if op == "region_center":
         region = context.regions[expression["region_id"]]
         lower, upper = region["bounds_min_m"], region["bounds_max_m"]

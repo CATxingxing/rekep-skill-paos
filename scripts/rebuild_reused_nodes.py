@@ -17,6 +17,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+SOURCE_PATCHES = {
+    "gateway": (
+        ROOT / "patches/gateway/0001-action-admission-status-barrier.patch",
+    ),
+}
+
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -88,6 +94,38 @@ def build_container(checkout: Path, work: Path, script: str, image: str) -> Path
     return work / "repo"
 
 
+def apply_source_patches(repository: str, checkout: Path) -> list[dict[str, str]]:
+    records = []
+    for patch in SOURCE_PATCHES.get(repository, ()):
+        if not patch.is_file():
+            raise SystemExit(f"source patch is missing: {patch}")
+        check = subprocess.run(
+            ["git", "apply", "--check", str(patch)],
+            cwd=checkout,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        if check.returncode == 0:
+            subprocess.run(["git", "apply", str(patch)], cwd=checkout, check=True)
+        else:
+            reverse = subprocess.run(
+                ["git", "apply", "--reverse", "--check", str(patch)],
+                cwd=checkout,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            if reverse.returncode != 0:
+                detail = check.stderr.strip() or reverse.stderr.strip()
+                raise SystemExit(f"source patch does not apply cleanly to {repository}: {detail}")
+        records.append({
+            "path": patch.relative_to(ROOT).as_posix(),
+            "sha256": sha256(patch),
+        })
+    return records
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Rebuild reused Forge Nodes from pinned source on a compatible glibc baseline.")
     parser.add_argument("--checkout-dir", type=Path, default=ROOT / ".build/upstream-sources")
@@ -121,11 +159,13 @@ def main() -> int:
     for node in lock["nodes"]:
         repositories.setdefault(node["repository"], node)
     built_roots: dict[str, Path] = {}
+    applied_patches: dict[str, list[dict[str, str]]] = {}
     for repository, node in repositories.items():
         checkout = arguments.checkout_dir.resolve() / repository
         revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=checkout, check=True, text=True, stdout=subprocess.PIPE).stdout.strip()
         if revision != node["revision"]:
             raise SystemExit(f"source revision mismatch for {repository}: {revision}")
+        applied_patches[repository] = apply_source_patches(repository, checkout)
         repository_nodes = [item for item in lock["nodes"] if item["repository"] == repository]
         already_built = all((checkout / item["source_executable"]).is_file() for item in repository_nodes)
         if arguments.reuse_built and already_built:
@@ -162,6 +202,7 @@ def main() -> int:
             "build_glibc_baseline": build_glibc,
             "build_mode": arguments.mode,
             "build_image": arguments.container_image if arguments.mode == "container" else None,
+            "source_patches": applied_patches[node["repository"]],
         }
         records.append(record)
         print(f"rebuilt {archive.name}: build glibc {build_glibc}, bootloader GLIBC_{bootloader_glibc}, sha256={record['sha256']}")

@@ -20,8 +20,14 @@ def _subdivide(waypoints: list[list[float]], maximum_step_m: float) -> list[list
 
 
 def solve_path(start: list[float], end: list[float], constraints: list[dict[str, Any]], snapshot: dict[str, Any], quaternion: list[float], held_object: str | None, held_anchor: tuple[list[float], list[float]] | None, *, clearance_m: float, samples_per_segment: int, max_cartesian_step_m: float) -> tuple[list[list[float]], list[dict[str, Any]]]:
-    if held_object is not None and start != end:
-        clearance = min(0.75, max(start[2], end[2]) + clearance_m)
+    if not math.isfinite(clearance_m) or clearance_m < 0:
+        raise ContractError("transport clearance height must be finite and non-negative")
+    if held_object is not None and start[:2] != end[:2]:
+        # A minimum transit height, not an increment on every stage. The
+        # program already specifies lifting/clearance constraints; adding a
+        # second lift here can leave the reachable workspace. Pure vertical
+        # moves need no lateral transit and must not overshoot their endpoint.
+        clearance = max(start[2], end[2], clearance_m)
         waypoints = [list(start), [start[0], start[1], clearance], [end[0], end[1], clearance], list(end)]
     else:
         waypoints = [list(start), list(end)]

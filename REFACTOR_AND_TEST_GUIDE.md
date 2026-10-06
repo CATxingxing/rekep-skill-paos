@@ -30,6 +30,12 @@
 | `joint_trajectory_controller` | `operator-controls` | `cde73dc2a6222d81b01ffc32f69f12cb12e42760` | 0.1.0 |
 | `gripper_action_controller` | `operator-controls` | `cde73dc2a6222d81b01ffc32f69f12cb12e42760` | 0.1.0 |
 
+Gateway 制品在锁定的 1.1.0 源码上应用
+`patches/gateway/0001-action-admission-status-barrier.patch`，因此使用独立的
+`gateway-1.1.0-rekep1-linux-x86_64` artifact ID。该补丁禁止 invoke acceptance
+建立前的 status/result lookup，避免查询越过 invoke dispatch 后将尚未到达 provider
+的 Action 错误固化为 `unknown`；补丁路径和 SHA-256 会写入本机构建锁并由分发校验器核对。
+
 三个自研节点 `rekep_perception`、`rekep_planner`、`rekep_executor` 保留，因为官方通用节点不包含本 Skill 特有的 DINOv2 关键点提取、观测绑定约束生成和 ReKep 约束求解逻辑。
 
 ## 3. glibc 兼容重打包方案

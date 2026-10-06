@@ -1,6 +1,9 @@
 state_timeout_ms: 500
 planning_timeout_ms: 3000
-execution_timeout_margin_ms: 3000
+# The child controller may legitimately use its full 3000 ms goal-settling
+# window. Keep the parent deadline later so the child's structured terminal
+# result wins instead of racing a parent-side cancellation.
+execution_timeout_margin_ms: 5000
 final_state_timeout_ms: 500
 child_cancel_retry_ms: 100
 child_cancel_timeout_ms: 1500

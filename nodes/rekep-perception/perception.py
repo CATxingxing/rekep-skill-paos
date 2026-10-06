@@ -134,17 +134,66 @@ class Perception:
             u, v = int(columns[nearest]), int(rows[nearest])
         return u, v, self._point(u, v, depth)
 
-    def _track(self, position: list[float]) -> str:
+    def _track_positions(self, positions: list[list[float]]) -> list[str]:
+        """Associate one capture's detections to tracks without reusing an ID.
+
+        A single tracked object remains unambiguous even when a manipulation
+        moves it farther than the normal frame-to-frame association gate.  For
+        multi-object captures, use a deterministic greedy global assignment so
+        two detections can never claim the same prior track.
+        """
+        if not positions:
+            return []
         threshold = float(self.config.get("tracker", {}).get("max_reassociation_distance_m", 0.08))
-        if self._tracks:
-            identifier, separation = min(((identifier, math.dist(position, old)) for identifier, old in self._tracks.items()), key=lambda item: item[1])
-            if separation <= threshold:
-                self._tracks[identifier] = position
-                return identifier
-        identifier = f"object_{self._next_track:03d}"
-        self._next_track += 1
-        self._tracks[identifier] = position
-        return identifier
+        assigned: dict[int, str] = {}
+        if len(positions) == 1 and len(self._tracks) == 1:
+            assigned[0] = next(iter(self._tracks))
+        elif self._tracks:
+            candidates = sorted(
+                (
+                    math.dist(position, old),
+                    index,
+                    identifier,
+                )
+                for index, position in enumerate(positions)
+                for identifier, old in self._tracks.items()
+            )
+            used_tracks: set[str] = set()
+            for separation, index, identifier in candidates:
+                if separation > threshold:
+                    break
+                if index not in assigned and identifier not in used_tracks:
+                    assigned[index] = identifier
+                    used_tracks.add(identifier)
+        identifiers = []
+        for index, position in enumerate(positions):
+            identifier = assigned.get(index)
+            if identifier is None:
+                identifier = f"object_{self._next_track:03d}"
+                self._next_track += 1
+            self._tracks[identifier] = position
+            identifiers.append(identifier)
+        return identifiers
+
+    def _object_center_estimate(self, visible_surface_point: list[float]) -> list[float]:
+        offset = self.config.get("keypoints", {}).get(
+            "object_center_offset_m", [0.0, 0.0, 0.0]
+        )
+        if (
+            not isinstance(offset, list)
+            or len(offset) != 3
+            or any(
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(float(value))
+                for value in offset
+            )
+        ):
+            raise RuntimeError("keypoints.object_center_offset_m must be a finite 3-vector")
+        return [
+            float(visible_surface_point[index]) + float(offset[index])
+            for index in range(3)
+        ]
 
     def _masks(self, rgb: Any) -> tuple[list[Any], list[Any]]:
         import numpy as np
@@ -180,15 +229,43 @@ class Perception:
         features = self.model.feature_map(rgb)
         overlay = PilImage.fromarray(rgb)
         draw = ImageDraw.Draw(overlay)
-        objects, keypoints = [], []
+        components = []
         for mask in masks:
             rows, columns = np.where(mask)
             center_u, center_v = int(np.median(columns)), int(np.median(rows))
             center_u, center_v, centroid = self._mask_point(center_u, center_v, depth, mask)
-            object_id = self._track(centroid)
+            center_estimate = self._object_center_estimate(centroid)
+            components.append(
+                (mask, rows, columns, center_u, center_v, centroid, center_estimate)
+            )
+        object_ids = self._track_positions([item[-1] for item in components])
+        objects, keypoints = [], []
+        for (
+            mask,
+            rows,
+            columns,
+            center_u,
+            center_v,
+            _visible_centroid,
+            centroid,
+        ), object_id in zip(
+            components, object_ids, strict=True
+        ):
             objects.append({"object_id": object_id, "label": "observed_object", "centroid_m": centroid, "bbox_xyxy": [int(columns.min()), int(rows.min()), int(columns.max()), int(rows.max())], "manipulable": True})
-            proposals = self.model.propose(features, mask, int(self.config.get("keypoints", {}).get("per_object", 3)))
-            for index, (u, v, confidence) in enumerate(proposals):
+            keypoint_id = f"{object_id}.kp_00"
+            keypoints.append({
+                "keypoint_id": keypoint_id,
+                "object_id": object_id,
+                "pixel_uv": [center_u, center_v],
+                "position_m": centroid,
+                "confidence": 1.0,
+                "kind": "object_center_estimate",
+            })
+            draw.ellipse((center_u - 5, center_v - 5, center_u + 5, center_v + 5), outline=(255, 255, 0), width=2)
+            draw.text((center_u + 7, center_v - 6), keypoint_id, fill=(255, 255, 0))
+            per_object = int(self.config.get("keypoints", {}).get("per_object", 3))
+            proposals = self.model.propose(features, mask, max(0, per_object - 1))
+            for index, (u, v, confidence) in enumerate(proposals, start=1):
                 if not mask[v, u]:
                     u, v = center_u, center_v
                 u, v, position = self._mask_point(u, v, depth, mask)

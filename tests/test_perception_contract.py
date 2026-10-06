@@ -52,3 +52,51 @@ def test_mask_point_falls_back_to_nearest_valid_depth():
     u, v, point = perception._mask_point(1, 1, depth, mask)
     assert (u, v) == (2, 1)
     assert point == [1.0, 0.5, 0.5]
+
+
+def test_single_object_track_survives_a_manipulation_sized_jump():
+    perception = object.__new__(Perception)
+    perception.config = {"tracker": {"max_reassociation_distance_m": 0.08}}
+    perception._tracks = {"object_000": [0.2, -0.36, 0.04]}
+    perception._next_track = 1
+
+    assert perception._track_positions([[0.2, -0.36, 0.22]]) == ["object_000"]
+    assert perception._tracks["object_000"] == [0.2, -0.36, 0.22]
+
+
+def test_multi_object_track_assignment_is_one_to_one():
+    perception = object.__new__(Perception)
+    perception.config = {"tracker": {"max_reassociation_distance_m": 0.08}}
+    perception._tracks = {
+        "object_000": [0.0, 0.0, 0.0],
+        "object_001": [0.1, 0.0, 0.0],
+    }
+    perception._next_track = 2
+
+    identifiers = perception._track_positions(
+        [[0.01, 0.0, 0.0], [0.02, 0.0, 0.0]]
+    )
+
+    assert identifiers == ["object_000", "object_001"]
+    assert len(set(identifiers)) == 2
+
+
+def test_object_center_estimate_applies_profile_calibration():
+    perception = object.__new__(Perception)
+    perception.config = {
+        "keypoints": {"object_center_offset_m": [0.0, 0.023, 0.0]}
+    }
+
+    assert perception._object_center_estimate([0.228, -0.363, 0.046]) == pytest.approx(
+        [0.228, -0.340, 0.046]
+    )
+
+
+def test_object_center_estimate_rejects_non_finite_calibration():
+    perception = object.__new__(Perception)
+    perception.config = {
+        "keypoints": {"object_center_offset_m": [0.0, float("nan"), 0.0]}
+    }
+
+    with pytest.raises(RuntimeError, match="finite 3-vector"):
+        perception._object_center_estimate([0.0, 0.0, 0.0])

@@ -1,4 +1,5 @@
 from pathlib import Path
+from xml.etree import ElementTree
 
 import yaml
 
@@ -46,8 +47,32 @@ def test_target_volume_centers_visible_top_face_at_rest() -> None:
 
 
 def test_joint_terminal_tolerance_supports_cartesian_terminal_check() -> None:
+    executor = yaml.safe_load((PROFILE / "executor.yaml").read_text(encoding="utf-8"))
+    motion = yaml.safe_load((PROFILE / "motion-server.yaml").read_text(encoding="utf-8"))
     controller = yaml.safe_load(
         (PROFILE / "joint-trajectory-controller.yaml").read_text(encoding="utf-8")
     )
     assert controller["goal_position_tolerance"] <= 0.01
     assert controller["goal_time_tolerance_ms"] >= 3000
+    assert motion["execution_timeout_margin_ms"] >= (
+        controller["goal_time_tolerance_ms"] + 500
+    )
+    assert executor["move_deadline_ms"] > motion["execution_timeout_margin_ms"]
+
+
+def test_sim_arm_servo_gain_supports_joint_terminal_tolerance() -> None:
+    scene = ROOT / "assets" / "dobot-nova2-robotiq" / "mjcf"
+    for path in (
+        scene / "dobot_nova2_robotiq_2f85_pick_place.xml",
+        scene / "dobot_nova2" / "nova2.xml",
+    ):
+        root = ElementTree.parse(path).getroot()
+        actuators = {
+            actuator.attrib["name"]: actuator
+            for group in root.findall("actuator")
+            for actuator in group.findall("position")
+            if actuator.attrib.get("name", "").startswith("joint")
+        }
+        assert set(actuators) == {f"joint{index}" for index in range(1, 7)}
+        assert all(float(actuator.attrib["kp"]) >= 2000.0 for actuator in actuators.values())
+        assert all(float(actuator.attrib["kv"]) >= 70.0 for actuator in actuators.values())

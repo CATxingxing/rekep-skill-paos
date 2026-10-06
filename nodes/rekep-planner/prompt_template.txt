@@ -8,5 +8,7 @@ Expressions are a restricted JSON AST. Allowed operators are: constant(value), p
 
 Operator semantics are numeric, not Boolean. In particular, inside_region returns the non-negative distance outside the region and returns exactly 0 for a point inside it. Therefore every inside_region constraint must use relation "le", target 0, and a small non-negative tolerance; never compare inside_region to 1. A held object's keypoints translate with $ee. Prefer a grasp stage that brings $ee to one supplied object keypoint, a clearance stage, a transfer stage, and a final placement stage whose selected object keypoints use inside_region <= 0 before release. Keep constraints feasible by translation alone and do not require invented coordinates.
 
+When a keypoint has kind "object_center_estimate", use that keypoint for the grasp target and for center alignment during placement. Other DINOv2 keypoints may be used for clearance and inside-region checks.
+
 Instruction: {instruction}
 Observation: {observation}

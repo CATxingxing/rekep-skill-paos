@@ -16,7 +16,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.3.15"
+VERSION = "0.3.17"
 PLATFORM = platform.system().lower()
 ARCH = {"amd64": "x86_64", "x64": "x86_64", "arm64": "aarch64"}.get(platform.machine().lower(), platform.machine().lower())
 NODES = {
@@ -111,6 +111,14 @@ def main() -> int:
         elif not executable.is_file():
             raise SystemExit(f"cannot reuse missing executable: {executable}")
         executable.chmod(executable.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        subprocess.run(
+            [str(executable), "--help"],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=60,
+        )
         artifact_id = f"{entrypoint}-{VERSION}-{PLATFORM}-{ARCH}"
         archive = arguments.output_dir / f"{artifact_id}.tar.gz"
         archive_executable(executable, archive, entrypoint)

@@ -9,7 +9,7 @@
   "nodes": [
     {
       "node_id": "gateway",
-      "artifact_id": "gateway-1.1.0-linux-x86_64",
+      "artifact_id": "gateway-1.1.0-rekep1-linux-x86_64",
       "entrypoint": "gateway",
       "version": "1.1.0",
       "repository": "gateway",

@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import pytest
+
+from constraint_evaluator import EvaluationContext, evaluate
 from execution import solve_program
 from helpers import program, snapshot
+from rekep_core.contracts import ContractError
 from subgoal_solver import solve_subgoal
+from path_solver import solve_path
 
 
 CONFIG = {
@@ -64,3 +69,29 @@ def test_clearance_constraint_preserves_unconstrained_xy():
 
     assert endpoint[:2] == seed[:2]
     assert endpoint[2] > seed[2]
+
+
+def test_post_stage_missing_keypoint_is_a_structured_contract_error():
+    context = EvaluationContext(snapshot(), [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 0.0])
+
+    with pytest.raises(ContractError, match="missing keypoint 'object_000.kp_02'"):
+        evaluate({"op": "point", "keypoint_id": "object_000.kp_02"}, context)
+
+
+@pytest.mark.parametrize("start,end,expected_max", [
+    ([0.2, -0.34, 0.04], [0.2, -0.34, 0.24], 0.24),
+    ([0.2, -0.34, 0.24], [-0.1, -0.48, 0.24], 0.24),
+    ([-0.1, -0.48, 0.24], [-0.1, -0.48, 0.05], 0.24),
+    ([0.2, -0.34, 0.04], [-0.1, -0.48, 0.05], 0.12),
+])
+def test_held_paths_do_not_repeat_lift_above_required_height(start, end, expected_max):
+    points, _ = solve_path(
+        start, end, [], snapshot(), [1., 0., 0., 0.], "object_000",
+        (start, start), clearance_m=0.12, samples_per_segment=9,
+        max_cartesian_step_m=0.025,
+    )
+    assert points[0] == start
+    assert points[-1] == end
+    assert max(p[2] for p in points) == pytest.approx(expected_max)
+    if start[:2] == end[:2]:
+        assert all(min(start[2], end[2]) <= p[2] <= max(start[2], end[2]) for p in points)

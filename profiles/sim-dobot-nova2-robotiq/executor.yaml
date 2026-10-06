@@ -6,6 +6,8 @@ max_segment_length_m: 0.45
 # Keep the DLS seed on the same numerical branch near the far side of the
 # Nova2 workspace; 50 mm steps can cross a line-search basin boundary.
 max_cartesian_step_m: 0.025
+# Minimum lateral transit height in the base frame, not an additive lift.
+# VLM path constraints may require a higher transit height.
 transport_clearance_m: 0.12
 path_samples_per_segment: 9
 move_deadline_ms: 15000

@@ -86,6 +86,26 @@ def main() -> int:
         for field in ("artifact_id", "entrypoint", "version", "source", "revision"):
             if generated.get(field) != source.get(field):
                 raise ValueError(f"reused node provenance mismatch: {source['node_id']} {field}")
+    expected_patch_paths = {
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / "patches").rglob("*.patch")
+    }
+    generated_patch_paths: set[str] = set()
+    for lock in standard:
+        patches = lock.get("source_patches", [])
+        if not isinstance(patches, list):
+            raise ValueError(f"{lock['node_id']} source_patches must be a list")
+        for patch in patches:
+            if not isinstance(patch, dict) or set(patch) != {"path", "sha256"}:
+                raise ValueError(f"{lock['node_id']} has invalid source patch provenance")
+            path = ROOT / safe_name(patch["path"])
+            if not path.is_relative_to(ROOT / "patches") or not path.is_file():
+                raise ValueError(f"source patch is missing or outside patches/: {path}")
+            if hashlib.sha256(path.read_bytes()).hexdigest() != patch["sha256"]:
+                raise ValueError(f"source patch digest mismatch: {path}")
+            generated_patch_paths.add(patch["path"])
+    if generated_patch_paths != expected_patch_paths:
+        raise ValueError("reused node patch provenance does not match patches/")
     for lock in standard:
         if tuple(map(int, lock["build_glibc_baseline"].split("."))) > tuple(map(int, reused["max_glibc"].split("."))):
             raise ValueError(f"{lock['node_id']} exceeds the recorded glibc baseline")

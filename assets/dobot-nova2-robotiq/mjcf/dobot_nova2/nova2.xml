@@ -67,12 +67,15 @@
     </body>
   </worldbody>
   <actuator>
-    <position name="joint1" joint="joint1" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-6.28 6.28" />
-    <position name="joint2" joint="joint2" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-3.14 3.14" />
-    <position name="joint3" joint="joint3" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-2.79 2.79" />
-    <position name="joint4" joint="joint4" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-6.28 6.28" />
-    <position name="joint5" joint="joint5" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-6.28 6.28" />
-    <position name="joint6" joint="joint6" kp="1000" kv="50" forcerange="-100 100" ctrlrange="-6.28 6.28" />
+    <!-- Keep gravity-induced steady-state error below the controller's 0.01 rad
+         terminal tolerance.  kv follows the square-root gain scaling from the
+         original kp=1000, kv=50 servo. -->
+    <position name="joint1" joint="joint1" kp="2000" kv="70" forcerange="-100 100" ctrlrange="-6.28 6.28" />
+    <position name="joint2" joint="joint2" kp="2000" kv="70" forcerange="-100 100" ctrlrange="-3.14 3.14" />
+    <position name="joint3" joint="joint3" kp="2000" kv="70" forcerange="-100 100" ctrlrange="-2.79 2.79" />
+    <position name="joint4" joint="joint4" kp="2000" kv="70" forcerange="-100 100" ctrlrange="-6.28 6.28" />
+    <position name="joint5" joint="joint5" kp="2000" kv="70" forcerange="-100 100" ctrlrange="-6.28 6.28" />
+    <position name="joint6" joint="joint6" kp="2000" kv="70" forcerange="-100 100" ctrlrange="-6.28 6.28" />
   </actuator>
   <keyframe>
     <key name="home" qpos="0 0 0 0 0 0" ctrl="0 0 0 0 0 0" />
