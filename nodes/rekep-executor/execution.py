@@ -67,6 +67,14 @@ def _metadata(value: Any) -> dict[str, Any]:
     return parameters if isinstance(parameters, dict) else value
 
 
+class ChildActionFailure(RuntimeError):
+    def __init__(self, status: str | None, result: Any):
+        self.terminal_result = result.model_dump(mode="json")
+        self.goal_status = status
+        self.error_code = result.error_code
+        super().__init__(f"child action failed: status={status}, code={result.error_code}, message={result.message}")
+
+
 class ChildActionBridge:
     """Only one child action can be active; each result must be terminal-success."""
 
@@ -125,7 +133,7 @@ class ChildActionBridge:
             result, status = self.result, self.result_status
             self.active_goal_id = None
         if status != "succeeded" or result.error_code != "SUCCESS":
-            raise RuntimeError(f"child action failed: status={status}, code={result.error_code}, message={result.message}")
+            raise ChildActionFailure(status, result)
         return result.model_dump(mode="json")
 
     def move_pose(self, segment: dict[str, Any], cancel: threading.Event) -> dict[str, Any]:
@@ -169,7 +177,7 @@ def execute(program: dict[str, Any], solved: dict[str, Any], bridge: ChildAction
     absolute_deadline = started + deadline_ms / 1000
     run_id = f"execution_{uuid.uuid4().hex}"
     records = []
-    status, failure = "succeeded", None
+    status, failure, failure_code = "succeeded", None, None
     try:
         for stage_index, stage in enumerate(solved["stages"]):
             if cancel.is_set():
@@ -182,7 +190,11 @@ def execute(program: dict[str, Any], solved: dict[str, Any], bridge: ChildAction
             for segment in stage["segments"]:
                 if cancel.is_set():
                     break
-                result = bridge.move_pose(segment, cancel) if segment["type"] == "move_pose" else bridge.gripper(segment, cancel)
+                try:
+                    result = bridge.move_pose(segment, cancel) if segment["type"] == "move_pose" else bridge.gripper(segment, cancel)
+                except ChildActionFailure as exc:
+                    record["segments"].append({"segment_id": segment["segment_id"], "status": "failed", "goal_status": exc.goal_status, "terminal_result": exc.terminal_result})
+                    raise
                 record["segments"].append({"segment_id": segment["segment_id"], "status": "succeeded", "terminal_result": result})
                 if segment["type"] == "move_pose" and cancel.wait(max(0, int(segment.get("settle_ms", 0))) / 1000):
                     break
@@ -191,6 +203,7 @@ def execute(program: dict[str, Any], solved: dict[str, Any], bridge: ChildAction
                 status, failure = "cancelled", "parent action cancelled"
                 break
             observation = bridge.observe()
+            record["observation_id"] = observation["observation_id"]
             if observation.get("session_id") != program["session_id"] or observation.get("scene_revision") != program["scene_revision"]:
                 raise RuntimeError("session or scene revision changed during execution")
             target = next((item["target_pose"] for item in reversed(stage["segments"]) if item["type"] == "move_pose"), None)
@@ -199,9 +212,10 @@ def execute(program: dict[str, Any], solved: dict[str, Any], bridge: ChildAction
             if target and not grasp_deferred:
                 context = EvaluationContext(observation, target["position_m"], target["quaternion_xyzw"])
                 evidence = [residual(item, context) for item in stage["constraints"]["subgoal_constraints"]]
-                if any(item["violation"] > 0.01 for item in evidence):
-                    raise RuntimeError(f"post-stage constraint verification failed in {stage['stage_id']}")
                 record["constraint_evidence"] = evidence
+                if any(item["violation"] > 0.01 for item in evidence):
+                    failure_code = "REKEP_POST_STAGE_CONSTRAINT_VIOLATED"
+                    raise RuntimeError(f"post-stage constraint verification failed in {stage['stage_id']}")
             elif target:
                 # A grasp occludes the object and DINO re-proposes keypoints on
                 # the remaining visible surface.  The contact-aware gripper
@@ -213,6 +227,9 @@ def execute(program: dict[str, Any], solved: dict[str, Any], bridge: ChildAction
             progress({"phase": "execute_stage", "stage_id": stage["stage_id"], "percent": 30 + round((stage_index + 1) / len(solved["stages"]) * 70)})
     except Exception as exc:
         status, failure = "failed", str(exc)
+        failure_code = getattr(exc, "error_code", None) or failure_code or ("REKEP_TIMEOUT" if isinstance(exc, TimeoutError) else "REKEP_EXECUTION_FAILED")
+        if records and records[-1]["status"] == "executing":
+            records[-1]["status"] = "failed"
     result = {
         "schema_version": RESULT_SCHEMA,
         "execution_id": run_id,
@@ -224,6 +241,7 @@ def execute(program: dict[str, Any], solved: dict[str, Any], bridge: ChildAction
         "plan_digest": program["plan_digest"],
         "stages": records,
         "failure_reason": failure,
+        "failure_code": failure_code,
         "solver_evidence": solved["evidence"],
         "checks": solved["checks"],
     }

@@ -1,0 +1,58 @@
+diff --git a/packages/motion_server/src/forge_motion_server/planner.py b/packages/motion_server/src/forge_motion_server/planner.py
+index f8a96b9..78216a5 100644
+--- a/packages/motion_server/src/forge_motion_server/planner.py
++++ b/packages/motion_server/src/forge_motion_server/planner.py
+@@ -86,8 +86,11 @@ class KinematicPlanner:
+                 goal.target_pose,
+                 state.positions,
+                 self.config.planning_timeout_ns,
+-                position_tolerance,
+-                orientation_tolerance,
++                # Reserve the remaining final-pose budget for controller
++                # tracking and settling; an IK solution at the final limit
++                # leaves no room for any physical tracking error.
++                position_tolerance * 0.25,
++                orientation_tolerance * 0.25,
+             )
+         except (FloatingPointError, TypeError, ValueError) as error:
+             raise PlanningFailure("IK_FAILED", str(error)) from error
+diff --git a/packages/motion_server/tests/conftest.py b/packages/motion_server/tests/conftest.py
+index 7e19c98..00396dd 100644
+--- a/packages/motion_server/tests/conftest.py
++++ b/packages/motion_server/tests/conftest.py
+@@ -17,6 +17,7 @@ class FakeKinematics:
+             positions=(0.2, -0.1, 0.3),
+         )
+         self.inverse_calls = 0
++        self.inverse_tolerances = None
+ 
+     def validate_positions(self, group_name: str, positions: tuple[float, ...]) -> None:
+         if group_name != "arm":
+@@ -34,6 +35,7 @@ class FakeKinematics:
+         orientation_tolerance_rad: float,
+     ) -> InverseKinematicsOutcome:
+         self.inverse_calls += 1
++        self.inverse_tolerances = (position_tolerance_m, orientation_tolerance_rad)
+         return self.inverse_outcome
+ 
+     def forward(self, group_name: str, positions: tuple[float, ...]) -> Pose:
+diff --git a/packages/motion_server/tests/test_ik_budget.py b/packages/motion_server/tests/test_ik_budget.py
+new file mode 100644
+index 0000000..f17d03f
+--- /dev/null
++++ b/packages/motion_server/tests/test_ik_budget.py
+@@ -0,0 +1,14 @@
++from forge_motion_server.planner import KinematicPlanner
++from forge_motion_server.state_cache import JointStateSnapshot
++
++
++def test_ik_reserves_final_pose_budget(server_config, group_config, fake_kinematics, pose_goal):
++    planner = KinematicPlanner(server_config, fake_kinematics)
++    # Trajectory generation is unrelated to the tolerance budget under test.
++    planner._trajectory = lambda *args: None
++    class State:
++        positions = (0., 0., 0.)
++    planner.plan_pose(group_config, State(), pose_goal)
++    assert fake_kinematics.inverse_tolerances == (0.005, 0.0125)
++    assert pose_goal.position_tolerance_m == 0.02
++    assert pose_goal.orientation_tolerance_rad == 0.05

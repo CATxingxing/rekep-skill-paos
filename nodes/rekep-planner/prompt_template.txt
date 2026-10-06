@@ -10,5 +10,7 @@ Operator semantics are numeric, not Boolean. In particular, inside_region return
 
 When a keypoint has kind "object_center_estimate", use that keypoint for the grasp target and for center alignment during placement. Other DINOv2 keypoints may be used for clearance and inside-region checks.
 
+A target region is a volume, not a support surface. For placement, align the semantic center with the region center in x and y, and require the object keypoints inside the region. Do not require the object center's z to equal the volume center's z: a released object settles under gravity, and any stable height inside the target volume is valid.
+
 Instruction: {instruction}
 Observation: {observation}

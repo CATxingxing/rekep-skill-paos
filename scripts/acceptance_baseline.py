@@ -96,7 +96,7 @@ def preflight(program: dict, snapshot: dict, profile: Path) -> dict:
             if segment["type"] != "move_pose":
                 continue
             p, q = segment["target_pose"]["position_m"], segment["target_pose"]["quaternion_xyzw"]
-            outcome = ik.inverse("nova2_arm", Pose(x=p[0], y=p[1], z=p[2], qx=q[0], qy=q[1], qz=q[2], qw=q[3]), seed, mc.planning_timeout_ns, .01, .08)
+            outcome = ik.inverse("nova2_arm", Pose(x=p[0], y=p[1], z=p[2], qx=q[0], qy=q[1], qz=q[2], qw=q[3]), seed, mc.planning_timeout_ns, .0025, .02)
             if outcome.positions is None:
                 raise RuntimeError(f"IK_FAILED {segment['segment_id']}: {outcome.status}: {outcome.message}")
             evidence.append({"segment_id": segment["segment_id"], "joint_positions": outcome.positions,

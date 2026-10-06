@@ -18,6 +18,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 SOURCE_PATCHES = {
+    "motion": (
+        ROOT / "patches/motion/0001-reserve-final-pose-error-budget.patch",
+    ),
     "gateway": (
         ROOT / "patches/gateway/0001-action-admission-status-barrier.patch",
     ),

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import threading
 
-from execution import execute
+from execution import ChildActionFailure, execute
 from helpers import program, snapshot
 
 
@@ -72,3 +72,26 @@ def test_grasp_geometry_is_deferred_when_keypoints_are_reproposed(tmp_path, monk
 
     assert result["status"] == "succeeded"
     assert result["stages"][0]["constraint_verification"] == "deferred_until_post_grasp_motion"
+
+
+def test_failed_child_preserves_diagnostics_and_stops_serial_execution(tmp_path, monkeypatch):
+    monkeypatch.setenv("REKEP_RUNTIME_ROOT", str(tmp_path))
+    class Result:
+        error_code = "FINAL_POSE_TOLERANCE_VIOLATED"
+        message = "final Cartesian pose tolerance was violated"
+        def model_dump(self, **_):
+            return {"error_code": self.error_code, "final_position_error_m": .01019}
+    class FailedBridge(Bridge):
+        def move_pose(self, segment, cancel):
+            self.calls.append(segment["segment_id"])
+            raise ChildActionFailure("aborted", Result())
+    bridge = FailedBridge()
+    solved = {"stages": [{"stage_id": "transfer", "segments": [
+        {"segment_id": "failed", "type": "move_pose"},
+        {"segment_id": "must_not_run", "type": "move_pose"},
+    ]}], "evidence": [], "checks": {}}
+    result = execute(program(), solved, bridge, threading.Event(), lambda _: None, deadline_ms=5000)
+    assert bridge.calls == ["failed"]
+    assert result["failure_code"] == "FINAL_POSE_TOLERANCE_VIOLATED"
+    assert result["stages"][0]["status"] == "failed"
+    assert result["stages"][0]["segments"][0]["terminal_result"]["final_position_error_m"] == .01019

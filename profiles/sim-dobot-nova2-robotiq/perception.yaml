@@ -1,10 +1,10 @@
 model_config: ~/.paos-rekep/models/dinov2/config.json
 frame_id: nova2_base
 segmentation: {backend: sim_color_components, minimum_component_pixels: 100}
-# RGB-D observes the cube's camera-facing surface. The gripper closes along
-# base +Y, so shift the semantic center keypoint 23 mm behind that surface.
+# RGB-D observes the cube's camera-facing top surface. The gripper closes
+# along base +Y. Shift 23 mm behind the visible edge and 25 mm below its top.
 # DINOv2 supplies the remaining per-object keypoints.
-keypoints: {per_object: 3, object_center_offset_m: [0.0, 0.023, 0.0]}
+keypoints: {per_object: 3, object_center_offset_m: [0.0, 0.023, -0.025]}
 tracker: {max_reassociation_distance_m: 0.08}
 freshness: {max_age_ms: 1500}
 # Depth keypoints lie on the visible top face.  With the raised support pad,

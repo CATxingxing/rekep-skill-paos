@@ -56,6 +56,24 @@ def solve_subgoal(constraints: list[dict[str, Any]], snapshot: dict[str, Any], s
     # shortest motion. This prevents height-only constraints from changing x/y.
     refined = [refine(candidate) for candidate in candidates]
     feasible = [point for point in refined if objective(point) <= 1e-12]
+    # The violation-only objective becomes flat as soon as a constraint is
+    # satisfied. Contract each feasible candidate toward the original seed to
+    # remove coarse coordinate-search overshoot (e.g. an unnecessary 10 cm
+    # lift). Keep a verified feasible endpoint at every iteration.
+    if objective(seed) > 1e-12:
+        contracted = []
+        for point in feasible:
+            lower, upper = 0.0, 1.0
+            best_feasible = point
+            for _ in range(32):
+                fraction = (lower + upper) / 2
+                candidate = [seed[i] + fraction * (point[i] - seed[i]) for i in range(3)]
+                if objective(candidate) <= 1e-12:
+                    upper, best_feasible = fraction, candidate
+                else:
+                    lower = fraction
+            contracted.append(best_feasible)
+        feasible = contracted
     best = min(feasible, key=lambda point: math.dist(point, seed)) if feasible else min(refined, key=objective)
     evidence = [residual(item, EvaluationContext(snapshot, best, quaternion, held_object, held_anchor)) for item in constraints]
     if any(item["violation"] > 1e-6 for item in evidence):

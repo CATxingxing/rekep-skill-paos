@@ -69,6 +69,9 @@ def test_clearance_constraint_preserves_unconstrained_xy():
 
     assert endpoint[:2] == seed[:2]
     assert endpoint[2] > seed[2]
+    # Region center z=.07, target clearance .10 with .002 tolerance:
+    # the nearest feasible height is .168, without a coarse 10 cm overshoot.
+    assert endpoint[2] == pytest.approx(0.168, abs=2e-6)
 
 
 def test_post_stage_missing_keypoint_is_a_structured_contract_error():

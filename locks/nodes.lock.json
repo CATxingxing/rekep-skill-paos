@@ -31,7 +31,7 @@
     },
     {
       "node_id": "motion_server",
-      "artifact_id": "motion_server-0.1.0-linux-x86_64",
+      "artifact_id": "motion_server-0.1.0-rekep1-linux-x86_64",
       "entrypoint": "motion_server",
       "version": "0.1.0",
       "repository": "motion",
