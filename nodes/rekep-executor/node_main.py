@@ -59,7 +59,7 @@ def main() -> None:
         active = runtime_root() / "run" / "rekep" / "active-execution.json"
         atomic_json(active, {"plan_id": program["plan_id"], "plan_digest": program["plan_digest"]})
         try:
-            result = execute(program, solved, holder["bridge"], cancel, progress, deadline_ms=deadline_ms)
+            result = execute(program, solved, holder["bridge"], cancel, progress, deadline_ms=deadline_ms, config=config, snapshot=snapshot)
         finally:
             active.unlink(missing_ok=True)
         if result["status"] == "failed":

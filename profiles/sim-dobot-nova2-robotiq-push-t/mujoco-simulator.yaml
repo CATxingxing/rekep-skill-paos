@@ -1,0 +1,26 @@
+model_path: ../../assets/dobot-nova2-robotiq/mjcf/tasks/push_t.xml
+control_hz: 50
+image_format: raw
+initial_state:
+  # Non-singular, downward-facing Nova 2 home pose with an open Robotiq gripper.
+  joint_positions: {joint1: 0.754726, joint2: -1.354448, joint3: 0.918229, joint4: 0.435667, joint5: -1.570687, joint6: 3.896297, gripper: 0.0}
+joints:
+  - {name: joint1, mode: position, unit: radians}
+  - {name: joint2, mode: position, unit: radians}
+  - {name: joint3, mode: position, unit: radians}
+  - {name: joint4, mode: position, unit: radians}
+  - {name: joint5, mode: position, unit: radians}
+  - {name: joint6, mode: position, unit: radians}
+  - {name: gripper, mode: position, unit: radians, state_from_joints: [right_driver_joint], state_expr: sum, state_scale: 318.75}
+robots:
+  - id: nova2
+    joints: [joint1, joint2, joint3, joint4, joint5, joint6, gripper]
+    actuator_order: [joint1, joint2, joint3, joint4, joint5, joint6, fingers_actuator]
+    joint_to_actuator: {joint1: joint1, joint2: joint2, joint3: joint3, joint4: joint4, joint5: joint5, joint6: joint6, gripper: fingers_actuator}
+image_forward:
+  rekep_overview:
+    - {output: image/rekep, fps: 30, width: 640, height: 480}
+    - {output: depth/rekep, fps: 30, width: 640, height: 480, type: depth}
+# Test-only ground truth for sim_tasks.replay_eval (patched mujoco_sim,
+# patches/mujoco/0001). No Dora output carries it; no ReKep node reads it.
+state_log: {path: "~/.paos-rekep/run/rekep/ground-truth/push_t-{start_ns}.jsonl", hz: 25}

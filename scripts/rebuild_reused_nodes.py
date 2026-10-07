@@ -20,9 +20,14 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATCHES = {
     "motion": (
         ROOT / "patches/motion/0001-reserve-final-pose-error-budget.patch",
+        ROOT / "patches/motion/0002-blend-through-cartesian-via-poses.patch",
     ),
     "gateway": (
         ROOT / "patches/gateway/0001-action-admission-status-barrier.patch",
+    ),
+    # Test-only ground truth for the sim_tasks evaluators; never a Dora output.
+    "mujoco": (
+        ROOT / "patches/mujoco/0001-optional-ground-truth-state-log.patch",
     ),
 }
 

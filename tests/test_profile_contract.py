@@ -76,3 +76,35 @@ def test_sim_arm_servo_gain_supports_joint_terminal_tolerance() -> None:
         assert set(actuators) == {f"joint{index}" for index in range(1, 7)}
         assert all(float(actuator.attrib["kp"]) >= 2000.0 for actuator in actuators.values())
         assert all(float(actuator.attrib["kv"]) >= 70.0 for actuator in actuators.values())
+
+
+def test_held_move_fits_inside_the_move_deadline() -> None:
+    import math
+
+    executor = yaml.safe_load((PROFILE / "executor.yaml").read_text(encoding="utf-8"))
+    motion = yaml.safe_load((PROFILE / "motion-server.yaml").read_text(encoding="utf-8"))
+    controller = yaml.safe_load((PROFILE / "joint-trajectory-controller.yaml").read_text(encoding="utf-8"))
+    group = motion["groups"]["nova2_arm"]
+    assert 0 < executor["held_velocity_scale"] <= executor["velocity_scale"] <= 1
+    assert 0 < executor["held_acceleration_scale"] <= executor["acceleration_scale"] <= 1
+    # A 25 mm Cartesian step stays well below 0.2 rad per joint for this arm.
+    joint_step = 0.2
+    duration_s = max(
+        max(1.875 * joint_step / (group["max_velocity"][name] * executor["held_velocity_scale"]),
+            math.sqrt(10 / math.sqrt(3) * joint_step / (group["max_acceleration"][name] * executor["held_acceleration_scale"])))
+        for name in group["joint_names"]
+    )
+    budget_ms = duration_s * 1000 + controller["goal_time_tolerance_ms"] + motion["execution_timeout_margin_ms"]
+    assert budget_ms < executor["move_deadline_ms"]
+
+
+def test_sim_scene_resolves_grasp_contact_and_compensates_arm_gravity() -> None:
+    root = ElementTree.parse(ROOT / "assets" / "dobot-nova2-robotiq" / "mjcf" / "dobot_nova2_robotiq_2f85_pick_place.xml").getroot()
+    # The held 80 g cube needs a sub-millisecond step to stay clamped while
+    # the arm moves; 2 ms let it yaw and creep out of the pads.
+    assert float(root.find("option").attrib["timestep"]) <= 0.0005
+    bodies = {body.attrib["name"]: body for body in root.find("worldbody").iter("body")}
+    assert bodies["pick_cube"].attrib.get("gravcomp") is None
+    assert all(body.attrib.get("gravcomp") == "1" for name, body in bodies.items() if name != "pick_cube")
+    joints = {joint.attrib["name"]: joint for joint in root.iter("joint") if joint.attrib.get("name", "").startswith("joint")}
+    assert all(joints[f"joint{index}"].attrib.get("actuatorgravcomp") == "true" for index in range(1, 7))

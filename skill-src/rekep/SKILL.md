@@ -10,8 +10,10 @@ metadata:
 # ReKep manipulation
 
 1. Call `rekep.get_context`. Preserve the returned `session_id`, `scene_revision`, and `observation_id`; use only object, region, and keypoint IDs present in that snapshot.
+   `rekep.get_context` is a read-only query that never moves the robot: if it times out or returns a gateway timeout, call it again (at most two more times) before reporting that perception is unavailable.
 2. Call `rekep.plan_task` with the original instruction and exact `session_id` and `observation_id`. Planning uses the VLM configured for the current PAOS Agent and produces a restricted JSON constraint program. It does not move the robot. If the provider is unsupported or unavailable, stop and report the error; do not substitute a template or another model.
 3. Inspect the stages and constraint program. Call `rekep.execute_task` only when the user has authorized motion for the active profile. Pass the exact `session_id`, `scene_revision`, `observation_id`, `plan_id`, and `plan_digest`, plus `allow_motion: true` and a positive deadline.
+   `deadline_ms` covers the whole closed-loop execution, not one motion: the executor re-observes the scene before every stage and between push strokes. Allow about 60 s per stage and about 30 s per push stroke (a push stage may need up to 16 strokes); when unsure use the maximum, 600000. A deadline that is too short aborts the execution midway.
 4. Treat only terminal `status: succeeded` as success. On stale identity, digest mismatch, invalid constraints, solver/IK/collision failure, timeout, cancellation, or failed post-stage verification, stop and surface the structured failure. Never automatically retry a physical segment.
 
 The executor sends one segment at a time and waits for its terminal child result before continuing. Never invent identifiers, execute generated Python, change profiles silently, or treat an accepted invocation as completion.

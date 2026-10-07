@@ -1,0 +1,51 @@
+# Base frame: the table top is at z = -0.005 (base_link is 30 mm above the
+# world origin). The lowest finger point is 4.6 mm below the pinch point
+# with the gripper open and 17.7 mm with it closed.
+# Closed Robotiq 2F-85 (the pusher): lowest collision point below the pinch
+# tip frame, measured in the MuJoCo model (diag/finger_extent.py, 0324-agent).
+pusher_bottom_below_tip_m: 0.0177
+workspace_m: {x: [-0.60, 0.60], y: [-0.80, 0.20], z: [0.005, 0.75]}
+default_end_effector_pose:
+  position_m: [0.3488, -0.1993, 0.3482]
+  quaternion_xyzw: [1.0, 0.0, 0.0, 0.0]
+max_segment_length_m: 0.45
+# Keep the DLS seed on the same numerical branch near the far side of the
+# Nova2 workspace; 50 mm steps can cross a line-search basin boundary.
+max_cartesian_step_m: 0.025
+# Minimum lateral transit height in the base frame, not an additive lift.
+# VLM path constraints may require a higher transit height.
+transport_clearance_m: 0.12
+pregrasp_approach_height_m: 0.10
+# Robotiq 0..255 coordinate: an empty closure stalls around 251.6 and a
+# 50 mm contact near 125. Any stalled contact between about 72 mm and 5 mm
+# of object width counts as holding something.
+grasp_contact_position_range: [30.0, 240.0]
+path_samples_per_segment: 9
+velocity_scale: 0.4
+acceleration_scale: 0.4
+# Holding the 50 mm cube. With the 0.5 ms scene the replay of Run 0320-run3
+# keeps the cube even at 0.4/0.4 on a 3x slower simulator; half speed while
+# holding is kept as margin (rekep-evidence/0320-run3-replay/diag).
+held_velocity_scale: 0.2
+held_acceleration_scale: 0.2
+# Blend each straight Cartesian run into one MovePose through its 25 mm IK
+# waypoints (motion_server patch 0002); stop only at corners.
+continuous_paths: true
+move_deadline_ms: 15000
+# Allow five 50 Hz state updates after a terminal trajectory result before
+# the motion server validates the next segment's start velocity.
+inter_segment_settle_ms: 100
+# Must exceed the controller's 12 s terminal deadline so its structured
+# success/failure result wins instead of the parent timing out first.
+gripper_deadline_ms: 15000
+automatic_physical_retry: false
+# Closed loop (ReKep): every stage after the first is re-solved from the
+# latest observation, the reached end-effector pose and the held object.
+replan_each_stage: true
+# While holding, finish lateral moves with this vertical descent onto the
+# stage endpoint, so a carried object is lowered onto its support instead
+# of sweeping into it sideways.
+held_descent_m: 0.04
+# Free (empty-gripper) lateral moves rise, travel and descend by this much
+# so the open fingers do not sweep through objects.
+free_approach_height_m: 0.08

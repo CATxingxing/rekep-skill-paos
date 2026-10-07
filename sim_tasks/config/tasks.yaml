@@ -1,0 +1,131 @@
+# Task, physics, randomization and evaluator thresholds for the RoboDojo-inspired
+# MuJoCo evaluation scenes.  Nothing here is a leaderboard-comparable number:
+# these are RoboDojo-*inspired* tasks on a Dobot Nova2 + Robotiq 2F-85.
+#
+# Units: metres, radians, seconds, kilograms.  Every evaluator threshold lives
+# here; no threshold is hard-coded in the evaluator code.
+
+common:
+  control_hz: 50                # one control tick = 1/control_hz seconds
+  settle_s: 1.0                 # physics settling after reset, before the episode starts
+  settle_max_speed: 0.002       # m/s; scene is rejected if any object still moves faster
+  settle_max_drift_m: 0.001     # scene is rejected if any object moves more than this while settling
+  camera: rekep_overview        # same camera/calibration as the baseline perception.yaml
+  max_scene_attempts: 40        # resample layouts the camera cannot separate (deterministic per seed)
+  visibility: {min_pixels: 250, gap_px: 3}   # every object must be visible and not merge with a neighbour
+  render: {width: 640, height: 480}
+  home_joint_positions: [0.754726, -1.354448, 0.918229, 0.435667, -1.570687, 3.896297]
+  gripper_open_ctrl: 0.0
+  gripper_closed_ctrl: 255.0
+  table:
+    center_xy: [0.10, -0.42]
+    half_size_xy: [0.40, 0.30]
+    top_z: 0.025
+    friction: [0.6, 0.005, 0.0001]
+  # Region of the table in which task objects may be placed (before per-task margins).
+  workspace:
+    x: [-0.10, 0.36]
+    y: [-0.56, -0.24]
+    radius: [0.30, 0.56]        # distance from the robot base; top-down grasps stay IK-reachable
+  # Lowest collision point of the gripper is 4.6 mm below the 'pinch' site; the pads span
+  # pinch_z-0.0046 .. pinch_z+0.033, so their centre is 14.2 mm above the site.
+  gripper: {pad_center_above_pinch_m: 0.0142, pad_bottom_below_pinch_m: 0.0046}
+  # Contact bit masks.  Pair collides if (contype1 & conaffinity2) | (contype2 & conaffinity1).
+  collision:
+    robot: {contype: 1, conaffinity: 1}      # robot geoms keep the MJCF defaults
+    table: {contype: 4, conaffinity: 3}      # collides with robot (1) and objects (2)
+    object: {contype: 2, conaffinity: 7}     # collides with robot (1), objects (2), table/floor (4)
+  # Object contact parameters shared by all tasks.  Friction is NOT inflated: the
+  # robot pads (mu 0.6-0.7) dominate pad/object contact, object/object and
+  # object/table pairs use mu 0.5-0.6.
+  object_physics:
+    friction: [0.6, 0.01, 0.001]
+    condim: 4
+
+general_pickup:
+  num_objects: 5
+  min_center_separation_m: 0.13
+  instruction: "Pick up the {color} {shape} and lift it off the table."
+  # The perception node requires one green region per scene, so a small green mat sits
+  # outside the object workspace.  It is a distractor, not part of the task.
+  reference_mat: {center_xy: [0.42, -0.62], half_size_m: 0.04}
+  time_limit_s: 60.0
+  colors:
+    red: [0.85, 0.12, 0.12]
+    blue: [0.12, 0.25, 0.85]
+    yellow: [0.95, 0.85, 0.12]
+    orange: [0.95, 0.50, 0.08]
+    purple: [0.55, 0.18, 0.75]
+    pink: [0.95, 0.35, 0.65]
+    cyan: [0.10, 0.75, 0.80]
+  shapes:
+    cube: {type: box, half: [0.025, 0.025, 0.025], mass: 0.08}
+    block: {type: box, half: [0.020, 0.030, 0.025], mass: 0.07}
+    cylinder: {type: cylinder, radius: 0.022, half_height: 0.035, mass: 0.07}
+  evaluator:
+    lift_height_m: 0.10          # target_z - initial_target_z >= this ...
+    hold_time_s: 0.7             # ... continuously for this long
+    drop_lift_height_m: 0.03     # target counted as "carried" above this height
+    drop_rest_height_m: 0.01     # ... and as "dropped" once it is back below this
+    wrong_object_moved_m: 0.02   # non-target xy displacement / lift counted as "moved"
+    wrong_object_lift_m: 0.05    # non-target lifted this high => WRONG_OBJECT failure
+    score_weights: {grasp: 0.2, lift: 0.6, hold: 0.2}
+
+stack_blocks:
+  num_blocks: 3
+  block_size_m: 0.05
+  block_mass_kg: 0.08
+  colors:
+    red: [0.85, 0.12, 0.12]
+    blue: [0.12, 0.25, 0.85]
+    yellow: [0.95, 0.85, 0.12]
+  zone: {half_size_m: 0.05, center_x: [0.04, 0.26], center_y: [-0.50, -0.34]}
+  min_center_separation_m: 0.11
+  require_order: true            # bottom/middle/top colours are given by the instruction
+  require_base_in_zone: true     # bottom block must stand on the green zone
+  time_limit_s: 120.0
+  evaluator:
+    xy_tolerance_m: 0.02         # |upper.xy - lower.xy|
+    z_tolerance_m: 0.008         # |(upper.z - lower.z) - block_size|
+    max_tilt_rad: 0.175          # each block must be upright (10 deg)
+    zone_margin_m: 0.01          # bottom block centre may exceed the zone by this much
+    probe_s: 1.5                 # arm held still, stack must survive this long
+    probe_dt_s: 0.05
+    max_linear_speed: 0.01       # m/s during the probe
+    max_angular_speed: 0.1       # rad/s during the probe
+    max_pose_drift_m: 0.005      # block displacement over the probe
+    contact_min_force_n: 0.05    # summed force of the pair's contact points that counts as contact
+    fallen_margin_m: 0.01        # block centre this far below its resting height on the table => fell off
+    require_released: true       # no gripper geom may touch a block at the end
+    partial_score: 0.5           # one correctly stacked pair
+    two_pair_unfinished_score: 0.75   # full tower, but unstable / off the zone / not released
+
+push_t:
+  # T = bar (local y) + stem (local -x); body frame origin is the T's centre of mass.
+  bar_half: [0.015, 0.060]       # half extents (x, y) of the bar
+  stem_half: [0.045, 0.015]
+  height_m: 0.03
+  mass_kg: 0.20
+  friction: [0.45, 0.005, 0.0001]
+  goal: {center_xy: [0.12, -0.42], yaw_rad: 2.2}   # yaw 2.2 rad: T looks upright in rekep_overview
+  init:
+    goal_distance_m: [0.08, 0.20]
+    yaw_offset_rad: [0.5, 2.0]   # magnitude, random sign
+    margin_m: 0.09               # keep the T's bounding circle inside the workspace
+    x: [-0.02, 0.32]
+    y: [-0.54, -0.30]
+    radius: [0.34, 0.52]
+  time_limit_s: 180.0
+  evaluator:
+    xy_tolerance_m: 0.02
+    yaw_tolerance_rad: 0.20
+    max_delta_z_m: 0.01          # T may not be lifted/tilted above this (push only)
+    max_tilt_rad: 0.10
+    fell_below_table_m: 0.01
+    probe_s: 1.0
+    probe_dt_s: 0.05
+    max_linear_speed: 0.005
+    max_angular_speed: 0.05
+    coverage_partial: 0.30       # overlap with goal T for partial success (thin T: 3 cm offset ~ 0.34, 2 cm ~ 0.53)
+    coverage_grid_m: 0.002
+    partial_score_cap: 0.9

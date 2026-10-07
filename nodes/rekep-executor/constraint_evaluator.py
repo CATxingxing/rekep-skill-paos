@@ -36,7 +36,7 @@ class EvaluationContext:
             anchor_ee, anchor_point = held_anchor
             delta = _sub(self.ee_position, anchor_ee)
             for item in snapshot["keypoints"]:
-                if item["object_id"] == held_object:
+                if item.get("object_id") == held_object:
                     self.points[item["keypoint_id"]] = _add(list(item["position_m"]), delta)
 
 
@@ -99,6 +99,25 @@ def evaluate(expression: dict[str, Any], context: EvaluationContext) -> float | 
         region = context.regions[expression["region_id"]]
         lower, upper = region["bounds_min_m"], region["bounds_max_m"]
         return max(max(float(lower[index]) - point[index], point[index] - float(upper[index]), 0.0) for index in range(3))
+    if op == "scale":
+        value = evaluate(expression["arg"], context)
+        factor = require_number(expression["factor"], "scale.factor")
+        if isinstance(value, list):
+            return [item * factor for item in finite_vector(value, 3, "scale.arg")]
+        return require_number(value, "scale.arg") * factor
+    if op == "normalize":
+        value = finite_vector(evaluate(expression["arg"], context), 3, "normalize.arg")
+        length = _norm(value)
+        if length <= 1e-9:
+            raise ContractError("normalize operand must be non-zero")
+        return [item / length for item in value]
+    if op == "component":
+        value = finite_vector(evaluate(expression["arg"], context), 3, "component.arg")
+        return value["xyz".index(expression["axis"])]
+    if op == "horizontal_distance":
+        left = finite_vector(evaluate(expression["left"], context), 3, "horizontal_distance.left")
+        right = finite_vector(evaluate(expression["right"], context), 3, "horizontal_distance.right")
+        return math.hypot(left[0] - right[0], left[1] - right[1])
     if op == "orientation_error":
         target = finite_vector(expression["target_quaternion_xyzw"], 4, "target quaternion")
         dot = abs(sum(target[index] * context.ee_quaternion_xyzw[index] for index in range(4)))

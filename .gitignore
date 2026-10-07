@@ -4,3 +4,4 @@ dist/
 __pycache__/
 *.py[cod]
 *.spec
+sim_tasks/generated/

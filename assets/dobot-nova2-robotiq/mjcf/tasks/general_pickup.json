@@ -1,0 +1,5 @@
+{
+ "task": "general_pickup",
+ "seed": 0,
+ "instruction": "Pick up the cyan cylinder and lift it off the table."
+}

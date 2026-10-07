@@ -1,0 +1,5 @@
+{
+ "task": "stack_blocks",
+ "seed": 0,
+ "instruction": "Stack the three cubes into one tower on the green square: the yellow cube at the bottom, the red cube in the middle and the blue cube on top."
+}

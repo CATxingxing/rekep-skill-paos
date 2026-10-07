@@ -1,0 +1,5 @@
+schema: rekep.constraint_program.v3
+dynamic_python_constraints: false
+max_ast_depth: 12
+max_ast_nodes: 512
+max_stages: 64

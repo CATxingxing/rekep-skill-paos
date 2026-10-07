@@ -16,7 +16,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.3.18"
+VERSION = "0.4.4"
 PLATFORM = platform.system().lower()
 ARCH = {"amd64": "x86_64", "x64": "x86_64", "arm64": "aarch64"}.get(platform.machine().lower(), platform.machine().lower())
 NODES = {

@@ -9,13 +9,14 @@ from typing import Any, Iterable
 from .geometry import finite_vector
 from .ids import canonical_json, digest
 
-SNAPSHOT_SCHEMA = "rekep.perception.v4"
-PROGRAM_SCHEMA = "rekep.constraint_program.v3"
+SNAPSHOT_SCHEMA = "rekep.perception.v5"
+PROGRAM_SCHEMA = "rekep.constraint_program.v4"
 RESULT_SCHEMA = "rekep.execution_result.v3"
 DSL_OPERATORS = frozenset({
     "constant", "point", "region_center", "vector", "add", "sub", "norm",
     "distance", "dot", "angle", "abs", "neg", "min", "max",
     "point_plane_signed_distance", "inside_region", "orientation_error",
+    "scale", "normalize", "component", "horizontal_distance",
 })
 
 
@@ -102,9 +103,13 @@ def validate_snapshot(value: Any) -> dict[str, Any]:
         raise ContractError("regions must be an array")
     object_ids = _unique(objects, "object_id", "objects")
     _unique(keypoints, "keypoint_id", "keypoints")
-    _unique(regions, "region_id", "regions")
+    region_ids = _unique(regions, "region_id", "regions")
     for index, keypoint in enumerate(keypoints):
-        if keypoint.get("object_id") not in object_ids:
+        # A keypoint lies on exactly one observed object or one static region.
+        if "region_id" in keypoint:
+            if "object_id" in keypoint or keypoint.get("region_id") not in region_ids:
+                raise ContractError(f"keypoints[{index}] references an unknown region")
+        elif keypoint.get("object_id") not in object_ids:
             raise ContractError(f"keypoints[{index}] references an unknown object")
         try:
             finite_vector(keypoint.get("position_m"), 3, f"keypoints[{index}].position_m")
@@ -143,6 +148,11 @@ def _validate_expression(expression: Any, *, keypoints: set[str], regions: set[s
             raise ContractError(str(exc)) from exc
     elif op == "inside_region" and expression.get("region_id") not in regions:
         raise ContractError(f"unknown region reference {expression.get('region_id')!r}")
+    elif op == "scale":
+        require_number(expression.get("factor"), "scale.factor")
+    elif op == "component":
+        if expression.get("axis") not in {"x", "y", "z"}:
+            raise ContractError("component.axis must be x, y, or z")
     elif op == "orientation_error":
         try:
             finite_vector(expression.get("target_quaternion_xyzw"), 4, "target quaternion")
@@ -220,16 +230,23 @@ def validate_program(value: Any, snapshot: dict[str, Any]) -> dict[str, Any]:
                 if require_number(constraint.get("tolerance"), f"constraint {constraint_id}.tolerance") < 0:
                     raise ContractError(f"constraint {constraint_id}.tolerance must be non-negative")
                 _validate_expression(constraint.get("expression"), keypoints=keypoints, regions=regions, depth=0, count=count)
+        if stage.get("motion", "auto") not in {"auto", "straight"}:
+            raise ContractError(f"stage {stage_id}.motion must be auto or straight")
         events = stage.get("events", [])
         if not isinstance(events, list):
             raise ContractError(f"stage {stage_id}.events must be an array")
         for event in events:
-            if not isinstance(event, dict) or event.get("type") not in {"grasp", "release"}:
+            if not isinstance(event, dict) or event.get("type") not in {"grasp", "release", "push"}:
                 raise ContractError(f"stage {stage_id} has an unsupported event")
             object_id = event.get("object_id")
             if object_id not in objects:
                 raise ContractError(f"unknown object reference {object_id!r}")
-            if event["type"] == "grasp":
+            if event["type"] == "push":
+                if held is not None:
+                    raise ContractError("cannot push while an object is held")
+                if len(events) != 1:
+                    raise ContractError(f"stage {stage_id}: a push event must be the stage's only event")
+            elif event["type"] == "grasp":
                 if held is not None:
                     raise ContractError("cannot grasp while another object is held")
                 held = object_id
@@ -237,8 +254,6 @@ def validate_program(value: Any, snapshot: dict[str, Any]) -> dict[str, Any]:
                 raise ContractError("release must match the held object")
             else:
                 held = None
-    if held is not None:
-        raise ContractError("the final stage must release the held object")
     unsigned = dict(value)
     supplied = unsigned.pop("plan_digest", None)
     if supplied != digest(unsigned):

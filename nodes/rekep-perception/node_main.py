@@ -5,7 +5,7 @@ import argparse
 import json
 from pathlib import Path
 
-from perception import Perception
+from perception import Perception, decode_text
 from rekep_core.provider import Provider, ProviderFailure
 
 
@@ -37,8 +37,7 @@ def main() -> None:
             elif input_id == "joint_state":
                 perception.update_joint_state(value)
             elif input_id == "simulator_status":
-                raw = value[0].as_py() if hasattr(value, "__getitem__") else bytes(value).decode("utf-8")
-                perception.update_status(json.loads(raw))
+                perception.update_status(json.loads(decode_text(value)))
             elif input_id == "observe_request":
                 emit(perception.capture())
         except (RuntimeError, TypeError, ValueError, UnicodeDecodeError, json.JSONDecodeError):

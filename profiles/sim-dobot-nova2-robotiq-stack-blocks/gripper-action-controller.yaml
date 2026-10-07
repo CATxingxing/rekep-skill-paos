@@ -1,0 +1,17 @@
+joint_name: gripper
+coordinate_type: revolute
+min_position: 0.0
+max_position: 255.0
+control_period_ms: 20
+feedback_timeout_ms: 500
+goal_tolerance: 2.0
+# The exported Robotiq coordinate is scaled to 0..255.  MuJoCo contact
+# settling produces sub-unit/s jitter, so the default radian-scale threshold
+# would never classify a physical grasp as stalled. Curved objects (a squeezed
+# cylinder creeps up between the pads) keep about 2.5 units/s of contact jitter
+# after closing (general_pickup run1, 0324-agent); free closing is ~500 units/s.
+stall_velocity_threshold: 6.0
+stall_timeout_ms: 1500
+allow_stalling: true
+goal_timeout_ms: 12000
+terminal_history_size: 128

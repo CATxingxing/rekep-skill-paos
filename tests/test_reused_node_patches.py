@@ -28,3 +28,15 @@ def test_gateway_patch_is_registered_and_content_addressable() -> None:
     assert "test_action_lookup_waits_for_invoke_acceptance_barrier" in text
     digest = hashlib.sha256(patch.read_bytes()).hexdigest()
     assert len(digest) == 64
+
+
+def test_motion_patches_are_registered_in_order() -> None:
+    module = _load_rebuild_module()
+    patches = module.SOURCE_PATCHES["motion"]
+    assert [patch.name for patch in patches] == [
+        "0001-reserve-final-pose-error-budget.patch",
+        "0002-blend-through-cartesian-via-poses.patch",
+    ]
+    text = patches[1].read_text(encoding="utf-8")
+    assert "def plan_quintic_path_trajectory(" in text and "PATH_DEVIATION" in text
+    assert "test_blended_path_that_leaves_the_cartesian_line_is_rejected" in text

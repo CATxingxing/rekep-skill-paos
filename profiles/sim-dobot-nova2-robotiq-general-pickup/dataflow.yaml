@@ -1,0 +1,87 @@
+nodes:
+  - id: gateway
+    path: ${FORGE_RUNTIME_BIN}/gateway
+    args: --config gateway.yaml
+    inputs:
+      tick: dora/timer/millis/50
+      perception_tool_in: perception/tool_out
+      planner_tool_in: planner/tool_out
+      executor_tool_in: executor/tool_out
+    outputs: [tool_response, perception_tool_out, planner_tool_out, executor_tool_out]
+
+  - id: perception
+    path: ${FORGE_RUNTIME_BIN}/rekep_perception
+    args: --config perception.yaml
+    inputs:
+      tick: dora/timer/millis/100
+      tool_in: gateway/perception_tool_out
+      rgb: mujoco_sim/image/rekep
+      depth: mujoco_sim/depth/rekep
+      joint_state: mujoco_sim/proprio_state
+      simulator_status: mujoco_sim/sim_status
+      observe_request: executor/observe_request
+    outputs: [tool_out, snapshot_out]
+
+  - id: planner
+    path: ${FORGE_RUNTIME_BIN}/rekep_planner
+    args: --config planner.yaml
+    inputs:
+      tick: dora/timer/millis/100
+      tool_in: gateway/planner_tool_out
+      snapshot_in: perception/snapshot_out
+    outputs: [tool_out, constraint_out]
+
+  - id: executor
+    path: ${FORGE_RUNTIME_BIN}/rekep_executor
+    args: --config executor.yaml
+    inputs:
+      tick: dora/timer/millis/20
+      tool_in: gateway/executor_tool_out
+      snapshot_in: perception/snapshot_out
+      constraint_in: planner/constraint_out
+      move_pose_feedback: motion_server/move_pose_feedback
+      move_pose_result: motion_server/move_pose_result
+      gripper_feedback: gripper_action_controller/gripper_feedback
+      gripper_result: gripper_action_controller/gripper_result
+    outputs: [tool_out, observe_request, move_pose_goal, move_pose_cancel, gripper_goal, gripper_cancel]
+
+  - id: motion_server
+    path: ${FORGE_RUNTIME_BIN}/motion_server
+    args: --config motion-server.yaml
+    inputs:
+      tick: dora/timer/millis/20
+      joint_state: mujoco_sim/proprio_state
+      move_pose_goal: executor/move_pose_goal
+      move_pose_cancel: executor/move_pose_cancel
+      trajectory_feedback: joint_trajectory_controller/trajectory_feedback
+      trajectory_result: joint_trajectory_controller/trajectory_result
+    outputs: [move_pose_feedback, move_pose_result, trajectory_goal, trajectory_cancel]
+
+  - id: joint_trajectory_controller
+    path: ${FORGE_RUNTIME_BIN}/joint_trajectory_controller
+    args: --config joint-trajectory-controller.yaml
+    inputs:
+      tick: dora/timer/millis/20
+      joint_state: mujoco_sim/proprio_state
+      trajectory_goal: motion_server/trajectory_goal
+      trajectory_cancel: motion_server/trajectory_cancel
+    outputs: [joint_command, trajectory_feedback, trajectory_result]
+
+  - id: gripper_action_controller
+    path: ${FORGE_RUNTIME_BIN}/gripper_action_controller
+    args: --config gripper-action-controller.yaml
+    inputs:
+      tick: dora/timer/millis/20
+      joint_state: mujoco_sim/proprio_state
+      gripper_goal: executor/gripper_goal
+      gripper_cancel: executor/gripper_cancel
+    outputs: [joint_command, gripper_feedback, gripper_result]
+
+  - id: mujoco_sim
+    path: ${FORGE_RUNTIME_BIN}/mujoco_sim
+    args: --config mujoco-simulator.yaml
+    inputs:
+      tick: dora/timer/millis/20
+      action/arm: joint_trajectory_controller/joint_command
+      action/gripper: gripper_action_controller/joint_command
+    outputs: [proprio_state, image/rekep, depth/rekep, sim_status]

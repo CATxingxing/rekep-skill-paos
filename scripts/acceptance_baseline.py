@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import subprocess
 import sys
 import time
 import urllib.error
@@ -12,9 +13,10 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path[:0] = [str(ROOT / "nodes/common"), str(ROOT / "nodes/rekep-executor")]
+sys.path[:0] = [str(ROOT / "nodes/common"), str(ROOT / "nodes/rekep-executor"), str(ROOT / "nodes/rekep-perception")]
 
-from rekep_core.contracts import atomic_json, validate_program, validate_snapshot, verify_binding
+from recorder import cut_video
+from rekep_core.contracts import atomic_json, runtime_root, validate_program, validate_snapshot, verify_binding
 
 
 class Gateway:
@@ -95,13 +97,17 @@ def preflight(program: dict, snapshot: dict, profile: Path) -> dict:
         for segment in stage["segments"]:
             if segment["type"] != "move_pose":
                 continue
-            p, q = segment["target_pose"]["position_m"], segment["target_pose"]["quaternion_xyzw"]
-            outcome = ik.inverse("nova2_arm", Pose(x=p[0], y=p[1], z=p[2], qx=q[0], qy=q[1], qz=q[2], qw=q[3]), seed, mc.planning_timeout_ns, .0025, .02)
-            if outcome.positions is None:
-                raise RuntimeError(f"IK_FAILED {segment['segment_id']}: {outcome.status}: {outcome.message}")
-            evidence.append({"segment_id": segment["segment_id"], "joint_positions": outcome.positions,
-                             "max_joint_step_rad": max(abs(a-b) for a, b in zip(seed, outcome.positions, strict=True))})
-            seed = outcome.positions
+            q = segment["target_pose"]["quaternion_xyzw"]
+            # Same sequential seeding as motion_server: via poses, then target.
+            points = [*segment.get("via_positions", []), segment["target_pose"]["position_m"]]
+            for index, p in enumerate(points):
+                outcome = ik.inverse("nova2_arm", Pose(x=p[0], y=p[1], z=p[2], qx=q[0], qy=q[1], qz=q[2], qw=q[3]), seed, mc.planning_timeout_ns, .0025, .02)
+                label = segment["segment_id"] if index == len(points) - 1 else f"{segment['segment_id']}.via.{index}"
+                if outcome.positions is None:
+                    raise RuntimeError(f"IK_FAILED {label}: {outcome.status}: {outcome.message}")
+                evidence.append({"segment_id": label, "joint_positions": outcome.positions,
+                                 "max_joint_step_rad": max(abs(a-b) for a, b in zip(seed, outcome.positions, strict=True))})
+                seed = outcome.positions
     return {"binding": binding, "solved": solved, "ik_evidence": evidence}
 
 
@@ -120,6 +126,11 @@ def placement_evidence(program: dict, before: dict, after: dict) -> dict:
             "outside_distance_m": outside, "observation_id": after["observation_id"]}
 
 
+def write_video(output: Path, recordings: Path, start_ns: int, end_ns: int) -> dict:
+    """Cut this attempt's window out of the perception node's recorded video into video.mp4."""
+    return cut_video(recordings, start_ns, end_ns, output / "video.mp4")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
@@ -128,10 +139,12 @@ def main() -> int:
     parser.add_argument("--motion-source", type=Path, default=ROOT.parent / "operator-motion/packages/motion_server/src")
     parser.add_argument("--instruction", default="Pick up object_000 using its semantic object-center keypoint, lift it clear of obstacles, transport it, and place it inside region_000.")
     parser.add_argument("--allow-motion", action="store_true")
+    parser.add_argument("--recordings", type=Path, default=runtime_root() / "run" / "rekep" / "recordings")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     sys.path.insert(0, str(args.motion_source.resolve()))
     gateway = Gateway(args.gateway, args.output)
+    started_ns = time.time_ns()
     before, program, terminal = None, None, None
     motion_admitted = False
     try:
@@ -174,6 +187,13 @@ def main() -> int:
             except Exception as exc:
                 atomic_json(args.output / "after-error.json", {"type": type(exc).__name__, "message": str(exc)})
                 print("post-observation error", str(exc), flush=True)
+        # Every attempt, including failed or motion-free ones, keeps a video.
+        try:
+            recording = write_video(args.output, args.recordings, started_ns, time.time_ns())
+        except Exception as exc:  # the attempt's verdict never depends on the video
+            recording = {"error": f"{type(exc).__name__}: {exc}"}
+        atomic_json(args.output / "recording.json", recording)
+        print("recording", json.dumps({k: v for k, v in recording.items() if k != "error"}), recording.get("error", ""), flush=True)
     verification = json.loads((args.output / "verification.json").read_text()) if (args.output / "verification.json").exists() else {}
     return 0 if verification.get("baseline_passed") else 1
 

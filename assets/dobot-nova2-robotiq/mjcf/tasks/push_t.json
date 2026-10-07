@@ -1,0 +1,5 @@
+{
+ "task": "push_t",
+ "seed": 0,
+ "instruction": "Push the blue T-shaped block onto the green T-shaped outline so that it matches the outline's position and orientation. Push only; do not lift the block."
+}

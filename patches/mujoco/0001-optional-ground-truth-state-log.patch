@@ -1,0 +1,101 @@
+diff --git a/src/mujoco_sim/config.py b/src/mujoco_sim/config.py
+index 91102f4..2977ad6 100644
+--- a/src/mujoco_sim/config.py
++++ b/src/mujoco_sim/config.py
+@@ -159,6 +159,10 @@ class MuJoCoNodeConfig:
+     pose_targets: dict[str, str] = field(default_factory=dict)
+     # 可选：通过 mocap body 消费 LocomotionCommand，按机体系速度做平面运动。
+     kinematic_planar_base: KinematicPlanarBaseConfig | None = None
++    # 可选：测试用真值记录。按 hz 把完整 qpos/qvel/ctrl 追加写入 JSONL 文件，
++    # 供离线评测器复原场景；不进入任何 Dora 输出。path 中 {start_ns} 会被替换。
++    state_log_path: str | None = None
++    state_log_hz: float = 25.0
+ 
+     @property
+     def control_period_sec(self) -> float:
+@@ -399,6 +403,8 @@ class MuJoCoNodeConfig:
+             control_hz=control_hz,
+             pose_targets=pose_targets,
+             kinematic_planar_base=kinematic_planar_base,
++            state_log_path=_parse_state_log(data.get("state_log"))[0],
++            state_log_hz=_parse_state_log(data.get("state_log"))[1],
+         )
+ 
+     @classmethod
+@@ -414,6 +420,17 @@ class MuJoCoNodeConfig:
+         return cls.from_dict(data)
+ 
+ 
++def _parse_state_log(value: Any) -> tuple[str | None, float]:
++    if value is None:
++        return None, 25.0
++    if not isinstance(value, dict) or not isinstance(value.get("path"), str) or not value["path"].strip():
++        raise ValueError("state_log 必须是包含非空 path 的字典")
++    hz = float(value.get("hz", 25.0))
++    if not math.isfinite(hz) or hz <= 0:
++        raise ValueError("state_log.hz 必须为正数")
++    return value["path"].strip(), hz
++
++
+ def load_config(
+     config_path: str | Path | None = None,
+     dataflow_config: dict[str, Any] | None = None,
+diff --git a/src/mujoco_sim/runtime.py b/src/mujoco_sim/runtime.py
+index bff7e3d..434d2de 100644
+--- a/src/mujoco_sim/runtime.py
++++ b/src/mujoco_sim/runtime.py
+@@ -4,7 +4,10 @@ from __future__ import annotations
+ 
+ import json
+ import math
++import os
+ import sys
++import time
++from pathlib import Path
+ from typing import Any
+ 
+ import mujoco
+@@ -94,6 +97,17 @@ class MuJoCoNodeRuntime:
+         self.sim_time = 0.0
+         self.current_step = 0
+         self.episode_index = 0
++        self.state_log = None
++        self.next_state_log_time = 0.0
++        if self.config.state_log_path:
++            path = Path(os.path.expanduser(self.config.state_log_path.replace("{start_ns}", str(time.time_ns()))))
++            path.parent.mkdir(parents=True, exist_ok=True)
++            self.state_log = open(path, "a", encoding="utf-8", buffering=1)
++            self.state_log.write(json.dumps({
++                "type": "header", "model_path": str(self.config.model_path),
++                "nq": int(self.model.nq), "nv": int(self.model.nv), "nu": int(self.model.nu),
++                "timestep": float(self.model.opt.timestep),
++            }) + "\n")
+ 
+     def run(self) -> int:
+         """Process Dora events until STOP or ERROR."""
+@@ -167,6 +181,7 @@ class MuJoCoNodeRuntime:
+             return
+ 
+         self._step_physics()
++        self._write_state_log()
+         self._send_state_output()
+         self._send_pose_output()
+         self._send_camera_outputs()
+@@ -181,6 +196,17 @@ class MuJoCoNodeRuntime:
+             self.sim_time += self.physics_dt
+         self.current_step += n_steps
+ 
++    def _write_state_log(self) -> None:
++        if self.state_log is None or self.sim_time + 1e-9 < self.next_state_log_time:
++            return
++        self.next_state_log_time = self.sim_time + 1.0 / self.config.state_log_hz
++        self.state_log.write(json.dumps({
++            "type": "state", "wall_ns": time.time_ns(), "sim_time": self.sim_time,
++            "episode_index": self.episode_index, "time": float(self.data.time),
++            "qpos": self.data.qpos.tolist(), "qvel": self.data.qvel.tolist(),
++            "ctrl": self.data.ctrl.tolist(), "act": self.data.act.tolist(),
++        }) + "\n")
++
+     def _send_state_output(self) -> None:
+         robot_states: dict[str, JointState] = {}
+         for robot in self.config.robots:

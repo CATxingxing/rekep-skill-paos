@@ -1,6 +1,6 @@
 [project]
 name = "rekep-paos"
-version = "0.3.15"
+version = "0.4.8"
 description = "Observation-bound ReKep nodes and PhyAgentOS Skill packaging"
 requires-python = ">=3.12"
 dependencies = [

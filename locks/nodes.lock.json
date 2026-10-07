@@ -20,7 +20,7 @@
     },
     {
       "node_id": "mujoco_sim",
-      "artifact_id": "mujoco_sim-1.1.1-linux-x86_64",
+      "artifact_id": "mujoco_sim-1.1.1-rekep1-linux-x86_64",
       "entrypoint": "mujoco_sim",
       "version": "1.1.1",
       "repository": "mujoco",
@@ -31,7 +31,7 @@
     },
     {
       "node_id": "motion_server",
-      "artifact_id": "motion_server-0.1.0-rekep1-linux-x86_64",
+      "artifact_id": "motion_server-0.1.0-rekep2-linux-x86_64",
       "entrypoint": "motion_server",
       "version": "0.1.0",
       "repository": "motion",

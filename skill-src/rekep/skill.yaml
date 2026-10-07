@@ -1,6 +1,6 @@
 manifest_version: 2
 name: rekep
-version: "0.3.15"
+version: "0.4.8"
 description: Observation-bound DINOv2 and VLM ReKep planning with serial standard-controller execution.
 skill_document: SKILL.md
 gateway_url: http://127.0.0.1:19021
@@ -25,6 +25,79 @@ profiles:
     environment:
       MUJOCO_GL: egl
       PYTHONUNBUFFERED: "1"
+      # Nodes are spawned by a shared Dora daemon and inherit its proxy
+      # variables (on the 5880 host a Codex-only reverse proxy that is not
+      # always running). The simulation profile reaches the VLM directly, so
+      # bypass any inherited proxy for every host. Both spellings are set
+      # because urllib lets the lower-case variable win.
+      NO_PROXY: "*"
+      no_proxy: "*"
+  sim-dobot-nova2-robotiq-general-pickup:
+    dataflow: profiles/sim-dobot-nova2-robotiq-general-pickup/dataflow.yaml
+    startup_timeout_s: 90
+    required_binaries:
+      - gateway
+      - mujoco_sim
+      - motion_server
+      - joint_trajectory_controller
+      - gripper_action_controller
+      - rekep_perception
+      - rekep_planner
+      - rekep_executor
+    required_assets:
+      - assets/dobot-nova2-robotiq/mjcf/tasks/general_pickup.xml
+      - assets/dobot-nova2-robotiq/urdf/dobot_rviz/nova2_robot.urdf
+    required_environment: []
+    environment:
+      MUJOCO_GL: egl
+      PYTHONUNBUFFERED: "1"
+      # Same proxy bypass as the baseline profile.
+      NO_PROXY: "*"
+      no_proxy: "*"
+  sim-dobot-nova2-robotiq-stack-blocks:
+    dataflow: profiles/sim-dobot-nova2-robotiq-stack-blocks/dataflow.yaml
+    startup_timeout_s: 90
+    required_binaries:
+      - gateway
+      - mujoco_sim
+      - motion_server
+      - joint_trajectory_controller
+      - gripper_action_controller
+      - rekep_perception
+      - rekep_planner
+      - rekep_executor
+    required_assets:
+      - assets/dobot-nova2-robotiq/mjcf/tasks/stack_blocks.xml
+      - assets/dobot-nova2-robotiq/urdf/dobot_rviz/nova2_robot.urdf
+    required_environment: []
+    environment:
+      MUJOCO_GL: egl
+      PYTHONUNBUFFERED: "1"
+      # Same proxy bypass as the baseline profile.
+      NO_PROXY: "*"
+      no_proxy: "*"
+  sim-dobot-nova2-robotiq-push-t:
+    dataflow: profiles/sim-dobot-nova2-robotiq-push-t/dataflow.yaml
+    startup_timeout_s: 90
+    required_binaries:
+      - gateway
+      - mujoco_sim
+      - motion_server
+      - joint_trajectory_controller
+      - gripper_action_controller
+      - rekep_perception
+      - rekep_planner
+      - rekep_executor
+    required_assets:
+      - assets/dobot-nova2-robotiq/mjcf/tasks/push_t.xml
+      - assets/dobot-nova2-robotiq/urdf/dobot_rviz/nova2_robot.urdf
+    required_environment: []
+    environment:
+      MUJOCO_GL: egl
+      PYTHONUNBUFFERED: "1"
+      # Same proxy bypass as the baseline profile.
+      NO_PROXY: "*"
+      no_proxy: "*"
 artifacts:
   resolver: local
   nodes: {}

@@ -1,3 +1,6 @@
+# Closed Robotiq 2F-85 (the pusher): lowest collision point below the pinch
+# tip frame, measured in the MuJoCo model (diag/finger_extent.py, 0324-agent).
+pusher_bottom_below_tip_m: 0.0177
 workspace_m: {x: [-0.60, 0.60], y: [-0.80, 0.20], z: [0.02, 0.75]}
 default_end_effector_pose:
   position_m: [0.35, -0.20, 0.35]
@@ -9,7 +12,21 @@ max_cartesian_step_m: 0.025
 # Minimum lateral transit height in the base frame, not an additive lift.
 # VLM path constraints may require a higher transit height.
 transport_clearance_m: 0.12
+pregrasp_approach_height_m: 0.10
+# Calibrated for the current 50 mm cube and 0..255 Robotiq coordinate.
+# Empty closure stalls around 251.6; a 50 mm contact is around 125.
+grasp_contact_position_range: [80.0, 180.0]
 path_samples_per_segment: 9
+velocity_scale: 0.4
+acceleration_scale: 0.4
+# Holding the 50 mm cube. With the 0.5 ms scene the replay of Run 0320-run3
+# keeps the cube even at 0.4/0.4 on a 3x slower simulator; half speed while
+# holding is kept as margin (rekep-evidence/0320-run3-replay/diag).
+held_velocity_scale: 0.2
+held_acceleration_scale: 0.2
+# Blend each straight Cartesian run into one MovePose through its 25 mm IK
+# waypoints (motion_server patch 0002); stop only at corners.
+continuous_paths: true
 move_deadline_ms: 15000
 # Allow five 50 Hz state updates after a terminal trajectory result before
 # the motion server validates the next segment's start velocity.
